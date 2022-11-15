@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import TutorialDataService from "../services/TutorialService";
 import { NavLink } from 'react-router-dom';
-import {JSON_API} from '../services/Constants'
+import {JSON_API} from '../services/Constants';
 
 import {
   DatePicker,

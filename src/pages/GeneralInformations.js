@@ -2,6 +2,7 @@ import { Radio,Card,DatePicker,Select,Divider,Typography,Row,Col,Button,Descript
 import axios from 'axios';
 import React,{useState,useEffect} from 'react';
 import { Redirect,NavLink } from 'react-router-dom';
+import {JSON_API} from '../services/Constants';
 import { ExclamationCircleOutlined,CaretRightOutlined,EditOutlined,SaveFilled,DeleteOutlined     } from '@ant-design/icons';
 import moment from 'moment';
 import BgProfile from "../assets/images/bg-profile.jpg";
@@ -11,7 +12,6 @@ const { Title,Text } = Typography;
 const { Option } = Select;
 const dateFormat = 'YYYY-MM-DD';
 const { Meta } = Card;
-import {JSON_API} from '../services/Constants'
 
 
 
