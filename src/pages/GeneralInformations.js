@@ -11,6 +11,7 @@ const { Title,Text } = Typography;
 const { Option } = Select;
 const dateFormat = 'YYYY-MM-DD';
 const { Meta } = Card;
+import {JSON_API} from '../services/Constants'
 
 
 
@@ -20,7 +21,7 @@ const GeneralInformations = () => {
 
   const onChange = async (value) => {
     console.log(`selected ${value}`);
-    await axios.get(`http://localhost:5000/companies/${value}`)
+    await axios.get(`${JSON_API}/companies/${value}`)
     .then((response) => {
       setCompany(response.data);
       console.log("info of this company", Company)
@@ -69,12 +70,12 @@ const GeneralInformations = () => {
   });
 
   const deleteCompany = async () => {
-    await axios.delete(`http://localhost:5000/companies/${Company.id}`)
+    await axios.delete(`${JSON_API}/companies/${Company.id}`)
     .then((response) => alert("Company deleted successfully"))
     window.location.reload(false)
   };
   const updateCompany = async () => {
-    await axios.put(`http://localhost:5000/companies/${UpdateData.id}`,UpdateData)
+    await axios.put(`${JSON_API}/companies/${UpdateData.id}`,UpdateData)
     .then((response) => alert("Company updated successfully"))
     getCompanies();
     setEdited(true);
@@ -86,7 +87,7 @@ const GeneralInformations = () => {
 
   useEffect(()=>{getCompanies();},[]);
   const getCompanies = async () =>{
-    await axios.get('http://localhost:5000/companies')
+    await axios.get(`${JSON_API}/companies`)
     .then((response) => {
       setCompanies(response.data);
     })

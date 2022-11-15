@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import TutorialDataService from "../services/TutorialService";
 import { NavLink } from 'react-router-dom';
+import {JSON_API} from '../services/Constants'
 
 import {
   DatePicker,
@@ -114,7 +115,7 @@ const AddCompany = () => {
 
           
         };
-        axios.post('http://localhost:5000/companies',companies)
+        axios.post(`${JSON_API}/companies`,companies)
         .then(response => {
           setSubmitted(true);
           console.log(response.data);
