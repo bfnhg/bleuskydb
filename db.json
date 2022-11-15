@@ -1,0 +1,50 @@
+{
+  "users": {
+    "username": "admin",
+    "password": "admin123"
+  },
+  "companies": [
+    {
+      "id": 1,
+      "nom_de_la_société": "Yasuo tech",
+      "adresse": "Ionia 10, 3th floor, 8",
+      "ville": "The Rift",
+      "province": "NB",
+      "code_postal": "123789",
+      "pays": "Riot",
+      "date_de_fondation": "2020-11-04T21:42:05.951Z",
+      "numéro_entreprise": "102270",
+      "nombre_employés": "98",
+      "type_industrie": "Agriculture, foresterie, pêche et chasse",
+      "budget": "+1000",
+      "taux_imposition_annuel_estimé": "10",
+      "Target_customers": {
+        "market": "",
+        "main_customers": "",
+        "revenue_model": "",
+        "business_partners": ""
+      }
+    },
+    {
+      "id": 3,
+      "nom_de_la_société": "Teemotech",
+      "adresse": "dragon pit near river, bush n 1",
+      "ville": "Ionia",
+      "province": "NS",
+      "code_postal": "19789",
+      "pays": "The Rift",
+      "date_de_fondation": "2022-11-15T10:28:10.566Z",
+      "numéro_entreprise": "33330",
+      "nombre_employés": "10",
+      "type_industrie": "Extraction minière, exploitation en carrière, et extraction de pétrole et de gaz",
+      "budget": "+1000",
+      "taux_imposition_annuel_estimé": "2",
+      "Target_customers": {
+        "market": "test market test market test market test market test market test market test market test market test market test market ",
+        "main_customers": "test customers test customers test customers test customers test customers test customers test customers test customers test customers test customers ",
+        "revenue_model": "test revenue model test revenue model test revenue model test revenue model test revenue model test revenue model test revenue model test revenue model ",
+        "business_partners": "test business partners test business partners test business partners test business partners test business partners test business partners test business partners test business partners test business partners "
+      }
+    }
+  ]
+}
