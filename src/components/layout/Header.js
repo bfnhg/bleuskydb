@@ -130,6 +130,8 @@ const credit = [
 function CustomButton() {
   console.log("logout  clicked ");
   localStorage.clear();
+  window.location.reload(false)
+
   
 }
 
