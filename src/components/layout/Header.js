@@ -34,7 +34,7 @@ import {
   FacebookFilled,
 } from "@ant-design/icons";
 
-import { NavLink, Link, Redirect } from "react-router-dom";
+import { NavLink, Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import avtar from "../../assets/images/team-2.jpg";
 
@@ -127,13 +127,6 @@ const credit = [
   </svg>,
 ];
 
-function CustomButton() {
-  console.log("logout  clicked ");
-  localStorage.clear();
-  window.location.reload(false)
-
-  
-}
 
 const clockicon = [
   <svg
@@ -266,6 +259,17 @@ function Header({
   handleSidenavType,
   handleFixedNavbar,
 }) {
+
+  const history = useHistory();
+
+function CustomButton() {
+  
+  console.log("logout  clicked ");
+  localStorage.clear();
+  let path = `/sign-in`; 
+  history.push(path);    
+  
+}
   const { Title, Text } = Typography;
 
   const [visible, setVisible] = useState(false);

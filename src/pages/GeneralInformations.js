@@ -1,7 +1,7 @@
 import { Radio,Card,DatePicker,Select,Divider,Typography,Row,Col,Button,Descriptions,Modal,Avatar,Tabs, Form, Input  } from 'antd';
 import axios from 'axios';
 import React,{useState,useEffect} from 'react';
-import { Redirect,NavLink } from 'react-router-dom';
+import { Redirect,NavLink,useHistory } from 'react-router-dom';
 import {JSON_API} from '../services/Constants';
 import { ExclamationCircleOutlined,CaretRightOutlined,EditOutlined,SaveFilled,DeleteOutlined     } from '@ant-design/icons';
 import moment from 'moment';
@@ -18,7 +18,7 @@ const { Meta } = Card;
 const GeneralInformations = () => {
 
   const [Company,setCompany]=useState({});
-
+  const history = useHistory();
   const onChange = async (value) => {
     console.log(`selected ${value}`);
     await axios.get(`${JSON_API}/companies/${value}`)
@@ -72,7 +72,7 @@ const GeneralInformations = () => {
   const deleteCompany = async () => {
     await axios.delete(`${JSON_API}/companies/${Company.id}`)
     .then((response) => alert("Company deleted successfully"))
-    window.location.reload(false)
+    history.go(0)
   };
   const updateCompany = async () => {
     await axios.put(`${JSON_API}/companies/${UpdateData.id}`,UpdateData)
@@ -80,7 +80,7 @@ const GeneralInformations = () => {
     getCompanies();
     setEdited(true);
 
-     window.location.reload(false);
+    history.go(0)
   };
 
   const [Edited,setEdited]=useState(true);

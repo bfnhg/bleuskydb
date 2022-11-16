@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import TutorialDataService from "../services/TutorialService";
-import { NavLink } from 'react-router-dom';
+import { NavLink,useHistory } from 'react-router-dom';
 import {JSON_API} from '../services/Constants';
 
 import {
@@ -57,6 +57,8 @@ const tailFormItemLayout = {
 const AddCompany = () => {
 
   const [form] = Form.useForm();
+  const history = useHistory();
+
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
   };
@@ -144,7 +146,10 @@ const AddCompany = () => {
         setCompany(initialCompanyState);
         setSubmitted(false);
       };
-
+      const gotoGI = () => {
+        let path = `/generalinformations`; 
+        history.push(path);    
+      };
       
   return (
 <>
@@ -157,9 +162,9 @@ const AddCompany = () => {
          <Button type="primary" onClick={newCompany} key="console">
            Add another company
          </Button>,
-         <NavLink to="/GeneralInformations">
+         <Button type="link" onClick={gotoGI}>
          <span className="label">Return to General Informations</span>
-       </NavLink>
+       </Button>
        ]}
      />
     ) : (

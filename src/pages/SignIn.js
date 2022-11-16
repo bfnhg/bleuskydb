@@ -12,7 +12,7 @@
 import React, { Component,useState } from "react";
 import axios from 'axios';
 import {JSON_API} from '../services/Constants';
-import { Link } from "react-router-dom";
+import { Link, useHistory  } from "react-router-dom";
 import {
   Layout,
   Button,
@@ -42,78 +42,80 @@ function onChange(checked) {
 const { Title } = Typography;
 const { Content } = Layout;
 
-const LoginIn= async (values)=>{
-  const hide = message.loading('Action in progress..', 0);
-  console.log("values are",values);
-  // const [users,setUsers]=useState({
-  //   username:"",
-  //   password:""
-  // });
-    await axios.get(`${JSON_API}/users`)
-    .then((response) => {
-      // setUsers(response.data);
-      if(response.data.username!==values.username ) 
-      {
-        setTimeout(hide);
-        message.error('username incorrect');
-      }
-      else if(response.data.username===values.username && response.data.password!==values.password)
-      {
-        setTimeout(hide);
-        message.error('password incorrect');
-      }else{
-        const token  =  response.data.username;
-
-        localStorage.setItem("token", token);
-
-        setTimeout(hide);
-
-        window.location.href = '/'         
-       }
-
-    })
 
 
-  // axios.post(`https://localhost:7095/api/Tokenmanager/Authentification?user_login=${values.username}&user_password=${values.password}`)
-  // .then(response => {
-  //   setTimeout(hide, response);
-  //   const token  =  response.data.token;
 
-  //   localStorage.setItem("token", token);
+  const SignIn = () => {
 
-  //   window.location.href = '/tables'
-  // })
-  .catch(function (error) {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.log(error.toJSON());
-      console.log(error.response.status);
-      console.log(error.response.headers);
-    } else if (error.request) {
-      // The request was made but no response was received
-      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-      // http.ClientRequest in node.js
-      console.log(error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log('Error', error.message);
-    }
-    console.log(error.config);
-  });
-}
-
-const onFinish = async (values) => {
+    const onFinish = async (values) => {
   
       console.log("Success:", values.username);
       // Dismiss manually and asynchronously
       LoginIn(values);
      
     };
-
-  const SignIn = () => {
-
-
+    const history = useHistory();
+    const LoginIn= async (values)=>{
+      const hide = message.loading('Action in progress..', 0);
+      console.log("values are",values);
+      // const [users,setUsers]=useState({
+      //   username:"",
+      //   password:""
+      // });
+        await axios.get(`${JSON_API}/users`)
+        .then((response) => {
+          // setUsers(response.data);
+          if(response.data.username!==values.username ) 
+          {
+            setTimeout(hide);
+            message.error('username incorrect');
+          }
+          else if(response.data.username===values.username && response.data.password!==values.password)
+          {
+            setTimeout(hide);
+            message.error('password incorrect');
+          }else{
+            const token  =  response.data.username;
+    
+            localStorage.setItem("token", token);
+    
+            setTimeout(hide);
+    
+            let path = `/`; 
+            history.push(path);    
+           }
+    
+        })
+    
+    
+      // axios.post(`https://localhost:7095/api/Tokenmanager/Authentification?user_login=${values.username}&user_password=${values.password}`)
+      // .then(response => {
+      //   setTimeout(hide, response);
+      //   const token  =  response.data.token;
+    
+      //   localStorage.setItem("token", token);
+    
+      //   window.location.href = '/tables'
+      // })
+      .catch(function (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.toJSON());
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+      });
+    }
     const [loadings, setLoadings] = useState([]);
     const enterLoading = (index) => {
       setLoadings((prevLoadings) => {
