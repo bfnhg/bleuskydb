@@ -72,7 +72,8 @@ const GeneralInformations = () => {
   const deleteCompany = async () => {
     await axios.delete(`${JSON_API}/companies/${Company.id}`)
     .then((response) => alert("Company deleted successfully"))
-    history.go(0)
+    let path = `/generalinformations`; 
+    history.push(path);  
   };
   const updateCompany = async () => {
     await axios.put(`${JSON_API}/companies/${UpdateData.id}`,UpdateData)
@@ -80,7 +81,8 @@ const GeneralInformations = () => {
     getCompanies();
     setEdited(true);
 
-    history.go(0)
+    let path = `/generalinformations`; 
+    history.push(path);  
   };
 
   const [Edited,setEdited]=useState(true);
