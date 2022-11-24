@@ -10,8 +10,9 @@
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect } from "react";
-
+import { useState, useEffect,useContext } from "react";
+import axios from 'axios';
+import { CompanyContext } from '../../contexts/CompanyContext';
 import {
   Row,
   Col,
@@ -25,6 +26,8 @@ import {
   Drawer,
   Typography,
   Switch,
+  Select,
+Divider,
 } from "antd";
 
 import {
@@ -33,10 +36,12 @@ import {
   TwitterOutlined,
   FacebookFilled,
 } from "@ant-design/icons";
+import {JSON_API} from '../../services/Constants';
 
 import { NavLink, Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import avtar from "../../assets/images/team-2.jpg";
+const { Option } = Select;
 
 const ButtonContainer = styled.div`
   .ant-btn-primary {
@@ -259,9 +264,16 @@ function Header({
   handleSidenavType,
   handleFixedNavbar,
 }) {
+  const {Companies,setCompanies,Company,setCompany}=useContext(CompanyContext);
 
   const history = useHistory();
-
+  useEffect(()=>{getCompanies();},[]);
+  const getCompanies = async () =>{
+    await axios.get(`${JSON_API}/companies`)
+    .then((response) => {
+      setCompanies(response.data);
+    })
+  };
 function CustomButton() {
   
   console.log("logout  clicked ");
@@ -270,6 +282,14 @@ function CustomButton() {
   history.push(path);    
   
 }
+const onChange = async (value) => {
+  console.log(`selected ${value}`);
+  await axios.get(`${JSON_API}/companies/${value}`)
+  .then((response) => {
+    setCompany(response.data);
+    console.log("info of this company", Company)
+  })
+};
   const { Title, Text } = Typography;
 
   const [visible, setVisible] = useState(false);
@@ -286,7 +306,7 @@ function CustomButton() {
         {setting}
       </div> */}
       <Row gutter={[24, 0]}>
-        <Col span={24} md={6}>
+        {/* <Col span={24} md={6}>
           <Breadcrumb>
             <Breadcrumb.Item>
               <NavLink to="/">Pages</NavLink>
@@ -295,154 +315,53 @@ function CustomButton() {
               {name.replace("/", "")}
             </Breadcrumb.Item>
           </Breadcrumb>
-          {/* <div className="ant-page-header-heading">
-            <span
-              className="ant-page-header-heading-title"
-              style={{ textTransform: "capitalize" }}
+
+        </Col> */}
+
+          <Col span={4} md={3} className="header-control">
+
+            <Button
+              type="link"
+              className="sidebar-toggler"
+              onClick={() => onPress()}
             >
-              {subName.replace("/", "")}
-            </span>
-          </div> */}
-        </Col>
-        <Col span={24} md={18} className="header-control">
-          {/* <Badge size="small" count={4}>
-            <Dropdown overlay={menu} trigger={["click"]}>
-              <a
-                href="#pablo"
-                className="ant-dropdown-link"
-                onClick={(e) => e.preventDefault()}
+              {toggler}
+            </Button>
+          </Col>
+
+          <Col span={20} md={21} className="header-control">
+            <Button  type="link" onClick={() => CustomButton()}>{profile} Sign out</Button>
+          </Col>
+          
+  <Divider/>
+         
+          <Col span={24} md={18}>
+            <Text type="secondary">Select and Access Company Information: </Text>
+
+            <Select
+              placeholder="Select a company"
+              onChange={onChange}
               >
-                {bell}
-              </a>
-            </Dropdown>
-          </Badge> */}
-          {/* <Button type="link" onClick={showDrawer}>
-            {logsetting}
-          </Button> */}
-          <Button
-            type="link"
-            className="sidebar-toggler"
-            onClick={() => onPress()}
-          >
-            {toggler}
-          </Button>
-          {/* <Drawer
-            className="settings-drawer"
-            mask={true}
-            width={360}
-            onClose={hideDrawer}
-            placement={placement}
-            visible={visible}
-          >
-            <div layout="vertical">
-              <div className="header-top">
-                <Title level={4}>
-                  Configurator
-                  <Text className="subtitle">See our dashboard options.</Text>
-                </Title>
-              </div>
+                {Companies.map((company)=>(
 
-              <div className="sidebar-color">
-                <Title level={5}>Sidebar Color</Title>
-                <div className="theme-color mb-2">
-                  <ButtonContainer>
-                    <Button
-                      type="primary"
-                      onClick={() => handleSidenavColor("#1890ff")}
-                    >
-                      1
-                    </Button>
-                    <Button
-                      type="success"
-                      onClick={() => handleSidenavColor("#52c41a")}
-                    >
-                      1
-                    </Button>
-                    <Button
-                      type="danger"
-                      onClick={() => handleSidenavColor("#d9363e")}
-                    >
-                      1
-                    </Button>
-                    <Button
-                      type="yellow"
-                      onClick={() => handleSidenavColor("#fadb14")}
-                    >
-                      1
-                    </Button>
+              company&&<Option value={company.id}>{company.nom_de_la_société}</Option>
 
-                    <Button
-                      type="black"
-                      onClick={() => handleSidenavColor("#111")}
-                    >
-                      1
-                    </Button>
-                  </ButtonContainer>
-                </div>
+                ))}
 
-                <div className="sidebarnav-color mb-2">
-                  <Title level={5}>Sidenav Type</Title>
-                  <Text>Choose between 2 different sidenav types.</Text>
-                  <ButtonContainer className="trans">
-                    <Button
-                      type={sidenavType === "transparent" ? "primary" : "white"}
-                      onClick={() => {
-                        handleSidenavType("transparent");
-                        setSidenavType("transparent");
-                      }}
-                    >
-                      TRANSPARENT
-                    </Button>
-                    <Button
-                      type={sidenavType === "white" ? "primary" : "white"}
-                      onClick={() => {
-                        handleSidenavType("#fff");
-                        setSidenavType("white");
-                      }}
-                    >
-                      WHITE
-                    </Button>
-                  </ButtonContainer>
-                </div>
-                <div className="fixed-nav mb-2">
-                  <Title level={5}>Navbar Fixed </Title>
-                  <Switch onChange={(e) => handleFixedNavbar(e)} />
-                </div>
-                <div className="ant-docment">
-                  <ButtonContainer>
-                    <Button type="black" size="large">
-                      FREE DOWNLOAD
-                    </Button>
-                    <Button size="large">VIEW DOCUMENTATION</Button>
-                  </ButtonContainer>
-                </div>
-                <div className="viewstar">
-                  <a href="#pablo">{<StarOutlined />} Star</a>
-                  <a href="#pablo"> 190</a>
-                </div>
+              </Select>
+          </Col>
+          <Col span={24} md={6}  style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}>
+            <NavLink to="/addcompany">
+              <span className="label">Add new company</span>
+            </NavLink>
+          </Col>
 
-                <div className="ant-thank">
-                  <Title level={5} className="mb-2">
-                    Thank you for sharing!
-                  </Title>
-                  <ButtonContainer className="social">
-                    <Button type="black">{<TwitterOutlined />}TWEET</Button>
-                    <Button type="black">{<FacebookFilled />}SHARE</Button>
-                  </ButtonContainer>
-                </div>
-              </div>
-            </div>
-          </Drawer> */}
+
           
-         <Button  type="link" onClick={() => CustomButton()}>{profile} Sign out</Button>
-          
-        
-          {/* <Input
-            className="header-search"
-            placeholder="Type here..."
-            prefix={<SearchOutlined />}
-          /> */}
-        </Col>
       </Row>
     </>
   );

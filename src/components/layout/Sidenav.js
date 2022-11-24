@@ -218,13 +218,14 @@ function Sidenav({ color }) {
         Sales
         </Menu.Item>
         <Menu.Item key="3">
-          <NavLink to="/ComingSoon">
+          <NavLink to="/salesorderbook">
           <span
               className="icon"
               style={{
                 background:"",
               }}
-            >            <LoadingOutlined />
+            >
+                          {/* <LoadingOutlined /> */}
 
             </span>
             <span className="label">Order Book</span>

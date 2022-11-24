@@ -6,14 +6,14 @@
   "companies": [
     {
       "id": 1,
-      "nom_de_la_société": "Yasuo tech",
+      "nom_de_la_société": "Yasuotech",
       "adresse": "Ionia 10, 3th floor, 8",
       "ville": "The Rift",
       "province": "NB",
       "code_postal": "123789",
       "pays": "Riot",
       "date_de_fondation": "2020-11-04T21:42:05.951Z",
-      "numéro_entreprise": "10227",
+      "numéro_entreprise": "10227000",
       "nombre_employés": "98",
       "type_industrie": "Agriculture, foresterie, pêche et chasse",
       "budget": "+1000",

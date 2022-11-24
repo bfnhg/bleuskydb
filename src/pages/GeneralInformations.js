@@ -1,11 +1,12 @@
 import { Radio,Card,DatePicker,Select,Divider,Typography,Row,Col,Button,Descriptions,Modal,Avatar,Tabs, Form, Input  } from 'antd';
 import axios from 'axios';
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useContext} from 'react';
 import { Redirect,NavLink,useHistory } from 'react-router-dom';
 import {JSON_API} from '../services/Constants';
 import { ExclamationCircleOutlined,CaretRightOutlined,EditOutlined,SaveFilled,DeleteOutlined     } from '@ant-design/icons';
 import moment from 'moment';
 import BgProfile from "../assets/images/bg-profile.jpg";
+import { CompanyContext } from '../contexts/CompanyContext';
 const { TextArea } = Input;
 const { confirm } = Modal;
 const { Title,Text } = Typography;
@@ -14,10 +15,10 @@ const dateFormat = 'YYYY-MM-DD';
 const { Meta } = Card;
 
 
-
 const GeneralInformations = () => {
+  
+  const {Companies,setCompanies,Company,setCompany}=useContext(CompanyContext);
 
-  const [Company,setCompany]=useState({});
   const history = useHistory();
   const onChange = async (value) => {
     console.log(`selected ${value}`);
@@ -45,7 +46,6 @@ const GeneralInformations = () => {
    
 
   };
-  const [Companies,setCompanies]=useState([{}]);
   const [UpdateData,setUpdateData]=useState({
     id:"",
     nom_de_la_société: "",
@@ -68,21 +68,24 @@ const GeneralInformations = () => {
             business_partners:"",
           }
   });
-
   const deleteCompany = async () => {
     await axios.delete(`${JSON_API}/companies/${Company.id}`)
     .then((response) => alert("Company deleted successfully"))
-    let path = `/generalinformations`; 
-    history.push(path);  
+    setCompany({});
+    getCompanies();
   };
   const updateCompany = async () => {
     await axios.put(`${JSON_API}/companies/${UpdateData.id}`,UpdateData)
     .then((response) => alert("Company updated successfully"))
-    getCompanies();
+
+    await axios.get(`${JSON_API}/companies/${UpdateData.id}`)
+    .then((response) => {
+      setCompany(response.data);
+    })
     setEdited(true);
 
-    let path = `/generalinformations`; 
-    history.push(path);  
+    // let path = `/generalinformations`; 
+    // history.push(path);  
   };
 
   const [Edited,setEdited]=useState(true);
@@ -128,90 +131,44 @@ const GeneralInformations = () => {
   
   return (
     <>
-      {/* <div
-        className="profile-nav-bg"
-        style={{ backgroundImage: "url(" + BgProfile + ")" }}
-      ></div> */}
+
     {
-    Companies.length>=1 ? 
-    (
-      <Card
-        bordered={false} className="header-solid mb-24"
-        bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
-        title={
-      <Row  justify="space-between" align="middle" gutter={[24, 0]}>
-          <Col span={24} md={12}>
-            <Text type="secondary">Select and Access Company Information: </Text>
-
-            <Select
-              disabled={!Edited}
-              placeholder="Select a company"
-              onChange={onChange}
-              >
-                {Companies.map((company)=>(
-
-              <Option value={company.id}>{company.nom_de_la_société}</Option>
-
-                ))}
-
-              </Select>
-            </Col>
-          <Col span={24} md={12}  style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}>
-          <NavLink to="/addcompany">
-            <span className="label">Add new company</span>
-          </NavLink>
-          </Col>
-          {/* <Col flex={1}>
-          <Button onClick={showDeleteConfirm} type="dashed">
-            Delete company
-          </Button>
-          </Col> */}
-      </Row>
-       }
-       >
-{
-
-Company.nom_de_la_société ? 
-
-<Row justify="space-between" align="middle" gutter={[24, 0]} > 
-<Col span={24} md={12} className="col-info">
-  <Card className="card-project" bordered={false}>
 
 
+Company.nom_de_la_société &&
+
+
+
+  <Card bordered={false} className="header-solid mb-24">
+<Row justify="space-between" align="middle" > 
+  <Col span={24} md={12} className="col-info">
             <Meta
                   avatar={<Avatar size={74} shape="square" style={{backgroundColor: '#f56a00',}}> {Company.nom_de_la_société} </Avatar>}
                   title={Company.nom_de_la_société}
                   description={Company.type_industrie}
                 />
+                </Col>
 
-
-  </Card>
-  </Col>
-  <Col  span={24}
-              md={12}
+<Col  span={24} md={12}
+              
               style={{
-                display: "flex",
+               display: "flex",
                 alignItems: "center",
-                justifyContent: "flex-end",
-              }}>
+               justifyContent: "flex-end",
+              }}
+              >
               {/* <Radio.Group>
                 <Radio.Button value="edit" ><EditOutlined /> Edit company </Radio.Button>
                 <Radio.Button value="delete" danger><DeleteOutlined /> Delete company</Radio.Button>
               </Radio.Group> */}
                   <Button danger onClick={showDeleteConfirm} ><DeleteOutlined /> Delete company</Button>
               </Col>
-</Row>
-:""}
+              </Row>
+  </Card>
 
-       </Card>
-    )
-    : 
-    <Redirect from="*" to="/addcompany" />
-  }
+
+}
+
 
 <Card bordered={false} className="header-solid mb-24" >
     <Form
