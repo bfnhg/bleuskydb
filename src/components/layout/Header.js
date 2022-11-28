@@ -35,6 +35,7 @@ import {
   StarOutlined,
   TwitterOutlined,
   FacebookFilled,
+  PlusOutlined
 } from "@ant-design/icons";
 import {JSON_API} from '../../services/Constants';
 
@@ -282,6 +283,10 @@ function CustomButton() {
   history.push(path);    
   
 }
+function addCompany() {
+  let path = '/addcompany'; 
+  history.push(path);    
+}
 const onChange = async (value) => {
   console.log(`selected ${value}`);
   await axios.get(`${JSON_API}/companies/${value}`)
@@ -302,11 +307,8 @@ const onChange = async (value) => {
 
   return (
     <>
-      {/* <div className="setting-drwer" onClick={showDrawer}>
-        {setting}
-      </div> */}
       <Row gutter={[24, 0]}>
-        {/* <Col span={24} md={6}>
+        <Col span={24} md={6}>
           <Breadcrumb>
             <Breadcrumb.Item>
               <NavLink to="/">Pages</NavLink>
@@ -315,31 +317,20 @@ const onChange = async (value) => {
               {name.replace("/", "")}
             </Breadcrumb.Item>
           </Breadcrumb>
-
-        </Col> */}
-
-          <Col span={4} md={3} className="header-control">
-
-            <Button
-              type="link"
-              className="sidebar-toggler"
-              onClick={() => onPress()}
+          <div className="ant-page-header-heading">
+            <span
+              className="ant-page-header-heading-title"
+              style={{ textTransform: "capitalize" }}
             >
-              {toggler}
-            </Button>
-          </Col>
-
-          <Col span={20} md={21} className="header-control">
-            <Button  type="link" onClick={() => CustomButton()}>{profile} Sign out</Button>
-          </Col>
-          
-  <Divider/>
-         
-          <Col span={24} md={18}>
-            <Text type="secondary">Select and Access Company Information: </Text>
-
+              {subName.replace("/", "")}
+            </span>
+          </div> 
+        </Col> 
+        <Col span={24} md={12}>
             <Select
-              placeholder="Select a company"
+              placeholder="Select and Access Company Information:"
+              style={{width:350}}
+              block
               onChange={onChange}
               >
                 {Companies.map((company)=>(
@@ -349,19 +340,25 @@ const onChange = async (value) => {
                 ))}
 
               </Select>
-          </Col>
-          <Col span={24} md={6}  style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}>
-            <NavLink to="/addcompany">
-              <span className="label">Add new company</span>
-            </NavLink>
-          </Col>
-
-
+        </Col>
+        <Col span={12} md={3}>
+            <Button type="link" block onClick={()=>addCompany()} icon={<PlusOutlined />} style={{padding:0}}>
+              <span>Add Company</span>
+            </Button>
+        </Col>
+             
           
+          <Col span={12} md={3} className="header-control">
+            <Button
+              type="link"
+              className="sidebar-toggler"
+              onClick={() => onPress()}
+            >
+              {toggler}
+            </Button>
+         
+            <Button  type="link" onClick={() => CustomButton()}>{profile} Sign out</Button>
+          </Col>
       </Row>
     </>
   );
