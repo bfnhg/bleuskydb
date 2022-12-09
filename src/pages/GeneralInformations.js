@@ -16,18 +16,9 @@ const { Meta } = Card;
 
 
 const GeneralInformations = () => {
-  
-  const {Companies,setCompanies,Company,setCompany}=useContext(CompanyContext);
-
   const history = useHistory();
-  const onChange = async (value) => {
-    console.log(`selected ${value}`);
-    await axios.get(`${JSON_API}/companies/${value}`)
-    .then((response) => {
-      setCompany(response.data);
-      console.log("info of this company", Company)
-    })
-  };
+
+  const {Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
 
   const showDeleteConfirm = () => {
     confirm({
@@ -88,7 +79,6 @@ const GeneralInformations = () => {
     // history.push(path);  
   };
 
-  const [Edited,setEdited]=useState(true);
 
   useEffect(()=>{getCompanies();},[]);
   const getCompanies = async () =>{
@@ -96,6 +86,7 @@ const GeneralInformations = () => {
     .then((response) => {
       setCompanies(response.data);
     })
+
   };
   const onFinish = (values) => {
     console.log('Success:', values);
@@ -105,28 +96,30 @@ const GeneralInformations = () => {
   };
   const generateUpdateformdata = () => {
     setEdited(false);
-    setUpdateData({
-      id:Company.id,
-      nom_de_la_société: Company.nom_de_la_société,
-      adresse:Company.adresse,
-      ville: Company.ville,
-      province: Company.province,
-      code_postal: Company.code_postal,
-      pays: Company.pays,
-      date_de_fondation: Company.date_de_fondation,
-      date_fin_exercice: Company.date_fin_exercice,
-      numéro_entreprise: Company.numéro_entreprise,
-      nombre_employés:Company.nombre_employés,
-      type_industrie: Company.type_industrie,
-      budget:Company.budget,
-      taux_imposition_annuel_estimé:Company.taux_imposition_annuel_estimé,
-      Target_customers:{ 
-        market:Company.Target_customers?Company.Target_customers.market:"",
-        main_customers:Company.Target_customers?Company.Target_customers.main_customers:"",
-        revenue_model:Company.Target_customers?Company.Target_customers.revenue_model:"",
-        business_partners:Company.Target_customers?Company.Target_customers.business_partners:"",
-      }
-    });
+    let path = `/updatecompany`; 
+    history.push(path);
+    // setUpdateData({
+    //   id:Company.id,
+    //   nom_de_la_société: Company.nom_de_la_société,
+    //   adresse:Company.adresse,
+    //   ville: Company.ville,
+    //   province: Company.province,
+    //   code_postal: Company.code_postal,
+    //   pays: Company.pays,
+    //   date_de_fondation: Company.date_de_fondation,
+    //   date_fin_exercice: Company.date_fin_exercice,
+    //   numéro_entreprise: Company.numéro_entreprise,
+    //   nombre_employés:Company.nombre_employés,
+    //   type_industrie: Company.type_industrie,
+    //   budget:Company.budget,
+    //   taux_imposition_annuel_estimé:Company.taux_imposition_annuel_estimé,
+    //   Target_customers:{ 
+    //     market:Company.Target_customers?Company.Target_customers.market:"",
+    //     main_customers:Company.Target_customers?Company.Target_customers.main_customers:"",
+    //     revenue_model:Company.Target_customers?Company.Target_customers.revenue_model:"",
+    //     business_partners:Company.Target_customers?Company.Target_customers.business_partners:"",
+    //   }
+    // });
   };
   
   return (
@@ -142,20 +135,36 @@ Company.nom_de_la_société &&
   <Card bordered={false} className="header-solid mb-24">
 <Row justify="space-between" align="middle" > 
   <Col span={24} md={12} className="col-info">
-            <Meta
+                <Meta
                   avatar={<Avatar size={74} shape="square" style={{backgroundColor: '#f56a00',}}> {Company.nom_de_la_société} </Avatar>}
                   title={Company.nom_de_la_société}
-                  description={Company.type_industrie}
+                  description={Company.type_industrie.map((e)=>(
+                    TypeIndustries.map((type)=>(type.id===e&&"- "+type.label+". "))
+                  ))}
                 />
                 </Col>
 
-<Col  span={24} md={12}
+              <Col  span={12} md={6}
               
-              style={{
-               display: "flex",
-                alignItems: "center",
-               justifyContent: "flex-end",
-              }}
+                style={{
+                display: "flex",
+                  alignItems: "center",
+                justifyContent: "flex-end",
+                }}
+              >
+              {/* <Radio.Group>
+                <Radio.Button value="edit" ><EditOutlined /> Edit company </Radio.Button>
+                <Radio.Button value="delete" danger><DeleteOutlined /> Delete company</Radio.Button>
+              </Radio.Group> */}
+                  <Button disabled={Actionstate} onClick={() => generateUpdateformdata()}> <EditOutlined /> Edit company</Button>
+              </Col>
+              <Col  span={12} md={6}
+              
+                style={{
+                display: "flex",
+                  alignItems: "center",
+                justifyContent: "flex-end",
+                }}
               >
               {/* <Radio.Group>
                 <Radio.Button value="edit" ><EditOutlined /> Edit company </Radio.Button>
@@ -184,9 +193,7 @@ Company.nom_de_la_société &&
       onFinishFailed={onFinishFailed}
       // autoComplete="off"
     >
-<Tabs defaultActiveKey="1" centred tabBarExtraContent={Edited ? <Button onClick={() => generateUpdateformdata()}> <EditOutlined /> Edit company's informations</Button>:(<> 
-  <Button  type="primary" onClick={() => updateCompany()}> <SaveFilled  /> Save</Button>
-     <Button onClick={() => setEdited(true)}> Cancel</Button></>)}>
+<Tabs defaultActiveKey="1">
     <Tabs.TabPane tab="General Information" key="1">
       <Descriptions layout="vertical">
         <Descriptions.Item label="Company name">{Company?!Edited?
@@ -264,7 +271,9 @@ Company.nom_de_la_société &&
       </Select>
       </Form.Item>:Company.type_industrie:""}</Descriptions.Item>
         <Descriptions.Item label="Address">
-        {Company?!Edited?<Form.Item
+        {Company?!Edited?
+        
+        <Form.Item
 
         name="address"
         rules={[
@@ -275,7 +284,9 @@ Company.nom_de_la_société &&
         ]}
       >
         <Input onChange={(e)=>setUpdateData({ ...UpdateData,adresse:e.target.value})} defaultValue={UpdateData.adresse} />
-      </Form.Item>:Company.adresse:""}
+      </Form.Item>
+      
+      :Company.adresse:""}
         </Descriptions.Item>
         <Descriptions.Item label="City">{Company?!Edited?<Form.Item
 

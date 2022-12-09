@@ -28,6 +28,7 @@ import {
   Switch,
   Select,
 Divider,
+message
 } from "antd";
 
 import {
@@ -265,16 +266,67 @@ function Header({
   handleSidenavType,
   handleFixedNavbar,
 }) {
-  const {Companies,setCompanies,Company,setCompany}=useContext(CompanyContext);
+  const {TempCompany,setTempCompany,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const history = useHistory();
-  useEffect(()=>{getCompanies();},[]);
-  const getCompanies = async () =>{
+  useEffect(()=>{getalltablesdata();},[]);
+
+  const getalltablesdata = async () =>{
     await axios.get(`${JSON_API}/companies`)
     .then((response) => {
       setCompanies(response.data);
     })
+    await axios.get(`${JSON_API}/type_industry`)
+    .then((response) => {
+      setTypeIndustries(response.data);  
+      console.log("TypeIndustries:"+TypeIndustries);
+    })
+    // TypeIndustries.map((e)=>(console.log("TypeIndustries:"+e.id)))
+    await axios.get(`${JSON_API}/type_industry`)
+    .then((response) => {
+      setTypeIndustries(response.data);  
+      console.log("TypeIndustries:"+TypeIndustries);
+    })
+    await axios.get(`${JSON_API}/market`)
+    .then((response) => {
+      setMarket(response.data);  
+      console.log("TypeIndustries:"+Market);
+    })
+    await axios.get(`${JSON_API}/revenue_model`)
+    .then((response) => {
+      setRevenueModel(response.data);  
+    })
+    await axios.get(`${JSON_API}/main_customer`)
+    .then((response) => {
+      setMainCustomer(response.data);  
+    })
+    await axios.get(`${JSON_API}/business_partner`)
+    .then((response) => {
+      setBusinessPartner(response.data);  
+    })
+    await axios.get(`${JSON_API}/strategic_target`)
+    .then((response) => {
+      setStrategicTarget(response.data);  
+    })
+    await axios.get(`${JSON_API}/activity_type`)
+    .then((response) => {
+      setActivityType(response.data);  
+    })
+    await axios.get(`${JSON_API}/product`)
+    .then((response) => {
+      setProduct(response.data);  
+    })
+    await axios.get(`${JSON_API}/shareholders`)
+    .then((response) => {
+      setShareHolders(response.data);  
+    })
+    await axios.get(`${JSON_API}/shares`)
+    .then((response) => {
+      setShares(response.data);  
+    })
   };
+
 function CustomButton() {
   
   console.log("logout  clicked ");
@@ -288,12 +340,25 @@ function addCompany() {
   history.push(path);    
 }
 const onChange = async (value) => {
+
   console.log(`selected ${value}`);
+
   await axios.get(`${JSON_API}/companies/${value}`)
   .then((response) => {
     setCompany(response.data);
+    setActionstate(false);
     console.log("info of this company", Company)
   })
+
+
+  messageApi
+  .open({
+    type: 'loading',
+    content: 'Switching Company in progress..',
+    duration: 0.5,
+  })
+  .then(() => message.success('Loading finished', 2))
+
 };
   const { Title, Text } = Typography;
 
@@ -307,6 +372,7 @@ const onChange = async (value) => {
 
   return (
     <>
+    {contextHolder}
       <Row gutter={[24, 0]}>
         <Col span={24} md={6}>
           <Breadcrumb>
@@ -328,6 +394,7 @@ const onChange = async (value) => {
         </Col> 
         <Col span={24} md={12}>
             <Select
+              disabled={!Edited}
               placeholder="Select and Access Company Information:"
               style={{width:350}}
               block

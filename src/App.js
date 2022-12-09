@@ -18,14 +18,32 @@ import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import RouteGuard from './components/layout/RouteGuard';
 import OrderBookDetails from "./pages/OrderBookDetails";
+import Testpage from "./pages/Testpage";
+import UpdateCompany from "./pages/UpdateCompany";
 
 function App() {
   const [Company,setCompany]=useState({});
   const [Companies,setCompanies]=useState([{}]);
 
+  const[TempCompany,setTempCompany]=useState({});
+
+  const [Actionstate,setActionstate]=useState(true);
+  const [Edited,setEdited]=useState(true);
+
+  const [TypeIndustries,setTypeIndustries]=useState([{}]);
+  const [Market,setMarket]=useState([{}]);
+  const [RevenueModel,setRevenueModel]=useState([{}]);
+  const [MainCustomer,setMainCustomer]=useState([{}]);
+  const [BusinessPartner,setBusinessPartner]=useState([{}]);
+  const [StrategicTarget,setStrategicTarget]=useState([{}]);
+  const [ActivityType,setActivityType]=useState([{}]);
+  const [Product,setProduct]=useState([{}]);
+  const [ShareHolders,setShareHolders]=useState([{}]);
+  const [Shares,setShares]=useState([{}]);
+
   return (
     <div className="App">
-      <CompanyContext.Provider value={{Companies,setCompanies,Company,setCompany}}>
+      <CompanyContext.Provider value={{TempCompany,setTempCompany,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}}>
       <Switch>
         
         <Route path="/sign-in" exact component={SignIn} />
@@ -40,7 +58,9 @@ function App() {
         <RouteGuard exact path='/orderbookdetails/:id'><OrderBookDetails /></RouteGuard>
         <RouteGuard exact path='/generalinformations'><GeneralInformations /></RouteGuard>
         <RouteGuard exact path='/addcompany'><AddCompany /></RouteGuard>
+        <RouteGuard exact path='/updatecompany'><UpdateCompany /></RouteGuard>
         <RouteGuard exact path='/comingsoon'><ComingSoon /></RouteGuard>
+        <RouteGuard exact path='/testpage'><Testpage /></RouteGuard>
 
         <RouteGuard exact path='/generalinformations/:id'><Details /></RouteGuard>
 
