@@ -9,6 +9,7 @@ import BgProfile from "../assets/images/bg-profile.jpg";
 import { CompanyContext } from '../contexts/CompanyContext';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { useTranslation } from 'react-i18next';
 dayjs.extend(customParseFormat);
 
 const { TextArea } = Input;
@@ -21,8 +22,8 @@ const { Meta } = Card;
 
 const GeneralInformations = () => {
   const history = useHistory();
-
-  const {Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
+  let {t} =useTranslation();
+  const {Lang,setLang,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
 
   const showDeleteConfirm = () => {
     confirm({
@@ -203,7 +204,7 @@ Company.name &&
     <Tabs.TabPane tab="General Information" key="1">
 
       <Descriptions  bordered size={"small"}>
-        <Descriptions.Item label="Company name">{Company.name?Company.name:""}</Descriptions.Item>
+        <Descriptions.Item label={t("company name")}>{Company.name?Company.name:""}</Descriptions.Item>
         <Descriptions.Item label="Business number">{Company.businessNumber?Company.businessNumber:""}</Descriptions.Item>
         <Descriptions.Item label="Type of industry">{Company.industryTypes&&Company.industryTypes.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
         <Descriptions.Item label="Address">{Company.address?Company.address:""}</Descriptions.Item>

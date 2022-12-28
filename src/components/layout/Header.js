@@ -266,8 +266,13 @@ function Header({
   handleSidenavType,
   handleFixedNavbar,
 }) {
-  const {TempCompany,setTempCompany,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
+  const {Lang,setLang,TempCompany,setTempCompany,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
   const [messageApi, contextHolder] = message.useMessage();
+
+  const handleChangeLang = (value)=>{
+    setLang(value);
+    // console.log(Lang);
+  }
 
   const history = useHistory();
   useEffect(()=>{getalltablesdata();},[]);
@@ -511,6 +516,23 @@ const onChange = async (value) => {
                 ))}
 
               </Select>
+              <Select
+                defaultValue="en"
+                style={{
+                  width: 120,
+                }}
+                onChange={handleChangeLang}
+                options={[
+                  {
+                    value: 'fr',
+                    label: 'Français',
+                  },
+                  {
+                    value: 'en',
+                    label: 'English',
+                  },
+                ]}
+              />
         </Col>
         <Col span={12} md={3}>
             <Button type="link" block onClick={()=>addCompany()} icon={<PlusOutlined />} style={{padding:0}}>

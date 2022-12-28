@@ -1,11 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { Layout, Drawer, Affix } from "antd";
 import Sidenav from "./Sidenav";
 import Header from "./Header";
 import Footer from "./Footer";
+import { CompanyContext } from '../../contexts/CompanyContext';
+
+import  i18n  from "i18next";
+import { initReactI18next } from "react-i18next";
+import Backend from "i18next-http-backend";
 
 const { Header: AntHeader, Content, Sider } = Layout;
+
+
+
 
 function Main({ children }) {
   const [visible, setVisible] = useState(false);
@@ -13,6 +21,8 @@ function Main({ children }) {
   const [sidenavColor, setSidenavColor] = useState("#1890ff");
   const [sidenavType, setSidenavType] = useState("transparent");
   const [fixed, setFixed] = useState(false);
+  const {Lang,setLang}=useContext(CompanyContext);
+
 
   const openDrawer = () => setVisible(!visible);
   const handleSidenavType = (type) => setSidenavType(type);
@@ -22,10 +32,30 @@ function Main({ children }) {
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
 
-
+  i18n.use(initReactI18next).init({
+    resources:{
+      en:{
+        translation:{
+          "company name":"Company name",
+          
+        }
+      },
+      fr:{
+        translation:{
+          "company name":"Nom de company"
+        }
+      }
+    },
+    lng:Lang,
+    fallbacklng:"en",
+    debug:true,
+    interpolation:{
+      escapeValue:false,
+    },
+  })
 
   useEffect(() => {
-    
+
     if (pathname === "rtl") {
       setPlacement("left");
     } else {

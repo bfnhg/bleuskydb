@@ -40,10 +40,11 @@ function App() {
   const [Product,setProduct]=useState([{}]);
   const [ShareHolders,setShareHolders]=useState([{}]);
   const [Shares,setShares]=useState([{}]);
+  const [Lang,setLang]=useState("en");
 
   return (
     <div className="App">
-      <CompanyContext.Provider value={{TempCompany,setTempCompany,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}}>
+      <CompanyContext.Provider value={{Lang,setLang,TempCompany,setTempCompany,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}}>
       <Switch>
         
         <Route path="/sign-in" exact component={SignIn} />
