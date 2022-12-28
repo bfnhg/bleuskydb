@@ -307,5 +307,83 @@
       "shareholder": 1,
       "share": 3
     }
+  ],
+  "orderbook": [
+    {
+      "id": 1,
+      "name": "order book 10000"
+    },
+    {
+      "id": 2,
+      "name": "orderbook 49877"
+    },
+    {
+      "id": 3,
+      "name": "orderbook"
+    },
+    {
+      "id": 4,
+      "name": "test"
+    },
+    {
+      "id": 5,
+      "name": "order book marwa"
+    }
+  ],
+  "customer": [
+    {
+      "id": 1,
+      "name": "customer 1"
+    },
+    {
+      "id": 2,
+      "name": "customer 2"
+    }
+  ],
+  "orderdetail": [
+    {
+      "orderbookId": 2,
+      "customerId": 2,
+      "startDate": "2022-12-01T23:43:12.389Z",
+      "description": "cfffffffffxc",
+      "id": 3,
+      "costdetails": {
+        "costPerDay": 109,
+        "januaryCost": 4,
+        "februaryCost": 32,
+        "marchCost": 188,
+        "aprilCost": 0,
+        "mayCost": 0,
+        "juneCost": 17,
+        "julyCost": 0,
+        "augustCost": 0,
+        "septemberCost": 0,
+        "octoberCost": 0,
+        "novemberCost": 132,
+        "decemberCost": 3367
+      }
+    },
+    {
+      "orderbookId": 2,
+      "customerId": 1,
+      "startDate": "2022-12-01T23:43:12.389Z",
+      "description": "wwwwwwfffxc",
+      "id": 4,
+      "costdetails": {
+        "costPerDay": 89,
+        "januaryCost": 3,
+        "februaryCost": 32,
+        "marchCost": 988,
+        "aprilCost": 0,
+        "mayCost": 0,
+        "juneCost": 1288,
+        "julyCost": 0,
+        "augustCost": 0,
+        "septemberCost": 0,
+        "octoberCost": 0,
+        "novemberCost": 0,
+        "decemberCost": 3367
+      }
+    }
   ]
 }

@@ -201,37 +201,26 @@ function Sidenav({ color }) {
             <span className="label">Strategic Planning</span>
           </NavLink>
         </Menu.Item>
-        {/* <Menu.Item key="4">
-          <NavLink to="/rtl">
-            <span
-              className="icon"
-              style={{
-                background: page === "rtl" ? color : "",
-              }}
-            >
-              {rtl}
-            </span>
-            <span className="label">RTL</span>
-          </NavLink>
-        </Menu.Item> */}
-        <Menu.Item className="menu-item-header" key="5">
+
+        <Menu.Item className="menu-item-header" key="10">
         Sales
         </Menu.Item>
-        <Menu.Item key="3">
-          <NavLink to="/salesorderbook">
+        <Menu.Item key="4">
+          <NavLink to="/orderbook">
           <span
               className="icon"
               style={{
                 background:"",
               }}
             >
-                          {/* <LoadingOutlined /> */}
+    <LoadingOutlined />
 
             </span>
             <span className="label">Order Book</span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="3">
+        
+        <Menu.Item key="5">
           <NavLink to="/ComingSoon">
           <span
               className="icon"
@@ -241,10 +230,10 @@ function Sidenav({ color }) {
             >            <LoadingOutlined />
 
             </span>
-            <span className="label">Strategic Planning</span>
+            <span className="label">Opportunities</span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item className="menu-item-header" key="5">
+        {/* <Menu.Item className="menu-item-header" key="5">
         Revenue
         </Menu.Item>
         <Menu.Item key="8">
@@ -690,7 +679,7 @@ function Sidenav({ color }) {
             </span>
             <span className="label">Settings</span>
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
 
 

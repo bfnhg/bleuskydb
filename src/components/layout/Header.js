@@ -266,65 +266,170 @@ function Header({
   handleSidenavType,
   handleFixedNavbar,
 }) {
-  const {TempCompany,setTempCompany,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
+  const {TempCompany,setTempCompany,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
   const [messageApi, contextHolder] = message.useMessage();
 
   const history = useHistory();
   useEffect(()=>{getalltablesdata();},[]);
 
   const getalltablesdata = async () =>{
-    await axios.get(`${JSON_API}/companies`)
+    await axios.get(`${JSON_API}/Enterprises`)
     .then((response) => {
       setCompanies(response.data);
-    })
-    await axios.get(`${JSON_API}/type_industry`)
+      console.log("Companies:",Companies);
+
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+
+    await axios.get(`${JSON_API}/IndustryTypes`)
     .then((response) => {
       setTypeIndustries(response.data);  
-      console.log("TypeIndustries:"+TypeIndustries);
-    })
+      console.log("TypeIndustries:",TypeIndustries);
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
     // TypeIndustries.map((e)=>(console.log("TypeIndustries:"+e.id)))
-    await axios.get(`${JSON_API}/type_industry`)
-    .then((response) => {
-      setTypeIndustries(response.data);  
-      console.log("TypeIndustries:"+TypeIndustries);
-    })
-    await axios.get(`${JSON_API}/market`)
+   
+    await axios.get(`${JSON_API}/Markets`)
     .then((response) => {
       setMarket(response.data);  
-      console.log("TypeIndustries:"+Market);
-    })
-    await axios.get(`${JSON_API}/revenue_model`)
+      console.log("Market:",Market);
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+    await axios.get(`${JSON_API}/RevenueModelItems`)
     .then((response) => {
       setRevenueModel(response.data);  
-    })
-    await axios.get(`${JSON_API}/main_customer`)
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+    await axios.get(`${JSON_API}/MainCustomers`)
     .then((response) => {
       setMainCustomer(response.data);  
-    })
-    await axios.get(`${JSON_API}/business_partner`)
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+    await axios.get(`${JSON_API}/BusinessPartners`)
     .then((response) => {
       setBusinessPartner(response.data);  
-    })
-    await axios.get(`${JSON_API}/strategic_target`)
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+    await axios.get(`${JSON_API}/StrategicTargets`)
     .then((response) => {
       setStrategicTarget(response.data);  
-    })
-    await axios.get(`${JSON_API}/activity_type`)
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+    await axios.get(`${JSON_API}/ActivityTypes`)
     .then((response) => {
       setActivityType(response.data);  
-    })
-    await axios.get(`${JSON_API}/product`)
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+    await axios.get(`${JSON_API}/Products`)
     .then((response) => {
       setProduct(response.data);  
-    })
-    await axios.get(`${JSON_API}/shareholders`)
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+    await axios.get(`${JSON_API}/ShareHolders`)
     .then((response) => {
       setShareHolders(response.data);  
-    })
-    await axios.get(`${JSON_API}/shares`)
-    .then((response) => {
-      setShares(response.data);  
-    })
+    }).catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
   };
 
 function CustomButton() {
@@ -343,21 +448,20 @@ const onChange = async (value) => {
 
   console.log(`selected ${value}`);
 
-  await axios.get(`${JSON_API}/companies/${value}`)
+  messageApi.open({
+    type: 'loading',
+    content: 'Switching Company in progress..',
+    duration: 0,
+  });
+
+  await axios.get(`${JSON_API}/Enterprises/${value}`)
   .then((response) => {
     setCompany(response.data);
     setActionstate(false);
+    setTimeout(messageApi.destroy);
     console.log("info of this company", Company)
-  })
 
-
-  messageApi
-  .open({
-    type: 'loading',
-    content: 'Switching Company in progress..',
-    duration: 0.5,
-  })
-  .then(() => message.success('Loading finished', 2))
+  }).then(() => message.success('Loading finished', 2));
 
 };
   const { Title, Text } = Typography;
@@ -402,7 +506,7 @@ const onChange = async (value) => {
               >
                 {Companies.map((company)=>(
 
-              company&&<Option value={company.id}>{company.nom_de_la_société}</Option>
+              company&&<Option value={company.id}>{company.name} N°{company.businessNumber}</Option>
 
                 ))}
 

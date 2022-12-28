@@ -1,4 +1,4 @@
-import { Radio,Card,DatePicker,Select,Divider,Typography,Row,Col,Button,Descriptions,Modal,Avatar,Tabs, Form, Input  } from 'antd';
+import { Radio,Card,DatePicker,Select,Divider,Typography,Row,Col,Button,Descriptions,Modal,Avatar,Tabs, Form, Input,Tag  } from 'antd';
 import axios from 'axios';
 import React,{useState,useEffect, useContext} from 'react';
 import { Redirect,NavLink,useHistory } from 'react-router-dom';
@@ -7,6 +7,10 @@ import { ExclamationCircleOutlined,CaretRightOutlined,EditOutlined,SaveFilled,De
 import moment from 'moment';
 import BgProfile from "../assets/images/bg-profile.jpg";
 import { CompanyContext } from '../contexts/CompanyContext';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
 const { TextArea } = Input;
 const { confirm } = Modal;
 const { Title,Text } = Typography;
@@ -22,7 +26,7 @@ const GeneralInformations = () => {
 
   const showDeleteConfirm = () => {
     confirm({
-      title: `Are you sure you want to delete ${Company.nom_de_la_société} company ?`,
+      title: `Are you sure you want to delete ${Company.name} company ?`,
       icon: <ExclamationCircleOutlined />,
       okText: 'Yes',
       okType: 'danger',
@@ -39,7 +43,7 @@ const GeneralInformations = () => {
   };
   const [UpdateData,setUpdateData]=useState({
     id:"",
-    nom_de_la_société: "",
+    name: "",
           adresse: "",
           ville: "",
           province: "",
@@ -60,7 +64,7 @@ const GeneralInformations = () => {
           }
   });
   const deleteCompany = async () => {
-    await axios.delete(`${JSON_API}/companies/${Company.id}`)
+    await axios.delete(`${JSON_API}/Enterprises/${Company.id}`)
     .then((response) => alert("Company deleted successfully"))
     setCompany({});
     getCompanies();
@@ -80,9 +84,11 @@ const GeneralInformations = () => {
   };
 
 
-  useEffect(()=>{getCompanies();},[]);
+  // useEffect(()=>{getCompanies();},[]);
+
   const getCompanies = async () =>{
-    await axios.get(`${JSON_API}/companies`)
+
+    await axios.get(`${JSON_API}/Enterprises`)
     .then((response) => {
       setCompanies(response.data);
     })
@@ -95,12 +101,12 @@ const GeneralInformations = () => {
     console.log('Failed:', errorInfo);
   };
   const generateUpdateformdata = () => {
-    setEdited(false);
+    // setEdited(false);
     let path = `/updatecompany`; 
     history.push(path);
     // setUpdateData({
     //   id:Company.id,
-    //   nom_de_la_société: Company.nom_de_la_société,
+    //   name: Company.name,
     //   adresse:Company.adresse,
     //   ville: Company.ville,
     //   province: Company.province,
@@ -128,7 +134,7 @@ const GeneralInformations = () => {
     {
 
 
-Company.nom_de_la_société &&
+Company.name &&
 
 
 
@@ -136,10 +142,10 @@ Company.nom_de_la_société &&
 <Row justify="space-between" align="middle" > 
   <Col span={24} md={12} className="col-info">
                 <Meta
-                  avatar={<Avatar size={74} shape="square" style={{backgroundColor: '#f56a00',}}> {Company.nom_de_la_société} </Avatar>}
-                  title={Company.nom_de_la_société}
-                  description={Company.type_industrie.map((e)=>(
-                    TypeIndustries.map((type)=>(type.id===e&&"- "+type.label+". "))
+                  avatar={<Avatar size={74} shape="square" style={{backgroundColor: '#f56a00',}}> {Company.name} </Avatar>}
+                  title={Company.name}
+                  description={Company.industryTypes.map((e)=>(
+                    TypeIndustries.map((type)=> {  return (type.id===e.id&&<Tag>{type.label}</Tag> )})
                   ))}
                 />
                 </Col>
@@ -170,7 +176,7 @@ Company.nom_de_la_société &&
                 <Radio.Button value="edit" ><EditOutlined /> Edit company </Radio.Button>
                 <Radio.Button value="delete" danger><DeleteOutlined /> Delete company</Radio.Button>
               </Radio.Group> */}
-                  <Button danger onClick={showDeleteConfirm} ><DeleteOutlined /> Delete company</Button>
+                  <Button type='link' danger onClick={showDeleteConfirm} ><DeleteOutlined /> Delete company</Button>
               </Col>
               </Row>
   </Card>
@@ -195,260 +201,32 @@ Company.nom_de_la_société &&
     >
 <Tabs defaultActiveKey="1">
     <Tabs.TabPane tab="General Information" key="1">
-      <Descriptions layout="vertical">
-        <Descriptions.Item label="Company name">{Company?!Edited?
-        
-        <Form.Item
-        name="Company_name"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the company name!',
-          },
-        ]}
-      >
-        <Input onChange={(e)=>setUpdateData({ ...UpdateData,nom_de_la_société:e.target.value})} defaultValue={UpdateData.nom_de_la_société} />
-      </Form.Item>
-        
-        :Company.nom_de_la_société:""}</Descriptions.Item>
-        <Descriptions.Item label="Business number">{Company?!Edited?<Form.Item
 
-        name="Business_number"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the business number!',
-          },
-        ]}
-      >
-        <Input onChange={(e)=>setUpdateData({ ...UpdateData,numéro_entreprise:e.target.value})} defaultValue={UpdateData.numéro_entreprise}/>
-      </Form.Item>:Company.numéro_entreprise:""}</Descriptions.Item>
-        <Descriptions.Item label="Founding date">{Company?!Edited?<Form.Item
+      <Descriptions  bordered size={"small"}>
+        <Descriptions.Item label="Company name">{Company.name?Company.name:""}</Descriptions.Item>
+        <Descriptions.Item label="Business number">{Company.businessNumber?Company.businessNumber:""}</Descriptions.Item>
+        <Descriptions.Item label="Type of industry">{Company.industryTypes&&Company.industryTypes.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label="Address">{Company.address?Company.address:""}</Descriptions.Item>
+        <Descriptions.Item label="City">{Company.city?Company.city:""}</Descriptions.Item>
+        <Descriptions.Item label="Postal code">{Company.postalCode?Company.postalCode:""} </Descriptions.Item>
 
-        name="founding_date"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the founding date!',
-          },
-        ]}
-      >
-        <DatePicker onChange={(e)=>setUpdateData({ ...UpdateData,date_de_fondation:e.target.value})} defaultValue={moment(UpdateData.date_de_fondation,dateFormat)}/>
-      </Form.Item>:Company.date_de_fondation:""}</Descriptions.Item>
-        <Descriptions.Item label="Type of industry">{Company?!Edited?<Form.Item
-
-        name="Type_of_industry"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the type of industry!',
-          },
-        ]}
-      >
-        <Select placeholder="select the type of industry" onChange={(e)=>setUpdateData({ ...UpdateData,type_industrie:e.target.value})} defaultValue={UpdateData.type_industrie}>
-          <Option value="Administrations publiques">Public administration</Option>
-          <Option value="Agriculture, foresterie, pêche et chasse">Agriculture, forestry, fishing and hunting</Option>
-          <Option value="Arts, spectacles et loisirs">Arts, entertainment and recreation</Option>
-          <Option value="Autres services (sauf les administrations publiques)">Other services (except public administration)</Option>
-          <Option value="Commerce de détail">Retail business</Option>
-          <Option value="Commerce de gros">Wholesale</Option>
-          <Option value="Construction">Construction</Option>
-          <Option value="Extraction minière, exploitation en carrière, et extraction de pétrole et de gaz">Mining, quarrying, and oil and gas extraction</Option>
-          <Option value="Fabrication">Manufacturing</Option>
-          <Option value="Finance et assurances">Finance and insurance</Option>
-          <Option value="Gestion de sociétés et d’entreprises">Management of companies and enterprises</Option>
-          <Option value="Hébergement et services de restauration">Accommodation and food services</Option>
-          <Option value="Industrie de l’information et industrie culturelle">Information industry and cultural industry</Option>
-          <Option value="Services administratifs, services de soutien, services de gestion des déchets et services d’assainissement">Administrative services, support services, waste management services and remediation services</Option>
-          <Option value="Services d’enseignement">Educational services</Option>
-          <Option value="Services de restauration et débit de boisson">Food services and drinking establishments</Option>
-          <Option value="Services immobiliers et services de location et de location à bail">Real estate and rental and leasing services</Option>
-          <Option value="Services professionnels, scientifiques et techniques">Professional, scientific and technical services</Option>
-          <Option value="Services publics">Public services</Option>
-          <Option value="Soins de santé et assistance sociale">Health care and social assistance</Option>
-          <Option value="Transport et entreposage">Transport and storage</Option>
-          <Option value="Transport par camion">Transport by truck</Option>
-      </Select>
-      </Form.Item>:Company.type_industrie:""}</Descriptions.Item>
-        <Descriptions.Item label="Address">
-        {Company?!Edited?
-        
-        <Form.Item
-
-        name="address"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the address!',
-          },
-        ]}
-      >
-        <Input onChange={(e)=>setUpdateData({ ...UpdateData,adresse:e.target.value})} defaultValue={UpdateData.adresse} />
-      </Form.Item>
-      
-      :Company.adresse:""}
-        </Descriptions.Item>
-        <Descriptions.Item label="City">{Company?!Edited?<Form.Item
-
-        name="city"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the city!',
-          },
-        ]}
-      >
-        <Input onChange={(e)=>setUpdateData({ ...UpdateData,ville:e.target.value})} defaultValue={UpdateData.ville} />
-      </Form.Item>:Company.ville:""}</Descriptions.Item>
-        <Descriptions.Item label="Country">{Company?!Edited?<Form.Item
-
-        name="country"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the country!',
-          },
-        ]}
-      >
-        <Input onChange={(e)=>setUpdateData({ ...UpdateData,pays:e.target.value})} defaultValue={UpdateData.pays}/>
-      </Form.Item>:Company.pays:""}</Descriptions.Item>
-        <Descriptions.Item label="Province">{Company?!Edited?<Form.Item
-
-        name="province"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the province!',
-          },
-        ]}
-      >
-<Select placeholder="select the province" defaultValue={UpdateData.province} onChange={(e)=>setUpdateData({ ...UpdateData,province:e.target.value})}>
-        <Option value="ON">ON</Option>
-        <Option value="QC">QC</Option>
-        <Option value="NS">NS</Option>
-        <Option value="NB">NB</Option>
-        <Option value="MB">MB</Option>
-        <Option value="BC">BC</Option>
-        <Option value="SK">SK</Option>
-        <Option value="AB">AB</Option>
-        <Option value="NL">NL</Option>
-      </Select>      </Form.Item>:Company.province:""}</Descriptions.Item>
-        <Descriptions.Item label="Postal code">{Company?!Edited?<Form.Item
-
-        name="postal_code"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the postal code!',
-          },
-        ]}
-      >
-        <Input onChange={(e)=>setUpdateData({ ...UpdateData,code_postal:e.target.value})} defaultValue={UpdateData.code_postal} />
-      </Form.Item>:Company.code_postal:""}</Descriptions.Item>
-        <Descriptions.Item label="Year-end date">{Company?!Edited?<Form.Item
-
-        name="year-end_date"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the year-end date!',
-          },
-        ]}
-      >
-        <DatePicker />
-      </Form.Item>:Company.date_fin_exercice:""}</Descriptions.Item>
-        <Descriptions.Item label="Number of employees">{Company?!Edited?<Form.Item
-
-        name="employees_number"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the number of employees!',
-          },
-        ]}
-      >
-        <Input onChange={(e)=>setUpdateData({ ...UpdateData,nombre_employés:e.target.value})} defaultValue={UpdateData.nombre_employés}/>
-      </Form.Item>:Company.nombre_employés:""}</Descriptions.Item>
-        <Descriptions.Item label="Budget">{Company?!Edited?<Form.Item
-
-        name="budget"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the budget!',
-          },
-        ]}
-      >
-      <Select placeholder="select the budget" defaultValue={UpdateData.budget} onChange={(e)=>setUpdateData({ ...UpdateData,budget:e.target.value})}>
-        <Option value="50-100">50 - 100</Option>
-        <Option value="100-1000">100 - 1000</Option>
-        <Option value="+1000">+1000</Option>
-      </Select>      </Form.Item>:Company.budget:""}</Descriptions.Item>
-        <Descriptions.Item label="Taux d'imposition annuel estimé (%)">{Company?!Edited?<Form.Item
-
-        name="taux_imposition_annuel_estimé"
-        rules={[
-          {
-            required: true,
-            message: `Please input your Taux d'imposition annuel estimé!`,
-          },
-        ]}
-      >
-        <Input onChange={(e)=>setUpdateData({ ...UpdateData,taux_imposition_annuel_estimé:e.target.value})}  defaultValue={UpdateData.taux_imposition_annuel_estimé}/>
-      </Form.Item>:Company.taux_imposition_annuel_estimé:""}</Descriptions.Item>
+        <Descriptions.Item label="Founding date">{Company.startingDate?dayjs(Company.startingDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
+        <Descriptions.Item label="Year-end date">{Company.endDate?dayjs(Company.endDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
+        {/* <Descriptions.Item label="Country">{Company&&Company.pays}</Descriptions.Item> */}
+        {/* <Descriptions.Item label="Province">{Company&&Company.province}</Descriptions.Item> */}
+        <Descriptions.Item label="Number of employees">{Company.empoyeesCount?Company.empoyeesCount:""}</Descriptions.Item>
+        <Descriptions.Item label="Budget">{Company.budget?Company.budget:""}</Descriptions.Item>
+        <Descriptions.Item label="Estimated annual tax rate">{Company.taxes?(Company.taxes+"%"):""}</Descriptions.Item>
       </Descriptions>
+
     </Tabs.TabPane>
 
     <Tabs.TabPane tab="Target customers" key="2">
-      <Descriptions layout="vertical">
-        <Descriptions.Item label="Market">{Company.Target_customers?!Edited?<Form.Item
-
-        name="market"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the market!',
-          },
-        ]}
-      >
-        <TextArea rows={4}  maxLength={1000} defaultValue={UpdateData.Target_customers.market} onChange={(e)=>setUpdateData({ ...UpdateData.Target_customers,market:e.target.value})}/>
-      </Form.Item>:Company.Target_customers.market:""}</Descriptions.Item>
-        <Descriptions.Item label="The main customers">{Company.Target_customers?!Edited?<Form.Item
-
-        name="main_customers"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the main customers!',
-          },
-        ]}
-      >
-        <TextArea rows={4}  maxLength={1000} defaultValue={UpdateData.Target_customers.main_customers} onChange={(e)=>setUpdateData({ ...UpdateData.Target_customers,main_customers:e.target.value})}/>
-      </Form.Item>:Company.Target_customers.main_customers:""}</Descriptions.Item>
-        <Descriptions.Item label="Revenue model">{Company.Target_customers?!Edited?<Form.Item
-
-        name="revenue_model"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the revenue model!',
-          },
-        ]}
-      >
-        <TextArea rows={4}  maxLength={1000}  defaultValue={UpdateData.Target_customers.revenue_model} onChange={(e)=>setUpdateData({ ...UpdateData.Target_customers,revenue_model:e.target.value})}/>
-      </Form.Item>:Company.Target_customers.revenue_model:""}</Descriptions.Item>
-        <Descriptions.Item label="Business partners">{Company.Target_customers?!Edited?<Form.Item
-
-        name="business_partners"
-        rules={[
-          {
-            required: true,
-            message: 'Please input the Business partners!',
-          },
-        ]}
-      >
-        <TextArea rows={4}  maxLength={1000} defaultValue={UpdateData.Target_customers.business_partners} onChange={(e)=>setUpdateData({ ...UpdateData.Target_customers,business_partners:e.target.value})}/>
-      </Form.Item>:Company.Target_customers.business_partners:""}</Descriptions.Item>
+      <Descriptions bordered   size={"small"}>
+        <Descriptions.Item label="Market">{Company.markets&&Company.markets.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label="The main customers">{Company.mainCustomers&&Company.mainCustomers.map((e)=>{return (<Tag>{e.name}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label="Revenue model">{Company.revenueModelItems&&Company.revenueModelItems.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label="Business partners">{Company.businessPartners&&Company.businessPartners.map((e)=>{return (<Tag>{e.name}</Tag> )})}</Descriptions.Item>
       </Descriptions>
     </Tabs.TabPane>
 

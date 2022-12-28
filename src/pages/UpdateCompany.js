@@ -1,11 +1,12 @@
-import React,{useState,useEffect, useContext} from 'react';
+import React, { useState,useEffect,useContext } from "react";
 import axios from 'axios';
 import TutorialDataService from "../services/TutorialService";
 import { NavLink,useHistory } from 'react-router-dom';
 import {JSON_API} from '../services/Constants';
-import {PlusOutlined } from '@ant-design/icons';
+import {PlusOutlined,SettingOutlined } from '@ant-design/icons';
 import { CompanyContext } from '../contexts/CompanyContext';
-
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {
   DatePicker,
   AutoComplete,
@@ -23,8 +24,16 @@ import {
   Typography, 
   Divider,
   Space,
-  Modal
+  Modal ,
+  Table,
+  Popconfirm,
+  Tag,
+  Tabs,
+  message,
 } from 'antd';
+import TutorialService from "../services/TutorialService";
+dayjs.extend(customParseFormat);
+
 const { Panel } = Collapse;
 const { TextArea } = Input;
 const { Text, Title } = Typography;
@@ -32,92 +41,174 @@ const { Option } = Select;
 
   // needed of update
 const formItemLayout = {
+
   labelCol: {
-    xs: {
-      span: 24,
+      xs: { span: 24 },
+      sm: { span: 12 },
+      md: { span: 8 },
+      lg: { span: 8 } 
     },
-    sm: {
-      span: 8,
-    },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 16,
-    },
-  },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 12 },
+      md: { span: 12 },
+      lg: { span: 12 }
+    }
+
+
 };
 const tailFormItemLayout = {
+
   wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 8,
-    },
-  },
+      xs: { span: 24 },
+      sm: { span: 12, offset: 12 },
+      md: { span: 12, offset: 8 },
+      lg: { span: 12, offset: 8 } 
+    }
+
 };
 
   // needed of update
-const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
-  const [form] = Form.useForm();
-  console.log('data est '+ data.data);
-  return (
 
-        <Modal
-          open={open}
-          title={"Create a new "+data.data}
-          okText="Create"
-          cancelText="Cancel"
-          onCancel={onCancel}
-          onOk={() => {
-            form
-              .validateFields()
-              .then((values) => {
-                form.resetFields();
-                onCreate({values:values,url:data.url,data:data.data});
-              })
-              .catch((info) => {
-                console.log('Validate Failed:', info);
-              });
-          }}
-        >
+ 
+
        
-          <Form
-            form={form}
-            // layout="vertical"
-            name="form_in_modal"
-            // initialValues={{
-            //   modifier: 'public',
-            // }}
-          >
-            <Form.Item
-              name="label"
-              label="Label"
-              
-              rules={[
-                {
-                  required: true,
-                  message: `Please input the ${data.data} label!`,
-                },
-              ]}
-            >
-              <Input placeholder={data.data+" Label"}/>
-            </Form.Item>
-          </Form>
-    
-    
-        </Modal>    
-  );
-};
 const UpdateCompany = () => {
+  const {Companies,setCompanies,Company,Actionstate,setActionstate,Edited,setEdited}=useContext(CompanyContext);
 
+  const [shareHolderData, setShareHolderData] = useState([]);
+  const [ManagerbyId, setManagerbyId] = useState({});
+
+  const [ManagerData, setManagerData] = useState([]);
+  // new Date().toLocaleDateString('en-US')
+  const [Cdate, setDate] = useState();
+
+  const [count, setCount] = useState(2);
   
-const {Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited}=useContext(CompanyContext);
+  const handleshareholderDelete = (id) => {
+    const newData = shareHolderData.filter((item) => item.id !== id);
+    setShareHolderData(newData);
+    console.log('after delete',shareHolderData);
+  };
+  const handlemanagerDelete = (id) => {
+    const newData = ManagerData.filter((item) => item.id !== id);
+    setManagerData(newData);
+    console.log('after delete',ManagerData);
+  };
+  const defaultshareholderColumns = [
+    {
+      title: 'Id',
+      dataIndex: 'id',
+    },
+    {
+      title: 'Shareholder name',
+      dataIndex: 'name',
+      width: '30%',
+    },
+    {
+      title: 'Shares',
+      dataIndex: 'shares',
+      render: (_, record) =>(
+          <>{record.shares}%</>
+        )
+    },
+    {
+      title: 'Start date',
+      dataIndex: 'startedAt',
+      render: (_, record) =>(
+          <>{dayjs(record.startedAt).format('YYYY/MM/DD')}</>
+        )
+    },
+    {
+      title: 'operation',
+      dataIndex: 'operation',
+      render: (_, record) =>
+        shareHolderData.length >= 1 ? (
+          <Popconfirm title="Sure to delete?" onConfirm={() => handleshareholderDelete(record.id)}>
+            <a>Delete</a>
+          </Popconfirm>
+        ) : null,
+    },
+  ];
+  const defaultmanagerColumns = [
+    {
+      title: 'Id',
+      dataIndex: 'id',
+    },
+    {
+      title: 'Lastname',
+      dataIndex: 'name',
+      width: '30%',
+    },
+    {
+      title: 'Firstname',
+      dataIndex: 'firstName',
+    },
+    // {
+    //   title: 'Titles',
+    //   dataIndex: 'titles',
+    //   render:(titles) => (
+    //     ManagerData.map((title) => (
+    //         <Tag color="blue" key={title}>
+    //           {title}
+    //         </Tag>
+    //       ))
+    //   )
+    // },
+    {
+      title: 'Years of Experience',
+      dataIndex: 'yearsofExperience',
+    },
+    {
+      title: 'operation',
+      dataIndex: 'operation',
+      render: (_, record) =>
+      ManagerData.length >= 1 ? (
+          <Popconfirm title="Sure to delete?" onConfirm={() => handlemanagerDelete(record.id)}>
+            <a>Delete</a>
+          </Popconfirm>
+        ) : null,
+    },
+  ];
+  const shareholdercolumns = defaultshareholderColumns.map((col) => {
+    // if (!col.editable) {
+      return col;
+    // }
+    // return {
+    //   ...col,
+    //   onCell: (record) => ({
+    //     record,
+    //     editable: col.editable,
+    //     dataIndex: col.dataIndex,
+    //     title: col.title,
+    //     handleSave,
+    //   }),
+    // };
+  });
+  const managercolumns = defaultmanagerColumns.map((col) => {
+      return col;
+  });
+  // const handleAdd = () => {
+  //   const newData = {
+  //     key: count,
+  //     name: `Edward King ${count}`,
+  //     age: '32',
+  //     address: `London, Park Lane no. ${count}`,
+  //   };
+  //   setShareHolderData([...shareHolderData, newData]);
+  //   setCount(count + 1);
+  // };
+  // const handleSave = (row) => {
+  //   const newData = [...shareHolderData];
+  //   const index = newData.findIndex((item) => row.key === item.key);
+  //   const item = newData[index];
+  //   newData.splice(index, 1, {
+  //     ...item,
+  //     ...row,
+  //   });
+  //   setShareHolderData(newData);
+  // };
+
     // needed of update
 const [TypeIndustries,setTypeIndustries]=useState([{}]);
 const [Market,setMarket]=useState([{}]);
@@ -128,56 +219,538 @@ const [StrategicTarget,setStrategicTarget]=useState([{}]);
 const [ActivityType,setActivityType]=useState([{}]);
 const [Product,setProduct]=useState([{}]);
 const [ShareHolders,setShareHolders]=useState([{}]);
+const [Managers,setManagers]=useState([{}]);
+const [Titles,setTitles]=useState([{}]);
+const [TitlesData,setTitlesData]=useState([{}]);
+const [Datestart,setDatestart]=useState();
+const [Dateend,setDateend]=useState();
 
+const[Tabkey,setTabkey]=useState("1");
+const onTabChange = (key) => {
+  setTabkey(key);
+  console.log(Tabkey);
+};
+const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
+  const [form] = Form.useForm();
+  console.log("open state"+open);
+  console.log('data est ', data);
+  {
+    return ["Shareholder","Main customers","Business partners","Strategic Target"].includes(data.data)?
+      <Modal
+        open={open}
+        title={"Create a new "+data.data}
+        okText="Create"
+        cancelText="Cancel"
+        onCancel={onCancel}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              form.resetFields();
+              onCreate({values:values,url:data.url,data:data.data});
+            })
+            .catch((info) => {
+              console.log('Validate Failed:', info);
+            });
+        }}
+      >
+        <Form
+        form={form}
+        // layout="vertical"
+        name="form_in_modal"
+        // initialValues={{
+        //   modifier: 'public',
+        // }}
+      >
+        <Form.Item
+          name="name"
+          label="Name"
+          
+          rules={[
+            {
+              required: true,
+              message: `Please input the ${data.data} name!`,
+            },
+          ]}
+        >
+          <Input placeholder={data.data+"  name"}/>
+        </Form.Item>
+      </Form>
+      </Modal> 
+      :data.data==="Managers"?
+      <Modal
+        open={open}
+        title={"Create a new manager"}
+        okText="Create"
+        cancelText="Cancel"
+        onCancel={onCancel}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              form.resetFields();
+              onCreate({values:values,url:data.url,data:data.data});
+            })
+            .catch((info) => {
+              console.log('Validate Failed:', info);
+            });
+        }}
+      >
+      <Form
+        form={form}
+         layout="vertical"
+        name="form_in_modal"
+        // initialValues={{
+        //   modifier: 'public',
+        // }}
+      >
+        <Form.Item
+          name="name"
+          label="Lastname"
+          
+          rules={[
+            {
+              required: true,
+              message: `Please input the manager lastname!`,
+            },
+          ]}
+        >
+          <Input placeholder={data.data+"  lastname"}/>
+        </Form.Item>
+        <Form.Item
+          name="firstName"
+          label="Firstname"
+          
+          rules={[
+            {
+              required: true,
+              message: `Please input the manager firstname!`,
+            },
+          ]}
+        >
+          <Input placeholder={data.data+"  firstname"}/>
+        </Form.Item>
+
+      <Form.Item
+          name="titles"
+          label="Titles"
+          
+        >
+        <Select mode="multiple" allowClear placeholder="select manager's titles" size={'large'} onChange={titlesState}>
+            {Titles.map((e)=>(
+
+              e&&<Option value={e.id}>{e.label}</Option>
+
+            ))}
+        </Select>
+      
+      </Form.Item>
+     
+
+      <Form.Item
+        name="yearsofexperience"
+        label="Years of experience"
+      >
+        <InputNumber
+          // disabled={SHselected}
+          min={0}
+          max={100}
+          size={'large'}
+        />
+
+      </Form.Item>
+      </Form>
+      </Modal>
+       :data.data==="Title"?
+       <Modal
+            open={open}
+            title={Tabkey=='1'?"Create a new title":"Edit titles"}
+            okText={Tabkey=='1'?"Create":"Save"}
+            cancelText="Cancel"
+            onCancel={onCancel}
+            onOk={() => {
+              console.log(Tabkey);
+              if(Tabkey=="1"){
+              form
+                .validateFields()
+                .then((values) => {
+                  
+                  form.resetFields();
+                  
+                    onCreate({values:values,url:data.url,data:data.data});
+                  }
+                
+                )
+                .catch((info) => {
+                  console.log('Validate Failed:', info);
+                });
+              }else{
+                console.log("title updated");
+              }
+            }}
+            >
+      <Tabs
+       defaultActiveKey="1"
+       onChange={onTabChange}
+       items={[
+         {
+           label: 'Add title',
+           key: '1',
+           children: 
+            <Form
+            {...formItemLayout}
+            form={form}
+            // layout="vertical"
+            name="form_in_modal"
+            // initialValues={{
+            //   modifier: 'public',
+            // }}
+            >
+              
+            <Form.Item
+            name="label"
+            label="Label"
+            
+            rules={[
+              {
+                required: true,
+                message: `Please input the ${data.data} label!`,
+              },
+            ]}
+            >
+            <Input placeholder={data.data+"  label"}/>
+            </Form.Item>
+            </Form>
+            },
+            {
+              label: 'Edit Titles',
+              key: '2',
+              children: 'Tab 2',
+              disabled: true,
+            },
+          ]}
+        />
+            </Modal> 
+        
+       
+       :
+
+      <Modal
+      open={open}
+      title={"Create a new "+data.data}
+      okText="Create"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onCreate({values:values,url:data.url,data:data.data});
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+      >
+
+      <Form
+                        {...formItemLayout}
+      form={form}
+      // layout="vertical"
+      name="form_in_modal"
+      // initialValues={{
+      //   modifier: 'public',
+      // }}
+      >
+        
+      <Form.Item
+      name="label"
+      label="Label"
+      
+      rules={[
+        {
+          required: true,
+          message: `Please input the ${data.data} label!`,
+        },
+      ]}
+      >
+      <Input placeholder={data.data+"  label"}/>
+      </Form.Item>
+      </Form>
+      </Modal> 
+  }
+};
+const [company, setCompany] = useState(Company);
 
     // needed of update
 useEffect(()=>{getData();},[]);
   const getData = async () =>{
 
-    await axios.get(`${JSON_API}/type_industry`)
+    setManagerData(company.managers);
+
+    const d= ShareHolders.filter(e=>e.id===shareHolderId);
+    setShareHolderData(company.shareHolders);
+
+    await axios.get(`${JSON_API}/IndustryTypes`)
     .then((response) => {
       setTypeIndustries(response.data);
-    })
+      console.log(TypeIndustries,'TypeIndustries');
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
-    await axios.get(`${JSON_API}/market`)
+    await axios.get(`${JSON_API}/Markets`)
     .then((response) => {
-      setMarket(response.data);
-    })
+      setMarket(response?.data);
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
-    await axios.get(`${JSON_API}/revenue_model`)
+    await axios.get(`${JSON_API}/RevenueModelItems`)
     .then((response) => {
       setRevenueModel(response.data);
-    })
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
-    await axios.get(`${JSON_API}/main_customer`)
+    await axios.get(`${JSON_API}/MainCustomers`)
     .then((response) => {
       setMainCustomer(response.data);
-    })
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
-    await axios.get(`${JSON_API}/business_partner`)
+    await axios.get(`${JSON_API}/BusinessPartners`)
     .then((response) => {
       setBusinessPartner(response.data);
-    })
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
-    await axios.get(`${JSON_API}/strategic_target`)
+    await axios.get(`${JSON_API}/StrategicTargets`)
     .then((response) => {
       setStrategicTarget(response.data);
-    })
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
-    await axios.get(`${JSON_API}/activity_type`)
+    await axios.get(`${JSON_API}/ActivityTypes`)
     .then((response) => {
       setActivityType(response.data);
-    })
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
-    await axios.get(`${JSON_API}/product`)
+    await axios.get(`${JSON_API}/Products`)
     .then((response) => {
       setProduct(response.data);
-    })
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
-    await axios.get(`${JSON_API}/shareholders`)
+    await axios.get(`${JSON_API}/ShareHolders`)
     .then((response) => {
       setShareHolders(response.data);
-    })
+      console.log('ShareHolders',ShareHolders);
+      const companyshareholders = ShareHolders.filter(o => {
+        let Found = false;
+        company.shareHolders.forEach(d=>{
+          if(d.id == o.id) Found = true;
+        });
+        return Found;
+        });
+
+   console.log("shareholders of company test",companyshareholders.filter(o=>{
+    let Found = false;
+    o.shares.forEach(d=>{
+      if(d.enterpriseId == company.id) Found = true;
+    });
+    return Found;
+  }))
+
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+
+    await axios.get(`${JSON_API}/Managers`)
+    .then((response) => {
+      setManagers(response.data);
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+
+    await axios.get(`${JSON_API}/Titles`)
+    .then((response) => {
+      setTitles(response.data);
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
   };
 
@@ -185,27 +758,64 @@ useEffect(()=>{getData();},[]);
    const [form] = Form.useForm();
     // needed of update
 const history = useHistory();
+const [shareHolderId,setShareHolderId]=useState();
+const [ManagerId,setManagerId]=useState();
 
+const filteredshareholderOptions = ShareHolders.filter(o => {
+  let notFound = true;
+  shareHolderData.forEach(d=>{
+    if(d.id == o.id) notFound = false;
+  });
+  return notFound;
+});
+
+const filteredmanagerOptions = Managers.filter(o => {
+  let notFound = true;
+  ManagerData.forEach(d=>{
+    if(d.id == o.id) notFound = false;
+  });
+  return notFound;
+});
+const [shareHolderShares,setShareHolderShares]=useState();
+const [Managerexp,setManagerexp]=useState();
+const [messageApi, contextHolder] = message.useMessage();
+
+const handleChange = (event) => {
+  // 👇 Get input value from "event"
+  console.log("test "+event.target.value)
+  // setShareHolderName(event.target.value);
+};
     // needed of update
 const [Open, setOpen] = useState({
     open:false,
-    url:"",
-    data:""
+    url:null,
+    data:null
   });
   // needed of update
   const onCreate = async ({values,url,data}) => {
-    console.log('Received values of form: ', data);
+    console.log('Received data of form: ', data);
+    console.log('Received values of form: ', values);
+    console.log('Received url of form: ', url);
+
 
     await axios.post(`${JSON_API}/${url}`,values)
     .then((response) => {
       getData();
-      console.log('values were added to' + data + " Successfully!");
+      console.log('values were added to ' + data + " Successfully!");
+
+      messageApi.open({
+        type: 'success',
+        content: 'values were added to ' + data + " Successfully!",
+      });
     })
     setOpen(false);
 
   };
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    console.log('Received manager data of form: ', ManagerData);
+    console.log('Received shareholder of form: ', shareHolderData);
+
   };
 
   const initialCompanyState = {
@@ -226,84 +836,157 @@ const [Open, setOpen] = useState({
     Target_customers:{},
 
   };
-      // needed of update
+   // needed of update
+    // needed of update
   const [submitted, setSubmitted] = useState(false);
+  
+  const addShareholderdata = () => {
+    if(shareHolderId){
+      console.log("before add:",shareHolderData)
 
+      const d= ShareHolders.filter(e=>e.id===shareHolderId);
+        setShareHolderData([...shareHolderData, {
+          id:d.length>0 && d[0].id,
+          name: d.length>0 && d[0].name,
+          shares:shareHolderShares&&shareHolderShares,
+          date:Cdate&&Cdate.date,
+          startedAt:Cdate&&Cdate.d
+        }]);
+    }
+        console.log("after add:",shareHolderData);
+  }
+
+  const addManagerdata = () => {
+
+   
+      const m= Managers.filter(e=>e.id===ManagerId);
+      console.log("m",m);
+
+      if(m){
+        setManagerData([...ManagerData, {
+          id:m[0].id,
+          name:m[0].name,
+          firstName:m[0].firstName,
+          titles:m[0].titles,
+          yearsofExperience:m[0].yearsofExperience,
+        }]);
+      }
+      
+
+       
+
+
+    console.log("manager id info:",m[0].id);
+    console.log("manager name info:",m[0].name);
+    console.log("manager firstname info:",m[0].firstName);
+    console.log("manager title info:",m[0].titles);
+    console.log("manager yearsofExperience info:",m[0].yearsofExperience);
+
+    console.log("ManagerData state:",ManagerData);
+
+    
+
+    
+
+  }
+
+  const displaydata=()=>{
+    console.log("shareHolderData:",shareHolderData);
+    console.log("datestart :",Datestart);
+
+
+  }
+
+  const titlesState = event => {
+    console.log(event);
+    // setTitlesData(event)
+  }
   const handleInputChange = event => {
     const { name, value } = event.target;
-    setCompany({ ...Company, [name]: value });
+    setCompany({ ...company, [name]: value });
   };
   
-      const saveCompany = (values) => {
+  const saveCompany = async(values) => {
 
+    console.log('Received values of form: ', values);
+    console.log('Received manager data of form: ', ManagerData);
+    console.log('Received shareholder of form: ', shareHolderData);
 
+    var companyinfo = {
+      id:company.id,
+      name: values.nom_de_la_société,
+      businessNumber: values.numéro_entreprise,
+      // budgetRange: values.budget,
+      startingDate: values.date_de_fondation,
+      endDate: values.date_fin_exercice,
+      empoyeesCount: values.nombre_employés,
+      address: values.adresse,
+      postalCode: values.code_postal,
+      // cityId: values.ville,
+      taxes: values.taux_imposition_annuel_estimé,
+      activityTypes: values.activity_type,
+      products: values.product,
+      mainCustomers: values.main_customers,
+      markets: values.market,
+      revenueModelItems: values.revenue_model,
+      businessPartners: values.business_partners,
+      industryTypes: values.type_industrie,
+      strategicTargets: values.strategic_target,
+      managers: ManagerData.map(i=>i.id),
+      shareHolders:shareHolderData.map(i=>{return{
+        shareHolderId:i.id,
+        shares: i.shares&&i.shares,
+        startedAt:i.startedAt
+      }})
 
-        var companies = {
-          nom_de_la_société: values.nom_de_la_société,
-          adresse: values.adresse,
-          ville: values.ville,
-          province: values.province,
-          code_postal: values.code_postal,
-          pays: values.pays,
-          date_de_fondation: values.date_de_fondation,
-          date_fin_exercice: values.date_fin_exercice,
-          numéro_entreprise: values.numéro_entreprise,
-          nombre_employés: values.nombre_employés,
-          type_industrie: values.type_industrie.map(i=>{return {id:i}}) ,
-          budget: values.budget,
-          taux_imposition_annuel_estimé: values.taux_imposition_annuel_estimé,
-          Target_customers:{ 
-            market:values.market,
-            main_customers:values.main_customers,
-            revenue_model:values.revenue_model,
-            business_partners:values.business_partners,
-          }
-           
+     
+        
 
-          
-        };
-        console.log('Received values of form: ', companies);
+      
+    };
+    console.log('Received values of form: ', companyinfo);
 
-        axios.post(`${JSON_API}/companies`,companies)
-        .then(response => {
-          setSubmitted(true);
-          console.log(response.data);
+    // axios.post(`${JSON_API}/Enterprises`,companyinfo)
+    // .then(response => {
+    //   setSubmitted(true);
+    //   console.log(response.data);
 
-        })
-        .catch(function (error) {
-          if (error.response) {
-           
-            console.log(error.toJSON());
-          } else if (error.request) {
-           
-            console.log(error.request);
-          } else {
-            console.log('Error', error.message);
-          }
-          console.log(error.config);
-        });
+    // })
+    // .catch(function (error) {
+    //   if (error.response) {
+        
+    //     console.log(error.toJSON());
+    //   } else if (error.request) {
+        
+    //     console.log(error.request);
+    //   } else {
+    //     console.log('Error', error.message);
+    //   }
+    //   console.log(error.config);
+    // });
 
-      };
+  };
     
       const newCompany = () => {
         setCompany(initialCompanyState);
         setSubmitted(false);
       };
       const gotoGI = () => {
-        setEdited(!Edited);
         let path = `/generalinformations`; 
         history.push(path);    
       };
       
   return (
 <>
+      {contextHolder}
+
       <CollectionCreateForm
         open={Open.open}
         onCreate={onCreate}
         onCancel={() => {
           setOpen({open:false,
-          url:"",
-          data:""});
+          url:null,
+          data:null});
         }}
         data={Open}
       />
@@ -311,8 +994,11 @@ const [Open, setOpen] = useState({
      
        <Result
        status="success"
-       title="Your Company has been updated successfully"
+       title="Your Company has been added successfully"
        extra={[
+         <Button type="primary" onClick={newCompany} key="console">
+           Add another company
+         </Button>,
          <Button type="link" onClick={gotoGI}>
          <span className="label">Return to General Informations</span>
        </Button>
@@ -320,42 +1006,42 @@ const [Open, setOpen] = useState({
      />
     ) : (
       
-
     <Form
-    {...formItemLayout}
-    form={form}
-    name="register"
-    onFinish={saveCompany}
-    initialValues={{
-      nom_de_la_société: Company.nom_de_la_société,
-      adresse: Company.adresse,
-      ville: Company.ville,
-      province: Company.province,
-      code_postal: Company.code_postal,
-      pays: Company.pays,
-      // date_de_fondation: Company.date_de_fondation,
-      // date_fin_exercice: Company.date_fin_exercice,
-      numéro_entreprise: Company.numéro_entreprise,
-      nombre_employés: Company.nombre_employés,
-      type_industrie: Company.type_industrie ,
-      budget: Company.budget,
-      taux_imposition_annuel_estimé: Company.taux_imposition_annuel_estimé,
-      Target_customers:{ 
-        market:Company.market,
-        main_customers:Company.main_customers,
-        revenue_model:Company.revenue_model,
-        business_partners:Company.business_partners,
-      }
-
-    }}
-    scrollToFirstError
-  >
+      form={form}
+      name="register"
+      onFinish={saveCompany}
+      initialValues={{
+        // residence: ['zhejiang', 'hangzhou', 'xihu'],
+        // prefix: '86',
+        nom_de_la_société:company.name,
+        numéro_entreprise:company.businessNumber,
+        budget:company.budgetRange,
+        date_de_fondation: dayjs(company.startingDate),
+        date_fin_exercice:dayjs(company.endDate),
+        nombre_employés:company.empoyeesCount,
+        adresse:company.address,
+        code_postal:company.postalCode,
+        ville:company.city,
+        taux_imposition_annuel_estimé:company.taxes,
+        activity_type:company.activityTypes.map(e=>e.id),
+        product:company.products.map(e=>e.id),
+        main_customers:company.mainCustomers.map(e=>e.id),
+        market:company.markets.map(e=>e.id),
+        revenue_model:company.revenueModelItems.map(e=>e.id),
+        business_partners:company.businessPartners.map(e=>e.id),
+        type_industrie:company.industryTypes.map(e=>e.id),
+        strategic_target:company.strategicTargets.map(e=>e.id)
+      }}
+      scrollToFirstError
+    >
     
 
-    <Title>Update Company: {Company.nom_de_la_société}</Title>
+    <Title>Update Company: {company.name}</Title>
+    <Text type="secondary">Please fill out the required fields below and click on the "Save" button to update your company's informations</Text>
     <Collapse defaultActiveKey={['1']}>
       <Panel header="General information" key="1">
             <Form.Item
+                  {...formItemLayout}
       name="nom_de_la_société"
       label="Company name"
        
@@ -371,21 +1057,29 @@ const [Open, setOpen] = useState({
       <Input />
     </Form.Item>
     <Form.Item
+          {...formItemLayout}
+
       name="adresse"
       label="Address"
            >
       <Input />
     </Form.Item>
+
     <Form.Item
-      name="ville"
-      label="City"
+          {...formItemLayout}
+
+      name="pays"
+      label="Country"
        
       // tooltip="What do you want others to call you?"
-  
+      
     >
       <Input />
     </Form.Item>
+
     <Form.Item
+          {...formItemLayout}
+
       name="province"
       label="Province"
        
@@ -405,6 +1099,22 @@ const [Open, setOpen] = useState({
     </Form.Item>
 
     <Form.Item
+          {...formItemLayout}
+
+      name="ville"
+      label="City"
+       
+      // tooltip="What do you want others to call you?"
+  
+    >
+      <Input />
+    </Form.Item>
+
+  
+
+    <Form.Item
+          {...formItemLayout}
+
       name="code_postal"
       label="Postal code"
        
@@ -412,56 +1122,71 @@ const [Open, setOpen] = useState({
       <Input />
     </Form.Item>
 
-    <Form.Item
-      name="pays"
-      label="Country"
-       
-      // tooltip="What do you want others to call you?"
-      
-    >
-      <Input />
-    </Form.Item>
+   
 
     <Form.Item
+          {...formItemLayout}
+
       name="date_de_fondation"
       label="Founding date"
-       
+     
       // tooltip="What do you want others to call you?"
       // validateStatus="error"
       // help="Please select right date"
     >
-        <DatePicker />
+        <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+      const d = new Date(date).toLocaleDateString('en-US');
+      console.log(d);
+      setDatestart(d);
+    }}/>
+
     </Form.Item>
 
     <Form.Item
+      {...formItemLayout}
 
       name="date_fin_exercice"
       label="Year-end date"
        
     >
-        <DatePicker />
+      <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+      const d = new Date(date).toLocaleDateString('en-US');
+      console.log(d);
+      setDateend(d);
+    }}/>
     </Form.Item>
  
     <Form.Item
+          {...formItemLayout}
+
       name="numéro_entreprise"
       label="Business Number"
-
+     
     >
       <Input />
     </Form.Item>
 
     <Form.Item
+          {...formItemLayout}
+
       name="nombre_employés"
       label="Number of employees"
-       
+      rules={[
+        {
+          type: 'number',
+          min: 0,
+          message: 'value cannot be less than 0',
+
+        },
+      ]}
 
     >
-      <Input />
+      <InputNumber />
     </Form.Item>
 
 
 
-    <Form.Item label="Type of industry">
+    <Form.Item label="Type of industry"       {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -483,7 +1208,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                 setOpen({open:true,
-                url:"type_industry",
+                url:"IndustryTypes",
                 data:"Type of industry"});
               }}
             >
@@ -501,10 +1226,12 @@ const [Open, setOpen] = useState({
     
    
     <Form.Item
+          {...formItemLayout}
+
       name="budget"
       label="budget"
        
-      // value={company.budget}
+      value={company.budget}
 
     >
       <Select placeholder="select the budget">
@@ -515,17 +1242,29 @@ const [Open, setOpen] = useState({
     </Form.Item>
 
     <Form.Item
+          {...formItemLayout}
+
       name="taux_imposition_annuel_estimé"
       label="Taux d'imposition annuel estimé(%)"
        
-      // value={company.taux_imposition_annuel_estimé}
+      value={company.taux_imposition_annuel_estimé}
+      rules={[
+        {
+          type: 'number',
+          min: 0,
+          max:100,
+          message: 'please enter a number between 0 and 100',
+
+        },
+      ]}
     >
-      <Input />
+      <InputNumber />
+   
     </Form.Item>
     </Panel>
     <Panel header="Target customers" key="2">
 
-    <Form.Item label="Market" >
+    <Form.Item label="Market"       {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -547,7 +1286,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                   setOpen({open:true,
-                  url:"market",
+                  url:"Markets",
                   data:"Market"});
                 }}
             >
@@ -558,7 +1297,7 @@ const [Open, setOpen] = useState({
         </Row>
       </Form.Item>
 
-      <Form.Item label="Main Customers">
+      <Form.Item label="Main Customers"       {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -581,7 +1320,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                   setOpen({open:true,
-                  url:"main_customer",
+                  url:"MainCustomers",
                   data:"Main customers"});
                 }}
             >
@@ -592,7 +1331,7 @@ const [Open, setOpen] = useState({
       </Form.Item>
 
     
-      <Form.Item label="Revenue Model" >
+      <Form.Item label="Revenue Model"       {...formItemLayout} >
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -614,7 +1353,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                   setOpen({open:true,
-                  url:"revenue_model",
+                  url:"RevenueModelItems",
                   data:"Revenue model"});
                 }}
             >
@@ -625,7 +1364,7 @@ const [Open, setOpen] = useState({
         </Row>
       </Form.Item>
     
-      <Form.Item label="Business partners">
+      <Form.Item label="Business partners"       {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -645,13 +1384,13 @@ const [Open, setOpen] = useState({
           </Col>
           <Col span={12}>
           <Button
-                type="link"
-                onClick={() => {
-                  setOpen({open:true,
-                  url:"business_partners",
-                  data:"Business partners"});
-                }}
-            >
+            type="link"
+            onClick={() => {
+              setOpen({open:true,
+              url:"BusinessPartners",
+              data:"Business partners"});
+            }}
+          >
             <PlusOutlined/> Add new business partner
           </Button>
      
@@ -662,7 +1401,7 @@ const [Open, setOpen] = useState({
 
       <Panel header="Description of services and products" key="3">
 
-      <Form.Item label="Strategic targets">
+      <Form.Item label="Strategic targets"       {...formItemLayout} >
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -685,7 +1424,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                   setOpen({open:true,
-                  url:"strategic_target",
+                  url:"StrategicTargets",
                   data:"Strategic Target"});
                 }}
             >
@@ -695,7 +1434,7 @@ const [Open, setOpen] = useState({
         </Row>
       </Form.Item>
 
-      <Form.Item label="Type of activities">
+      <Form.Item label="Type of activities"       {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -718,7 +1457,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                   setOpen({open:true,
-                  url:"activity_type",
+                  url:"ActivityTypes",
                   data:"Type of activities"});
                 }}
             >
@@ -728,7 +1467,7 @@ const [Open, setOpen] = useState({
         </Row>
       </Form.Item>
 
-      <Form.Item label="Products / Services">
+      <Form.Item label="Products / Services"       {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -751,7 +1490,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                   setOpen({open:true,
-                  url:"product",
+                  url:"Products",
                   data:"Products / Services"});
                 }}
             >
@@ -761,53 +1500,196 @@ const [Open, setOpen] = useState({
         </Row>
       </Form.Item>
       </Panel>
-      <Panel  header="Legal structure" key="4">
+      
+      <Panel header="Management team" key="4">
+      <Space
+        style={{
+          display: 'flex',
+          marginBottom: 8,
 
-      <Form.Item label="ShareHolders">
-        <Row gutter={8}>
-          <Col span={12}>
-            <Form.Item
-              name="shareholders"
-              label="ShareHolders"
-              noStyle
-            >
-              <Select mode="multiple" allowClear placeholder="select the shareholders" size={'large'} style={{ width: '100%', }}>
-                  {Product.map((e)=>(
+        }}
+        align="baseline"
+      >
 
-                    e&&<Option value={e.id}>{e.label}</Option>
-
-                  ))}
-              </Select>
-              </Form.Item>
-          </Col>
-
-          <Col span={12}>
-          <Button
-                type="link"
-                onClick={() => {
-                  setOpen({open:true,
-                  url:"product",
-                  data:"Products / Services"});
-                }}
-            >
-            <PlusOutlined/> Add new product / service
-          </Button>
-          </Col>
-        </Row>
+      <Form.Item
+        name="managers"
+        label="Managers"
+      >
+        <Select  
+          style={{
+            width: 200,
+          }}
+          size={'large'}
+          placeholder="Search to Select"
+          // optionFilterProp="children"
+          onChange={e=>setManagerId(e)}
+                // filterOption={(input, option) => (option?.label ?? '').includes(input)}
+          // filterSort={(optionA, optionB) =>
+          //   (optionA ?? '').toLowerCase().localeCompare((optionB ?? '').toLowerCase())
+          // }
+          options= {filteredmanagerOptions.map((item) => ({
+            value: item.id,
+            label: item.name+' '+item.firstName,
+          }))}
+        />
+          
       </Form.Item>
+
+      <Button
+          type="link"
+          onClick={() => {
+            setOpen({open:true,
+            url:"Managers",
+            data:"Managers"});
+          }}
+      >
+      <PlusOutlined/>
+      </Button>
+
+
+      <Button
+          type="link"
+          onClick={() => {
+            setOpen({open:true,
+            url:"Titles",
+            data:"Title"});
+          }}
+      >
+      <SettingOutlined /> Manage titles
+      </Button>
+      
+
+    <Form.Item name="add">
+      <Button  onClick={()=>addManagerdata()}>
+      <PlusOutlined/>Add manager
+      </Button>
+    </Form.Item>
+
+   
+      </Space>
+     {ManagerData.length>0&&<Table
+        rowClassName={() => 'editable-row'}
+        bordered
+        dataSource={ManagerData}
+        columns={managercolumns}
+
+      />}
+      
+
+      </Panel>
+
+
+      <Panel  header="Legal structure" key="5">
+
+      <Space
+        style={{
+          display: 'flex',
+          marginBottom: 8,
+
+        }}
+        align="baseline"
+      >
+
+      <Form.Item
+        name="shareholdersname"
+        label="ShareHolders"
+      >
+        <Select  
+          style={{
+            width: 200,
+          }}
+          size={'large'}
+          placeholder="Search to Select"
+          // optionFilterProp="children"
+          onChange={e=>setShareHolderId(e)}
+                // filterOption={(input, option) => (option?.label ?? '').includes(input)}
+          // filterSort={(optionA, optionB) =>
+          //   (optionA ?? '').toLowerCase().localeCompare((optionB ?? '').toLowerCase())
+          // }
+          id="selectedshareholder"
+          options= {filteredshareholderOptions.map((item) => ({
+            value: item.id,
+            label: item.name,
+          }))}
+        />
+          
+      </Form.Item>
+
+      <Button
+          type="link"
+          onClick={() => {
+            setOpen({open:true,
+            url:"ShareHolders",
+            data:"Shareholder"});
+          }}
+      >
+      <PlusOutlined/>
+      </Button>
+
+
+      <Form.Item
+        name="shares"
+        label="Shares"
+      >
+        <InputNumber
+          // disabled={SHselected}
+          min={0}
+          max={100}
+          size={'large'}
+          formatter={(value) => `${value}%`}
+          parser={(value) => value.replace('%', '')}
+          onChange={e=>setShareHolderShares(e)}
+
+        />
+
+      </Form.Item>
+      
+      
+
+
+      <Form.Item
+      name="startedAt"
+      label="Start date"
+      >
+        <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+      const d = new Date(date).toLocaleDateString('en-US');
+      console.log(date);
+      setDate({date,d});
+    }}/>
+      </Form.Item>
+
+    <Form.Item name="add">
+      <Button  onClick={()=>addShareholderdata()}>
+      <PlusOutlined/>Add shareholder
+      </Button>
+    </Form.Item>
+
+   
+      </Space>
+     {shareHolderData.length>0 && <Table
+        rowClassName={() => 'editable-row'}
+        bordered
+        dataSource={shareHolderData}
+        columns={shareholdercolumns}
+
+      />}
+      
 
       </Panel>
       </Collapse>
 
     <Form.Item {...tailFormItemLayout}>
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
-      <Button onClick={gotoGI}>
-        Cancel
-      </Button>
+      
+      <Space style={{marginTop:10}}>
+          <Button type="primary" htmlType="submit" style={{width:100}} >
+            Save
+          </Button>
+          <Button htmlType="button">
+            Cancel
+          </Button>
+        </Space>
     </Form.Item>
-
+    
   </Form>
 
     )}</>

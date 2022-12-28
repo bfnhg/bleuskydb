@@ -1,173 +1,192 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Form, Input, Popconfirm, Table, Space, Card } from 'antd';
-const EditableContext = React.createContext(null);
-const EditableRow = ({ index, ...props }) => {
-  const [form] = Form.useForm();
-  return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
-};
-const EditableCell = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef(null);
-  const form = useContext(EditableContext);
-  useEffect(() => {
-    if (editing) {
-      inputRef.current.focus();
-    }
-  }, [editing]);
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({
-      [dataIndex]: record[dataIndex],
-    });
-  };
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-      toggleEdit();
-      handleSave({
-        ...record,
-        ...values,
-      });
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
-    }
-  };
-  let childNode = children;
-  if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{
-          margin: 0,
-        }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
-      >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
-    ) : (
-      <div
-        className="editable-cell-value-wrap"
-        style={{
-          paddingRight: 24,
-        }}
-        onClick={toggleEdit}
-      >
-        {children}
-      </div>
-    );
-  }
-  return <td {...restProps}>{childNode}</td>;
-};
+import { Button, Form, Input, Popconfirm, Table, Space, Card, message } from 'antd';
+import {
+  EditOutlined,
+  DeleteOutlined
+} from '@ant-design/icons';
+
+import {JSON_API} from '../services/Constants';
+import axios from 'axios';
+
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
+
+
 const SalesOrderBook = () => {
   const current = new Date();
-  const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
-  const [count, setCount] = useState(2);
-  const [dataSource, setDataSource] = useState([
-    {
-      key: '0',
-      name: `Order Book no. ${count}`,
-      date: `${date}`,
-    },
-  ]);
-  
-  const handleDelete = (key) => {
-    const newData = dataSource.filter((item) => item.key !== key);
-    setDataSource(newData);
+  // const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+  const [dataSource, setDataSource] = useState();
+  const [messageApi, contextHolder] = message.useMessage();
+  const [editingRow, setEditingRow] = useState(null);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    getorderbooks();
+  }, []);
+
+
+  const getorderbooks = async ()=>{
+    await axios.get(`${JSON_API}/orderbook`)
+    .then((response)=>{
+      console.log("orderbook:",response.data);
+      setDataSource(response.data);
+    })
   };
+
+  const handleDelete = async(id) => {
+    await axios.delete(`${JSON_API}/orderbook/${id}`)
+    .then(() => { 
+    
+      messageApi.info('Orderbook deleted successfully!');
+      getorderbooks();
+    })
+    // const newData = dataSource.filter((item) => item.key !== id);
+    // setDataSource(newData);
+  };
+
   const defaultColumns = [
-    {
-      title: 'Creation Date',
-      dataIndex: 'date',
-    },
     {
       title: 'Name',
       dataIndex: 'name',
-      editable: true,
+      width: '30%',
+      render: (text, record) => {
+        if (editingRow === record.id) {
+          return (
+            <Form.Item
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter orderbook name",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          );
+        } else {
+          return <>{text}</>;
+        }
+
+      }
     },
+    {
+      title: 'Creation Date',
+      dataIndex: 'date',
+      render: (_, record) =>(
+        <>{dayjs(record.createdAt).format('YYYY/MM/DD')}</>
+      )
+    },
+    {
+      title: 'Total',
+      dataIndex: 'total',
+    },
+
     {
       title: 'operation',
       dataIndex: 'operation',
       render: (_, record) =>
         dataSource.length >= 1 ? (
           <Space size="middle">
-            <Popconfirm title="Are you sure delete this row?" onConfirm={() => handleDelete(record.key)} okText="Yes" cancelText="No">
+            {
+            editingRow === record.id?
+            <>
+            <Button type="link" onClick={()=>setEditingRow(null)}>
+              Cancel
+            </Button>
+            <Button type="link" htmlType="submit">
+              Save
+            </Button>
+            </>
+            
+            :
+            <>
+            <Button
+              type="link"
+              onClick={() => {
+
+                setEditingRow(record.id);
+                form.setFieldsValue({
+                  name: record.name,
+                });
+              }}
+            >
+              Edit 
+            </Button>
+            <Popconfirm title="Are you sure delete this row?" onConfirm={() => handleDelete(record.id)} okText="Yes" cancelText="No">
             <a>Delete</a>
             </Popconfirm>
-            {console.log('record.key',record.key)}
 
             <Link to={{
-              pathname:"/orderbookdetails/id",
-              state:{stateParam:record.key}
+              pathname:`/orderbook/${record.id}`,
+              state:{stateParam:record.id}
             }}>Details</Link>
+
+            </>
+            }
+            
           </Space>
           
         ) : null,
     },
   ];
-  const details = (key)=>{
 
-  };
-  const handleAdd = () => {
-    const newData = {
-      key: count,
-      date: `${date}`,
-      name: `Order Book no. ${count}`,
-    };
-    setDataSource([...dataSource, newData]);
-    setCount(count + 1);
-  };
-  const handleSave = (row) => {
-    const newData = [...dataSource];
-    const index = newData.findIndex((item) => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row,
-    });
-    setDataSource(newData);
-  };
-  const components = {
-    body: {
-      row: EditableRow,
-      cell: EditableCell,
-    },
-  };
-  const columns = defaultColumns.map((col) => {
-    if (!col.editable) {
-      return col;
+
+  const onFinish = async (values) => {
+    var now = dayjs()
+
+    const orderbook = {
+      name:values.name,
+      createdAt:now
     }
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        handleSave,
-      }),
-    };
-  });
+
+    console.log('Success:', orderbook);
+
+    await axios.post(`${JSON_API}/orderbook`,orderbook)
+    .then((response) => {
+      getorderbooks();
+      console.log('Orderbook added Successfully!');
+
+      messageApi.open({
+        type: 'success',
+        content: 'Orderbook added Successfully!'
+      });
+    })
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
+  const onFinishEdit = async (values) => {
+
+    const orderbookobj={
+      id:editingRow,
+      name:values.name,
+    }
+
+    console.log("orderbookedited: ",orderbookobj);
+
+    await axios.put(`${JSON_API}/orderbook/${editingRow}`,orderbookobj)
+    .then((response) => {
+      getorderbooks();
+      console.log('Orderbook updated Successfully!');
+
+      messageApi.open({
+        type: 'success',
+        content: 'Orderbook updated Successfully!'
+      });
+    })
+    setEditingRow(null);
+  };
+  
+
   return (
+    <>
+    {contextHolder}
+    
     <Card
     bordered={false}
     className="header-solid mb-24"
@@ -175,23 +194,61 @@ const SalesOrderBook = () => {
         <h6 className="font-semibold">Order Book</h6>
     }
   >
-      <Button
-        onClick={handleAdd}
-        type="primary"
-        style={{
-          marginBottom: 16,
+    
+    <Form
+      name="basic"
+      // labelCol={{
+      //   span: 8,
+      // }}
+      // wrapperCol={{
+      //   span: 16,
+      // }}
+
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      autoComplete="off"
+    >
+      <Space style={{
+          display: 'flex',
+          marginBottom: 8,
+
+        }}
+        align="baseline" >
+      <Form.Item
+        label="Name"
+        name="name"
+        rules={[
+          {
+            required: true,
+            message: 'Please input a name for the orderbook!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        wrapperCol={{
+          offset: 8,
+          span: 16,
         }}
       >
-        Add a row
-      </Button>
+        <Button type="primary" htmlType="submit">
+          Create Orderbook 
+        </Button>
+      </Form.Item>
+      </Space>
+    </Form>
+
+    <Form form={form} onFinish={onFinishEdit}>
       <Table
-        components={components}
-        rowClassName={() => 'editable-row'}
         bordered
         dataSource={dataSource}
-        columns={columns}
+        columns={defaultColumns}
       />
+    </Form>
+
     </Card>
+    </>
   );
 };
 export default SalesOrderBook

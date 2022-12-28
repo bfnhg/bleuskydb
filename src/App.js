@@ -47,6 +47,8 @@ function App() {
       <Switch>
         
         <Route path="/sign-in" exact component={SignIn} />
+
+        
         <Main>
         <RouteGuard exact path='/'><Home /></RouteGuard>
         <RouteGuard exact path='/dashboard'><Home /></RouteGuard>
@@ -54,8 +56,8 @@ function App() {
         <RouteGuard exact path='/billing'><Billing /></RouteGuard>
         <RouteGuard exact path='/rtl'><Rtl /></RouteGuard>
         <RouteGuard exact path='/profile'><Profile /></RouteGuard>
-        <RouteGuard exact path='/salesorderbook'><SalesOrderBook /></RouteGuard>
-        <RouteGuard exact path='/orderbookdetails/:id'><OrderBookDetails /></RouteGuard>
+        <RouteGuard exact path='/orderbook'><SalesOrderBook /></RouteGuard>
+        <RouteGuard exact path='/orderbook/:id'><OrderBookDetails /></RouteGuard>
         <RouteGuard exact path='/generalinformations'><GeneralInformations /></RouteGuard>
         <RouteGuard exact path='/addcompany'><AddCompany /></RouteGuard>
         <RouteGuard exact path='/updatecompany'><UpdateCompany /></RouteGuard>

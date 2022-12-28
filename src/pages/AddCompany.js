@@ -26,7 +26,8 @@ import {
   Table,
   Popconfirm,
   Tag,
-  Tabs 
+  Tabs,
+  message,
 } from 'antd';
 import TutorialService from "../services/TutorialService";
 const { Panel } = Collapse;
@@ -72,9 +73,11 @@ const AddCompany = () => {
   const ref = useRef(null);
 
   const [shareHolderData, setShareHolderData] = useState([]);
-  const [ManagerData, setManagerData] = useState([]);
+  const [ManagerbyId, setManagerbyId] = useState({});
 
-  const [Cdate, setDate] = useState(new Date().toLocaleDateString('fr-FR'));
+  const [ManagerData, setManagerData] = useState([]);
+  // new Date().toLocaleDateString('en-US')
+  const [Cdate, setDate] = useState();
 
   const [count, setCount] = useState(2);
   
@@ -104,7 +107,7 @@ const AddCompany = () => {
     },
     {
       title: 'Start date',
-      dataIndex: 'date',
+      dataIndex: 'datestring',
     },
     {
       title: 'operation',
@@ -131,17 +134,17 @@ const AddCompany = () => {
       title: 'Firstname',
       dataIndex: 'firstName',
     },
-    {
-      title: 'Titles',
-      dataIndex: 'titles',
-      render:(titles) => (
-        titles.map((title) => (
-            <Tag color="blue" key={title}>
-              {title}
-            </Tag>
-          ))
-      )
-    },
+    // {
+    //   title: 'Titles',
+    //   dataIndex: 'titles',
+    //   render:(titles) => (
+    //     ManagerData.map((title) => (
+    //         <Tag color="blue" key={title}>
+    //           {title}
+    //         </Tag>
+    //       ))
+    //   )
+    // },
     {
       title: 'Years of Experience',
       dataIndex: 'yearsofExperience',
@@ -209,6 +212,8 @@ const [ShareHolders,setShareHolders]=useState([{}]);
 const [Managers,setManagers]=useState([{}]);
 const [Titles,setTitles]=useState([{}]);
 const [TitlesData,setTitlesData]=useState([{}]);
+const [Datestart,setDatestart]=useState();
+const [Dateend,setDateend]=useState();
 
 const[Tabkey,setTabkey]=useState("1");
 const onTabChange = (key) => {
@@ -341,8 +346,6 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
           min={0}
           max={100}
           size={'large'}
-          onChange={e=>setManagerexp(e)}
-
         />
 
       </Form.Item>
@@ -744,6 +747,7 @@ const filteredmanagerOptions = Managers.filter(o => {
 });
 const [shareHolderShares,setShareHolderShares]=useState();
 const [Managerexp,setManagerexp]=useState();
+const [messageApi, contextHolder] = message.useMessage();
 
 const handleChange = (event) => {
   // 👇 Get input value from "event"
@@ -761,17 +765,26 @@ const [Open, setOpen] = useState({
     console.log('Received data of form: ', data);
     console.log('Received values of form: ', values);
     console.log('Received url of form: ', url);
-    
+
+
     await axios.post(`${JSON_API}/${url}`,values)
     .then((response) => {
       getData();
-      console.log('values were added to' + data + " Successfully!");
+      console.log('values were added to ' + data + " Successfully!");
+
+      messageApi.open({
+        type: 'success',
+        content: 'values were added to ' + data + " Successfully!",
+      });
     })
     setOpen(false);
 
   };
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    console.log('Received manager data of form: ', ManagerData);
+    console.log('Received shareholder of form: ', shareHolderData);
+
   };
 
   const initialCompanyState = {
@@ -805,28 +818,52 @@ const [Open, setOpen] = useState({
         setShareHolderData([...shareHolderData, {
           id:d.length>0 && d[0].id,
           name: d.length>0 && d[0].name,
-          shares:shareHolderShares+"%",
-          date:Cdate
+          shares:shareHolderShares&&shareHolderShares+"%",
+          date:Cdate&&Cdate.date,
+          datestring:Cdate&&Cdate.d
         }]);
     }
         console.log("after add:",shareHolderData);
   }
 
   const addManagerdata = () => {
-    if(ManagerId){
+
+   
       const m= Managers.filter(e=>e.id===ManagerId);
-      setManagerData([...ManagerData, {
-          id:m.length>0 && m[0].id,
-          name: m.length>0 && m[0].name,
-          firstName: m.length>0 && m[0].firstName,
-          // titles:,
-          yearsofExperience:Managerexp,
+      console.log("m",m);
+
+      if(m){
+        setManagerData([...ManagerData, {
+          id:m[0].id,
+          name:m[0].name,
+          firstName:m[0].firstName,
+          titles:m[0].titles,
+          yearsofExperience:m[0].yearsofExperience,
         }]);
-    }
+      }
+      
+
+       
+
+
+    console.log("manager id info:",m[0].id);
+    console.log("manager name info:",m[0].name);
+    console.log("manager firstname info:",m[0].firstName);
+    console.log("manager title info:",m[0].titles);
+    console.log("manager yearsofExperience info:",m[0].yearsofExperience);
+
+    console.log("ManagerData state:",ManagerData);
+
+    
+
+    
+
   }
 
   const displaydata=()=>{
     console.log("shareHolderData:",shareHolderData);
+    console.log("datestart :",Datestart);
+
 
   }
 
@@ -839,57 +876,65 @@ const [Open, setOpen] = useState({
     setCompany({ ...company, [name]: value });
   };
   
-      const saveCompany = (values) => {
+  const saveCompany = async(values) => {
 
+    console.log('Received values of form: ', values);
+    console.log('Received manager data of form: ', ManagerData);
+    console.log('Received shareholder of form: ', shareHolderData);
 
+    var companyinfo = {
+      name: values.nom_de_la_société,
+      businessNumber: values.numéro_entreprise,
+      // budgetRange: values.budget,
+      startingDate: values.date_de_fondation,
+      endDate: values.date_fin_exercice,
+      empoyeesCount: values.nombre_employés,
+      address: values.adresse,
+      postalCode: values.code_postal,
+      // cityId: values.ville,
+      taxes: values.taux_imposition_annuel_estimé,
+      activityTypes: values.activity_type,
+      products: values.product,
+      mainCustomers: values.main_customers,
+      markets: values.market,
+      revenueModelItems: values.revenue_model,
+      businessPartners: values.business_partners,
+      industryTypes: values.type_industrie,
+      strategicTargets: values.strategic_target,
+      managers: ManagerData.map(i=>i.id),
+      shareHolders:shareHolderData.map(i=>{return{
+        shareHolderId:i.id,
+        shares: i.shares.replace('%',''),
+        startedAt:i.date
+      }})
 
-        var companies = {
-          nom_de_la_société: values.nom_de_la_société,
-          adresse: values.adresse,
-          ville: values.ville,
-          province: values.province,
-          code_postal: values.code_postal,
-          pays: values.pays,
-          date_de_fondation: values.date_de_fondation,
-          date_fin_exercice: values.date_fin_exercice,
-          numéro_entreprise: values.numéro_entreprise,
-          nombre_employés: values.nombre_employés,
-          // type_industrie: values.type_industrie.map(i=>{return {id:i}}) ,
-          type_industrie: values.type_industrie ,
-          budget: values.budget,
-          taux_imposition_annuel_estimé: values.taux_imposition_annuel_estimé,
-          Target_customers:{ 
-            market:values.market,
-            main_customers:values.main_customers,
-            revenue_model:values.revenue_model,
-            business_partners:values.business_partners,
-          }
-           
+     
+        
 
-          
-        };
-        console.log('Received values of form: ', companies);
+      
+    };
+    console.log('Received values of form: ', companyinfo);
 
-        axios.post(`${JSON_API}/companies`,companies)
-        .then(response => {
-          setSubmitted(true);
-          console.log(response.data);
+    axios.post(`${JSON_API}/Enterprises`,companyinfo)
+    .then(response => {
+      setSubmitted(true);
+      console.log(response.data);
 
-        })
-        .catch(function (error) {
-          if (error.response) {
-           
-            console.log(error.toJSON());
-          } else if (error.request) {
-           
-            console.log(error.request);
-          } else {
-            console.log('Error', error.message);
-          }
-          console.log(error.config);
-        });
+    })
+    .catch(function (error) {
+      if (error.response) {
+        
+        console.log(error.toJSON());
+      } else if (error.request) {
+        
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
-      };
+  };
     
       const newCompany = () => {
         setCompany(initialCompanyState);
@@ -902,6 +947,8 @@ const [Open, setOpen] = useState({
       
   return (
 <>
+      {contextHolder}
+
       <CollectionCreateForm
         open={Open.open}
         onCreate={onCreate}
@@ -931,7 +978,7 @@ const [Open, setOpen] = useState({
     <Form
       form={form}
       name="register"
-      onFinish={onFinish}
+      onFinish={saveCompany}
       initialValues={{
         // residence: ['zhejiang', 'hangzhou', 'xihu'],
         // prefix: '86',
@@ -968,17 +1015,19 @@ const [Open, setOpen] = useState({
            >
       <Input />
     </Form.Item>
+
     <Form.Item
           {...formItemLayout}
 
-      name="ville"
-      label="City"
+      name="pays"
+      label="Country"
        
       // tooltip="What do you want others to call you?"
-  
+      
     >
       <Input />
     </Form.Item>
+
     <Form.Item
           {...formItemLayout}
 
@@ -1003,6 +1052,20 @@ const [Open, setOpen] = useState({
     <Form.Item
           {...formItemLayout}
 
+      name="ville"
+      label="City"
+       
+      // tooltip="What do you want others to call you?"
+  
+    >
+      <Input />
+    </Form.Item>
+
+  
+
+    <Form.Item
+          {...formItemLayout}
+
       name="code_postal"
       label="Postal code"
        
@@ -1010,29 +1073,24 @@ const [Open, setOpen] = useState({
       <Input />
     </Form.Item>
 
-    <Form.Item
-          {...formItemLayout}
-
-      name="pays"
-      label="Country"
-       
-      // tooltip="What do you want others to call you?"
-      
-    >
-      <Input />
-    </Form.Item>
+   
 
     <Form.Item
           {...formItemLayout}
 
       name="date_de_fondation"
       label="Founding date"
-       
+     
       // tooltip="What do you want others to call you?"
       // validateStatus="error"
       // help="Please select right date"
     >
-        <DatePicker format={"YYYY-MM-DD"} />
+        <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+      const d = new Date(date).toLocaleDateString('en-US');
+      console.log(d);
+      setDatestart(d);
+    }}/>
+
     </Form.Item>
 
     <Form.Item
@@ -1042,7 +1100,11 @@ const [Open, setOpen] = useState({
       label="Year-end date"
        
     >
-        <DatePicker format={"YYYY-MM-DD"} />
+      <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+      const d = new Date(date).toLocaleDateString('en-US');
+      console.log(d);
+      setDateend(d);
+    }}/>
     </Form.Item>
  
     <Form.Item
@@ -1050,7 +1112,7 @@ const [Open, setOpen] = useState({
 
       name="numéro_entreprise"
       label="Business Number"
-
+     
     >
       <Input />
     </Form.Item>
@@ -1060,10 +1122,17 @@ const [Open, setOpen] = useState({
 
       name="nombre_employés"
       label="Number of employees"
-       
+      rules={[
+        {
+          type: 'number',
+          min: 0,
+          message: 'value cannot be less than 0',
+
+        },
+      ]}
 
     >
-      <Input />
+      <InputNumber />
     </Form.Item>
 
 
@@ -1130,8 +1199,18 @@ const [Open, setOpen] = useState({
       label="Taux d'imposition annuel estimé(%)"
        
       value={company.taux_imposition_annuel_estimé}
+      rules={[
+        {
+          type: 'number',
+          min: 0,
+          max:100,
+          message: 'please enter a number between 0 and 100',
+
+        },
+      ]}
     >
-      <Input />
+      <InputNumber />
+   
     </Form.Item>
     </Panel>
     <Panel header="Target customers" key="2">
@@ -1158,7 +1237,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                   setOpen({open:true,
-                  url:"market",
+                  url:"Markets",
                   data:"Market"});
                 }}
             >
@@ -1433,16 +1512,16 @@ const [Open, setOpen] = useState({
 
     <Form.Item name="add">
       <Button  onClick={()=>addManagerdata()}>
-      <PlusOutlined/>Add
+      <PlusOutlined/>Add manager
       </Button>
     </Form.Item>
 
    
       </Space>
-     {shareHolderData.length>0&&<Table
+     {ManagerData.length>0&&<Table
         rowClassName={() => 'editable-row'}
         bordered
-        dataSource={shareHolderData}
+        dataSource={ManagerData}
         columns={managercolumns}
 
       />}
@@ -1524,21 +1603,21 @@ const [Open, setOpen] = useState({
       label="Start date"
       >
         <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
-      const d = new Date(date).toLocaleDateString('fr-FR');
-      console.log(d);
-      setDate(d);
+      const d = new Date(date).toLocaleDateString('en-US');
+      console.log(date);
+      setDate({date,d});
     }}/>
       </Form.Item>
 
     <Form.Item name="add">
       <Button  onClick={()=>addShareholderdata()}>
-      <PlusOutlined/>Add
+      <PlusOutlined/>Add shareholder
       </Button>
     </Form.Item>
 
    
       </Space>
-     {shareHolderData.length>0&&<Table
+     {shareHolderData.length>0 && <Table
         rowClassName={() => 'editable-row'}
         bordered
         dataSource={shareHolderData}
@@ -1555,9 +1634,7 @@ const [Open, setOpen] = useState({
         Submit
       </Button>
     </Form.Item>
-    <Button  onClick={()=>displaydata()}>
-        display data
-      </Button>
+   
   </Form>
 
     )}</>
