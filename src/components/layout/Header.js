@@ -13,6 +13,8 @@
 import { useState, useEffect,useContext } from "react";
 import axios from 'axios';
 import { CompanyContext } from '../../contexts/CompanyContext';
+import { useTranslation } from 'react-i18next';
+
 import {
   Row,
   Col,
@@ -27,6 +29,7 @@ import {
   Typography,
   Switch,
   Select,
+  Spin,
 Divider,
 message
 } from "antd";
@@ -345,7 +348,7 @@ function Header({
       }
       console.log(error.config);
     });
-    await axios.get(`${JSON_API}/MainCustomers`)
+    await axios.get(`${JSON_API}/Customers`)
     .then((response) => {
       setMainCustomer(response.data);  
     }).catch(function (error) {
@@ -473,8 +476,9 @@ const onChange = async (value) => {
 
   const [visible, setVisible] = useState(false);
   const [sidenavType, setSidenavType] = useState("transparent");
+  let {t} =useTranslation();
 
-  useEffect(() => window.scrollTo(0, 0));
+  // useEffect(() => window.scrollTo(0, 0));
 
   const showDrawer = () => setVisible(true);
   const hideDrawer = () => setVisible(false);
@@ -486,7 +490,7 @@ const onChange = async (value) => {
         <Col span={24} md={6}>
           <Breadcrumb>
             <Breadcrumb.Item>
-              <NavLink to="/">Pages</NavLink>
+              <NavLink to="/">Home</NavLink>
             </Breadcrumb.Item>
             <Breadcrumb.Item style={{ textTransform: "capitalize" }}>
               {name.replace("/", "")}
@@ -504,16 +508,18 @@ const onChange = async (value) => {
         <Col span={24} md={12}>
             <Select
               disabled={!Edited}
-              placeholder="Select and Access Company Information:"
+              placeholder={t("select")}
               style={{width:350}}
               block
               onChange={onChange}
               >
-                {Companies.map((company)=>(
 
-              company&&<Option value={company.id}>{company.name} N°{company.businessNumber}</Option>
+                {Companies&&Companies.map((company)=>(
 
-                ))}
+              <Option value={company.id}>{company.name} N°{company.businessNumber}</Option>
+              
+              ))
+                }
 
               </Select>
               <Select
@@ -536,7 +542,7 @@ const onChange = async (value) => {
         </Col>
         <Col span={12} md={3}>
             <Button type="link" block onClick={()=>addCompany()} icon={<PlusOutlined />} style={{padding:0}}>
-              <span>Add Company</span>
+              <span>{t("company")}</span>
             </Button>
         </Col>
              
@@ -550,7 +556,7 @@ const onChange = async (value) => {
               {toggler}
             </Button>
          
-            <Button  type="link" onClick={() => CustomButton()}>{profile} Sign out</Button>
+            <Button  type="link" onClick={() => CustomButton()}>{profile} {t("logout")}</Button>
           </Col>
       </Row>
     </>

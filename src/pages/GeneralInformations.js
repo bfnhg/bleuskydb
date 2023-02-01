@@ -27,11 +27,11 @@ const GeneralInformations = () => {
 
   const showDeleteConfirm = () => {
     confirm({
-      title: `Are you sure you want to delete ${Company.name} company ?`,
+      title: `${t("deletecompanytext")} ${Company.name} ?`,
       icon: <ExclamationCircleOutlined />,
-      okText: 'Yes',
+      okText: `${t("yes")}`,
       okType: 'danger',
-      cancelText: 'No',
+      cancelText: `${t("no")}`,
       onOk() {
         deleteCompany();
       },
@@ -163,7 +163,7 @@ Company.name &&
                 <Radio.Button value="edit" ><EditOutlined /> Edit company </Radio.Button>
                 <Radio.Button value="delete" danger><DeleteOutlined /> Delete company</Radio.Button>
               </Radio.Group> */}
-                  <Button disabled={Actionstate} onClick={() => generateUpdateformdata()}> <EditOutlined /> Edit company</Button>
+                  <Button disabled={Actionstate} onClick={() => generateUpdateformdata()}> <EditOutlined /> {t("editcompany")} </Button>
               </Col>
               <Col  span={12} md={6}
               
@@ -177,7 +177,7 @@ Company.name &&
                 <Radio.Button value="edit" ><EditOutlined /> Edit company </Radio.Button>
                 <Radio.Button value="delete" danger><DeleteOutlined /> Delete company</Radio.Button>
               </Radio.Group> */}
-                  <Button type='link' danger onClick={showDeleteConfirm} ><DeleteOutlined /> Delete company</Button>
+                  <Button type='link' danger onClick={showDeleteConfirm} ><DeleteOutlined /> {t("deletecompany")}</Button>
               </Col>
               </Row>
   </Card>
@@ -201,33 +201,33 @@ Company.name &&
       // autoComplete="off"
     >
 <Tabs defaultActiveKey="1">
-    <Tabs.TabPane tab="General Information" key="1">
+    <Tabs.TabPane tab={t("generalinf")} key="1">
 
       <Descriptions  bordered size={"small"}>
-        <Descriptions.Item label={t("company name")}>{Company.name?Company.name:""}</Descriptions.Item>
-        <Descriptions.Item label="Business number">{Company.businessNumber?Company.businessNumber:""}</Descriptions.Item>
-        <Descriptions.Item label="Type of industry">{Company.industryTypes&&Company.industryTypes.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
-        <Descriptions.Item label="Address">{Company.address?Company.address:""}</Descriptions.Item>
-        <Descriptions.Item label="City">{Company.city?Company.city:""}</Descriptions.Item>
-        <Descriptions.Item label="Postal code">{Company.postalCode?Company.postalCode:""} </Descriptions.Item>
+        <Descriptions.Item label={t("companyname")}>{Company.name?Company.name:""}</Descriptions.Item>
+        <Descriptions.Item label={t("Businessnumber")}>{Company.businessNumber?Company.businessNumber:""}</Descriptions.Item>
+        <Descriptions.Item label={t("Typeofindustry")}>{Company.industryTypes&&Company.industryTypes.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label={t("Address")}>{Company.address?Company.address:""}</Descriptions.Item>
+        <Descriptions.Item label={t("City")}>{Company.city?Company.city:""}</Descriptions.Item>
+        <Descriptions.Item label={t("Postalcode")}>{Company.postalCode?Company.postalCode:""} </Descriptions.Item>
 
-        <Descriptions.Item label="Founding date">{Company.startingDate?dayjs(Company.startingDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
-        <Descriptions.Item label="Year-end date">{Company.endDate?dayjs(Company.endDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
+        <Descriptions.Item label={t("Foundingdate")}>{Company.startingDate?dayjs(Company.startingDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
+        <Descriptions.Item label={t("Yearenddate")}>{Company.endDate?dayjs(Company.endDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
         {/* <Descriptions.Item label="Country">{Company&&Company.pays}</Descriptions.Item> */}
         {/* <Descriptions.Item label="Province">{Company&&Company.province}</Descriptions.Item> */}
-        <Descriptions.Item label="Number of employees">{Company.empoyeesCount?Company.empoyeesCount:""}</Descriptions.Item>
+        <Descriptions.Item label={t("Numberofemployees")}>{Company.empoyeesCount?Company.empoyeesCount:""}</Descriptions.Item>
         <Descriptions.Item label="Budget">{Company.budget?Company.budget:""}</Descriptions.Item>
-        <Descriptions.Item label="Estimated annual tax rate">{Company.taxes?(Company.taxes+"%"):""}</Descriptions.Item>
+        <Descriptions.Item label={t("Estimatedannualtaxrate")}>{Company.taxes?(Company.taxes+"%"):""}</Descriptions.Item>
       </Descriptions>
 
     </Tabs.TabPane>
 
-    <Tabs.TabPane tab="Target customers" key="2">
+    <Tabs.TabPane tab={t("Targetcustomers")} key="2">
       <Descriptions bordered   size={"small"}>
-        <Descriptions.Item label="Market">{Company.markets&&Company.markets.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
-        <Descriptions.Item label="The main customers">{Company.mainCustomers&&Company.mainCustomers.map((e)=>{return (<Tag>{e.name}</Tag> )})}</Descriptions.Item>
-        <Descriptions.Item label="Revenue model">{Company.revenueModelItems&&Company.revenueModelItems.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
-        <Descriptions.Item label="Business partners">{Company.businessPartners&&Company.businessPartners.map((e)=>{return (<Tag>{e.name}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label={t("Market")}>{Company.markets&&Company.markets.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label={t("Themaincustomers")}>{Company.mainCustomers&&Company.mainCustomers.map((e)=>{return (<Tag>{e.name}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label={t("Revenuemodel")}>{Company.revenueModelItems&&Company.revenueModelItems.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label={t("Businesspartners")}>{Company.businessPartners&&Company.businessPartners.map((e)=>{return (<Tag>{e.name}</Tag> )})}</Descriptions.Item>
       </Descriptions>
     </Tabs.TabPane>
 

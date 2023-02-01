@@ -7,6 +7,7 @@ import {
   SettingFilled,
   SmileOutlined,
   SyncOutlined,
+  AimOutlined
 } from '@ant-design/icons';
 function Sidenav({ color }) {
   const { pathname } = useLocation();
@@ -189,13 +190,13 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
         <Menu.Item key="3">
-          <NavLink to="/ComingSoon">
+          <NavLink to="/strategicplanning">
           <span
               className="icon"
               style={{
                 background:"",
               }}
-            >            <LoadingOutlined />
+            >            <AimOutlined />
 
             </span>
             <span className="label">Strategic Planning</span>
@@ -233,7 +234,7 @@ function Sidenav({ color }) {
             <span className="label">Opportunities</span>
           </NavLink>
         </Menu.Item>
-        {/* <Menu.Item className="menu-item-header" key="5">
+         {/* <Menu.Item className="menu-item-header" key="5">
         Revenue
         </Menu.Item>
         <Menu.Item key="8">
@@ -248,9 +249,9 @@ function Sidenav({ color }) {
             </span>
             <span className="label">Budget</span>
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="6">
-        <NavLink to="/ComingSoon">
+        <NavLink to="/chartofaccounts">
           <span
               className="icon"
               style={{
@@ -259,10 +260,10 @@ function Sidenav({ color }) {
             >            <LoadingOutlined />
 
             </span>
-            <span className="label">Real sales</span>
+            <span className="label">Chart of accounts</span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="6">
+        {/*<Menu.Item key="6">
         <NavLink to="/ComingSoon">
           <span
               className="icon"

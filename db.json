@@ -280,6 +280,18 @@
     {
       "label": "sdfg",
       "id": 2
+    },
+    {
+      "label": "huygu",
+      "id": 3
+    },
+    {
+      "label": "lpp",
+      "id": 4
+    },
+    {
+      "label": "product 2",
+      "id": 5
     }
   ],
   "shareholders": [
@@ -319,7 +331,7 @@
     },
     {
       "id": 3,
-      "name": "orderbook"
+      "name": "orderbook 17"
     },
     {
       "id": 4,
@@ -328,6 +340,14 @@
     {
       "id": 5,
       "name": "order book marwa"
+    },
+    {
+      "id": 6,
+      "name": "order book moha"
+    },
+    {
+      "id": 7,
+      "name": "order reunion"
     }
   ],
   "customer": [
@@ -338,18 +358,24 @@
     {
       "id": 2,
       "name": "customer 2"
+    },
+    {
+      "name": "customer 3",
+      "id": 3
     }
   ],
   "orderdetail": [
     {
       "orderbookId": 2,
       "customerId": 2,
+      "productId": 1,
       "startDate": "2022-12-01T23:43:12.389Z",
+      "priceperday": 970,
       "description": "cfffffffffxc",
       "id": 3,
       "costdetails": {
         "costPerDay": 109,
-        "januaryCost": 4,
+        "januaryCost": 7,
         "februaryCost": 32,
         "marchCost": 188,
         "aprilCost": 0,
@@ -358,7 +384,7 @@
         "julyCost": 0,
         "augustCost": 0,
         "septemberCost": 0,
-        "octoberCost": 0,
+        "octoberCost": 10,
         "novemberCost": 132,
         "decemberCost": 3367
       }
@@ -366,7 +392,9 @@
     {
       "orderbookId": 2,
       "customerId": 1,
+      "productId": 2,
       "startDate": "2022-12-01T23:43:12.389Z",
+      "priceperday": 890,
       "description": "wwwwwwfffxc",
       "id": 4,
       "costdetails": {
@@ -382,6 +410,78 @@
         "septemberCost": 0,
         "octoberCost": 0,
         "novemberCost": 0,
+        "decemberCost": 3367
+      }
+    },
+    {
+      "orderbookId": 6,
+      "customerId": 2,
+      "productId": 2,
+      "startDate": "2023-01-04T10:04:26.934Z",
+      "priceperday": 370,
+      "description": "description order book 6",
+      "id": 5,
+      "costdetails": {
+        "costPerDay": 180,
+        "januaryCost": 7,
+        "februaryCost": 32,
+        "marchCost": 188,
+        "aprilCost": 0,
+        "mayCost": 0,
+        "juneCost": 17,
+        "julyCost": 211,
+        "augustCost": 0,
+        "septemberCost": 0,
+        "octoberCost": 10,
+        "novemberCost": 132,
+        "decemberCost": 3367
+      }
+    },
+    {
+      "orderbookId": 7,
+      "customerId": 1,
+      "productId": 2,
+      "startDate": "2023-01-05T12:41:23.265Z",
+      "priceperday": 170,
+      "description": "description order book reunion",
+      "id": 6,
+      "costdetails": {
+        "costPerDay": 32978,
+        "januaryCost": 7,
+        "februaryCost": 32,
+        "marchCost": 188,
+        "aprilCost": 0,
+        "mayCost": 0,
+        "juneCost": 17,
+        "julyCost": 0,
+        "augustCost": 0,
+        "septemberCost": 0,
+        "octoberCost": 10,
+        "novemberCost": 132,
+        "decemberCost": 3367
+      }
+    }
+    ,{
+      "orderbookId": 3,
+      "customerId": 2,
+      "productId": 1,
+      "startDate": "2023-01-11T12:35:56.557Z",
+      "priceperday": 710,
+      "description": "description test",
+      "id": 7,
+      "costdetails": {
+        "costPerDay": 22,
+        "januaryCost": 7,
+        "februaryCost": 32,
+        "marchCost": 188,
+        "aprilCost": 0,
+        "mayCost": 0,
+        "juneCost": 17,
+        "julyCost": 0,
+        "augustCost": 0,
+        "septemberCost": 0,
+        "octoberCost": 10,
+        "novemberCost": 132,
         "decemberCost": 3367
       }
     }

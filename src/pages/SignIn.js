@@ -49,33 +49,33 @@ const { Content } = Layout;
 
     const onFinish = async (values) => {
   
-      console.log("Success:", values.username);
+      // console.log("Success:", values.username);
       // Dismiss manually and asynchronously
       LoginIn(values);
      
     };
     const history = useHistory();
     const LoginIn= async (values)=>{
-      const hide = message.loading('Action in progress..', 0);
+      const hide = message.loading('Login in progress..');
       console.log("values are",values);
-      // const [users,setUsers]=useState({
-      //   username:"",
-      //   password:""
-      // });
-        await axios.get(`${JSON_API}/users`)
+      const userinfo={
+        email:values.username,
+        password:values.password
+      };
+        await axios.post(`${JSON_API}/Authentication/login`,userinfo)
         .then((response) => {
           // setUsers(response.data);
-          if(response.data.username!==values.username ) 
-          {
-            setTimeout(hide);
-            message.error('username incorrect');
-          }
-          else if(response.data.username===values.username && response.data.password!==values.password)
-          {
-            setTimeout(hide);
-            message.error('password incorrect');
-          }else{
-            const token  =  response.data.username;
+          // if(response.data.username!==values.username ) 
+          // {
+          //   setTimeout(hide);
+          //   message.error('username incorrect');
+          // }
+          // else if(response.data.username===values.username && response.data.password!==values.password)
+          // {
+          //   setTimeout(hide);
+          //   message.error('password incorrect');
+          // }else{
+            const token  =  response.data.hash;
     
             localStorage.setItem("token", token);
     
@@ -83,20 +83,9 @@ const { Content } = Layout;
     
             let path = `/`; 
             history.push(path);    
-           }
+          //  }
     
         })
-    
-    
-      // axios.post(`https://localhost:7095/api/Tokenmanager/Authentification?user_login=${values.username}&user_password=${values.password}`)
-      // .then(response => {
-      //   setTimeout(hide, response);
-      //   const token  =  response.data.token;
-    
-      //   localStorage.setItem("token", token);
-    
-      //   window.location.href = '/tables'
-      // })
       .catch(function (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -104,14 +93,21 @@ const { Content } = Layout;
           console.log(error.toJSON());
           console.log(error.response.status);
           console.log(error.response.headers);
+
+          setTimeout(hide);
+          message.error(`Could not connect to server!`);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
           console.log(error.request);
+          setTimeout(hide);
+          message.error(`Could not connect to server!`);
         } else {
           // Something happened in setting up the request that triggered an Error
           console.log('Error', error.message);
+          setTimeout(hide);
+          message.error(`Could not connect to server!`);
         }
         console.log(error.config);
       });

@@ -4,6 +4,7 @@ import TutorialDataService from "../services/TutorialService";
 import { NavLink,useHistory } from 'react-router-dom';
 import {JSON_API} from '../services/Constants';
 import {PlusOutlined,SettingOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import {
   DatePicker,
@@ -71,6 +72,7 @@ const tailFormItemLayout = {
        
 const AddCompany = () => {
   const ref = useRef(null);
+  let {t} =useTranslation();
 
   const [shareHolderData, setShareHolderData] = useState([]);
   const [ManagerbyId, setManagerbyId] = useState({});
@@ -97,25 +99,25 @@ const AddCompany = () => {
       dataIndex: 'id',
     },
     {
-      title: 'Shareholder name',
+      title: `${t("Leadersname")}`,
       dataIndex: 'name',
       width: '30%',
     },
     {
-      title: 'Shares',
+      title: `${t("Shares")}`,
       dataIndex: 'shares',
     },
     {
-      title: 'Start date',
+      title: `${t("Startdate")}`,
       dataIndex: 'datestring',
     },
     {
-      title: 'operation',
+      title: 'Actions',
       dataIndex: 'operation',
       render: (_, record) =>
         shareHolderData.length >= 1 ? (
           <Popconfirm title="Sure to delete?" onConfirm={() => handleshareholderDelete(record.id)}>
-            <a>Delete</a>
+            <a>{t("Delete")}</a>
           </Popconfirm>
         ) : null,
     },
@@ -126,36 +128,26 @@ const AddCompany = () => {
       dataIndex: 'id',
     },
     {
-      title: 'Lastname',
+      title: `${t("Lastname")}`,
       dataIndex: 'name',
       width: '30%',
     },
     {
-      title: 'Firstname',
+      title: `${t("Firstname")}`,
       dataIndex: 'firstName',
     },
-    // {
-    //   title: 'Titles',
-    //   dataIndex: 'titles',
-    //   render:(titles) => (
-    //     ManagerData.map((title) => (
-    //         <Tag color="blue" key={title}>
-    //           {title}
-    //         </Tag>
-    //       ))
-    //   )
-    // },
     {
-      title: 'Years of Experience',
+      title: `${t("Yearsofexperience")}`,
       dataIndex: 'yearsofExperience',
     },
+
     {
-      title: 'operation',
+      title: 'Actions',
       dataIndex: 'operation',
       render: (_, record) =>
       ManagerData.length >= 1 ? (
           <Popconfirm title="Sure to delete?" onConfirm={() => handlemanagerDelete(record.id)}>
-            <a>Delete</a>
+            <a>{t("Delete")}</a>
           </Popconfirm>
         ) : null,
     },
@@ -754,7 +746,7 @@ const handleChange = (event) => {
   console.log("test "+event.target.value)
   // setShareHolderName(event.target.value);
 };
-    // needed of update
+  // needed of update
 const [Open, setOpen] = useState({
     open:false,
     url:null,
@@ -762,10 +754,10 @@ const [Open, setOpen] = useState({
   });
   // needed of update
   const onCreate = async ({values,url,data}) => {
+
     console.log('Received data of form: ', data);
     console.log('Received values of form: ', values);
     console.log('Received url of form: ', url);
-
 
     await axios.post(`${JSON_API}/${url}`,values)
     .then((response) => {
@@ -778,12 +770,13 @@ const [Open, setOpen] = useState({
       });
     })
     setOpen(false);
-
   };
+
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    console.log('Received manager data of form: ', ManagerData);
-    console.log('Received shareholder of form: ', shareHolderData);
+
+  console.log('Received values of form: ', values);
+  console.log('Received manager data of form: ', ManagerData);
+  console.log('Received shareholder of form: ', shareHolderData);
 
   };
 
@@ -987,20 +980,19 @@ const [Open, setOpen] = useState({
     >
     
 
-    <Title>Add Company</Title>
-    <Text type="secondary">Please fill out the required fields below and click on the "Submit" button to add your company's informations</Text>
-    <Collapse defaultActiveKey={['1']}>
-      <Panel header="General information" key="1">
+    <Title>{t("AddCompany")}</Title>
+    <Text type="secondary">{t("textButtonAJT")}</Text>
+<Divider orientation="left">{t("generalinf")}</Divider>
             <Form.Item
                   {...formItemLayout}
       name="nom_de_la_société"
-      label="Company name"
+      label={t("companyname")}
        
       // tooltip="What do you want others to call you?"
       rules={[
         {
           required: true,
-          message: 'Please input the company name!',
+          message: `${t("Pleaseinputthecompanyname")}`,
           // whitespace: true,
         },
       ]}
@@ -1011,7 +1003,7 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="adresse"
-      label="Address"
+      label={t("address")}
            >
       <Input />
     </Form.Item>
@@ -1020,7 +1012,7 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="pays"
-      label="Country"
+      label={t("country")}
        
       // tooltip="What do you want others to call you?"
       
@@ -1032,11 +1024,11 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="province"
-      label="Province"
+      label={t("province")}
        
       // tooltip="What do you want others to call you?"
     >
-      <Select placeholder="select the province">
+      <Select placeholder={t("ProvinceSelect")}>
         <Option value="ON">ON</Option>
         <Option value="QC">QC</Option>
         <Option value="NS">NS</Option>
@@ -1053,7 +1045,7 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="ville"
-      label="City"
+      label={t("city")}
        
       // tooltip="What do you want others to call you?"
   
@@ -1067,7 +1059,7 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="code_postal"
-      label="Postal code"
+      label={t("postalcode")}
        
     >
       <Input />
@@ -1079,7 +1071,7 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="date_de_fondation"
-      label="Founding date"
+      label={t("foundingdate")}
      
       // tooltip="What do you want others to call you?"
       // validateStatus="error"
@@ -1097,7 +1089,7 @@ const [Open, setOpen] = useState({
       {...formItemLayout}
 
       name="date_fin_exercice"
-      label="Year-end date"
+      label={t("Yearenddate")}
        
     >
       <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
@@ -1111,7 +1103,7 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="numéro_entreprise"
-      label="Business Number"
+      label={t("Businessnumber")}
      
     >
       <Input />
@@ -1121,7 +1113,7 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="nombre_employés"
-      label="Number of employees"
+      label={t("Numberofemployees")}
       rules={[
         {
           type: 'number',
@@ -1137,15 +1129,15 @@ const [Open, setOpen] = useState({
 
 
 
-    <Form.Item label="Type of industry"       {...formItemLayout}>
+    <Form.Item label={t("Typeofindustry")}      {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
               name="type_industrie"
-              label="Type of industry"
+              label={t("Typeofindustry")}
               noStyle
             >
-              <Select mode="multiple" allowClear placeholder="select the type of industry" size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selectthetypeofindustry")} size={'large'} style={{ width: '100%', }}>
                   {TypeIndustries.map((e)=>(
 
                     e&&<Option value={e.id}>{e.label}</Option>
@@ -1160,10 +1152,10 @@ const [Open, setOpen] = useState({
                 onClick={() => {
                 setOpen({open:true,
                 url:"IndustryTypes",
-                data:"Type of industry"});
+                data:`${t("Typeofindustry")}`});
               }}
             >
-            <PlusOutlined/> Add new type
+            <PlusOutlined/>{t("AddnewtypeIndustry")}
           </Button>
          
           </Col>
@@ -1185,7 +1177,7 @@ const [Open, setOpen] = useState({
       value={company.budget}
 
     >
-      <Select placeholder="select the budget">
+      <Select placeholder={t("selectthebudget")}>
         <Option value="50-100">50 - 100</Option>
         <Option value="100-1000">100 - 1000</Option>
         <Option value="+1000">+1000</Option>
@@ -1196,7 +1188,7 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="taux_imposition_annuel_estimé"
-      label="Taux d'imposition annuel estimé(%)"
+      label={t("Estimatedannualtaxrate")}
        
       value={company.taux_imposition_annuel_estimé}
       rules={[
@@ -1212,18 +1204,19 @@ const [Open, setOpen] = useState({
       <InputNumber />
    
     </Form.Item>
-    </Panel>
-    <Panel header="Target customers" key="2">
 
-    <Form.Item label="Market"       {...formItemLayout}>
+    <Divider orientation="left">{t("Targetcustomers")}</Divider>
+
+
+    <Form.Item label={t("Market")}      {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
               name="market"
-              label="Market"
+              label={t("Market")}  
               noStyle
             >
-              <Select mode="multiple" allowClear placeholder="select the market" size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selectthemarket")}   size={'large'} style={{ width: '100%', }}>
                   {Market.map((e)=>(
 
                     e&&<Option value={e.id}>{e.label}</Option>
@@ -1238,26 +1231,26 @@ const [Open, setOpen] = useState({
                 onClick={() => {
                   setOpen({open:true,
                   url:"Markets",
-                  data:"Market"});
+                  data:`${t("Market")}`});
                 }}
             >
-            <PlusOutlined/> Add new market
+            <PlusOutlined/> {t("AddnewmarketButton")}  
           </Button>
      
           </Col>
         </Row>
       </Form.Item>
 
-      <Form.Item label="Main Customers"       {...formItemLayout}>
+      <Form.Item label= {t("MainCustomers")}      {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
               name="main_customers"
-              label="Main Customers"
+              label={t("MainCustomers")}  
               noStyle
               // rules={[{ required: true, message: 'Please input the main customers!'}]}
             >
-              <Select mode="multiple" allowClear placeholder="select the main customers" size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selectthemaincustomers")}   size={'large'} style={{ width: '100%', }}>
                   {MainCustomer.map((e)=>(
 
                     e&&<Option value={e.id}>{e.name}</Option>
@@ -1272,25 +1265,25 @@ const [Open, setOpen] = useState({
                 onClick={() => {
                   setOpen({open:true,
                   url:"MainCustomers",
-                  data:"Main customers"});
+                  data:`${t("MainCustomers")}`});
                 }}
             >
-            <PlusOutlined/> Add new customer
+            <PlusOutlined/> {t("AddnewcustomerButton")}
           </Button>
           </Col>
         </Row>
       </Form.Item>
 
     
-      <Form.Item label="Revenue Model"       {...formItemLayout} >
+      <Form.Item label={t("RevenueModel")}     {...formItemLayout} >
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
               name="revenue_model"
-              label="Revenue Model"
+              label={t("RevenueModel")} 
               noStyle
             >
-              <Select mode="multiple" allowClear placeholder="select the revenue model" size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selecttherevenuemodel")} size={'large'} style={{ width: '100%', }}>
                   {RevenueModel.map((e)=>(
 
                     e&&<Option value={e.id}>{e.label}</Option>
@@ -1305,26 +1298,26 @@ const [Open, setOpen] = useState({
                 onClick={() => {
                   setOpen({open:true,
                   url:"RevenueModelItems",
-                  data:"Revenue model"});
+                  data:`${t("RevenueModel")}`   });
                 }}
             >
-            <PlusOutlined/> Add new revenue model
+            <PlusOutlined/> {t("RevenueModelButton")} 
           </Button>
      
           </Col>
         </Row>
       </Form.Item>
     
-      <Form.Item label="Business partners"       {...formItemLayout}>
+      <Form.Item label={t("BusinesspartnersButton")}        {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
               name="business_partners"
-              label="Business partners"
+              label={t("BusinesspartnersButton")} 
               noStyle
               // rules={[{ required: true, message: 'Please input the business partner!'}]}
             >
-              <Select mode="multiple" allowClear placeholder="select the business partners" size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selectthebusinesspartners")}  size={'large'} style={{ width: '100%', }}>
                   {BusinessPartner.map((e)=>(
 
                     e&&<Option value={e.id}>{e.name}</Option>
@@ -1339,28 +1332,28 @@ const [Open, setOpen] = useState({
             onClick={() => {
               setOpen({open:true,
               url:"BusinessPartners",
-              data:"Business partners"});
+              data:`${t("BusinesspartnersButton")}` });
             }}
           >
-            <PlusOutlined/> Add new business partner
+            <PlusOutlined/> {t("Addnewbusinesspartner")}
           </Button>
      
           </Col>
         </Row>
       </Form.Item>
-      </Panel>
 
-      <Panel header="Description of services and products" key="3">
+     <Divider orientation="left">{t("Descriptionofservicesandproducts")}</Divider>
 
-      <Form.Item label="Strategic targets"       {...formItemLayout} >
+
+      <Form.Item label={t("Strategictargets")}      {...formItemLayout} >
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
               name="strategic_target"
-              label="Strategic targets"
+              label={t("Strategictargets")} 
               noStyle
             >
-              <Select mode="multiple" allowClear placeholder="select the strategic target" size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selectthestrategictarget")}  size={'large'} style={{ width: '100%', }}>
                   {StrategicTarget.map((e)=>(
 
                     e&&<Option value={e.id}>{e.name}</Option>
@@ -1376,24 +1369,24 @@ const [Open, setOpen] = useState({
                 onClick={() => {
                   setOpen({open:true,
                   url:"StrategicTargets",
-                  data:"Strategic Target"});
+                  data:`${t("Strategictargets")}` });
                 }}
             >
-            <PlusOutlined/> Add new strategic target
+            <PlusOutlined/> {t("StrategictargetsButton")}
           </Button>
           </Col>
         </Row>
       </Form.Item>
 
-      <Form.Item label="Type of activities"       {...formItemLayout}>
+      <Form.Item label={t("Typeofactivities")}        {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
               name="activity_type"
-              label="Type of activities"
+              label={t("Typeofactivities")}
               noStyle
             >
-              <Select mode="multiple" allowClear placeholder="select the type of activities" size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selectthetypeofactivities")} size={'large'} style={{ width: '100%', }}>
                   {ActivityType.map((e)=>(
 
                     e&&<Option value={e.id}>{e.label}</Option>
@@ -1409,24 +1402,24 @@ const [Open, setOpen] = useState({
                 onClick={() => {
                   setOpen({open:true,
                   url:"ActivityTypes",
-                  data:"Type of activities"});
+                  data:`${t("Typeofactivities")}`});
                 }}
             >
-            <PlusOutlined/> Add new type of activity
+            <PlusOutlined/>{t("TypeofactivitiesButton")} 
           </Button>
           </Col>
         </Row>
       </Form.Item>
 
-      <Form.Item label="Products / Services"       {...formItemLayout}>
+      <Form.Item label={t("ProductsServices")}       {...formItemLayout}>
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
               name="product"
-              label="Products / Services"
+              label={t("ProductsServices")} 
               noStyle
             >
-              <Select mode="multiple" allowClear placeholder="select the products / services" size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selecttheproductsservices")}  size={'large'} style={{ width: '100%', }}>
                   {Product.map((e)=>(
 
                     e&&<Option value={e.id}>{e.label}</Option>
@@ -1442,17 +1435,16 @@ const [Open, setOpen] = useState({
                 onClick={() => {
                   setOpen({open:true,
                   url:"Products",
-                  data:"Products / Services"});
+                  data:`${t("ProductsServices")}`});
                 }}
             >
-            <PlusOutlined/> Add new product / service
+            <PlusOutlined/> {t("ProductsServicesButton")} 
           </Button>
           </Col>
         </Row>
       </Form.Item>
-      </Panel>
-      
-      <Panel header="Management team" key="4">
+           <Divider orientation="left">{t("Managementteam")}</Divider>
+
       <Space
         style={{
           display: 'flex',
@@ -1464,14 +1456,14 @@ const [Open, setOpen] = useState({
 
       <Form.Item
         name="managers"
-        label="Managers"
+        label={t("Leadersname")}
       >
         <Select  
           style={{
             width: 200,
           }}
           size={'large'}
-          placeholder="Search to Select"
+          placeholder={t("selectleader")}
           // optionFilterProp="children"
           onChange={e=>setManagerId(e)}
                 // filterOption={(input, option) => (option?.label ?? '').includes(input)}
@@ -1506,13 +1498,13 @@ const [Open, setOpen] = useState({
             data:"Title"});
           }}
       >
-      <SettingOutlined /> Manage titles
+      <SettingOutlined /> {t("Managetitles")}
       </Button>
       
 
     <Form.Item name="add">
       <Button  onClick={()=>addManagerdata()}>
-      <PlusOutlined/>Add manager
+      <PlusOutlined/>{t("Addmanager")}
       </Button>
     </Form.Item>
 
@@ -1527,10 +1519,8 @@ const [Open, setOpen] = useState({
       />}
       
 
-      </Panel>
+      <Divider orientation="left">{t("Legalstructure")}</Divider>
 
-
-      <Panel  header="Legal structure" key="5">
 
       <Space
         style={{
@@ -1543,7 +1533,7 @@ const [Open, setOpen] = useState({
 
       <Form.Item
         name="shareholdersname"
-        label="ShareHolders"
+        label={t("ShareHolders")}
       >
         <Select  
           style={{
@@ -1571,7 +1561,7 @@ const [Open, setOpen] = useState({
           onClick={() => {
             setOpen({open:true,
             url:"ShareHolders",
-            data:"Shareholder"});
+            data:`${t("ShareHolders")}` });
           }}
       >
       <PlusOutlined/>
@@ -1580,7 +1570,7 @@ const [Open, setOpen] = useState({
 
       <Form.Item
         name="shares"
-        label="Shares"
+        label={t("Shares")}
       >
         <InputNumber
           // disabled={SHselected}
@@ -1600,7 +1590,7 @@ const [Open, setOpen] = useState({
 
       <Form.Item
       name="shares_startdate"
-      label="Start date"
+      label={t("Startdate")}
       >
         <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
       const d = new Date(date).toLocaleDateString('en-US');
@@ -1611,7 +1601,7 @@ const [Open, setOpen] = useState({
 
     <Form.Item name="add">
       <Button  onClick={()=>addShareholderdata()}>
-      <PlusOutlined/>Add shareholder
+      <PlusOutlined/>{t("CreateanewShareholder")}
       </Button>
     </Form.Item>
 
@@ -1626,13 +1616,15 @@ const [Open, setOpen] = useState({
       />}
       
 
-      </Panel>
-      </Collapse>
+      
 
     <Form.Item {...tailFormItemLayout}>
       <Button type="primary" htmlType="submit">
-        Submit
+        {t("submit")}
       </Button>
+      <Button htmlType="button">
+            Cancel
+          </Button>
     </Form.Item>
    
   </Form>

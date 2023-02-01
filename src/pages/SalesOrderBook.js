@@ -8,14 +8,16 @@ import {
 
 import {JSON_API} from '../services/Constants';
 import axios from 'axios';
+import { CompanyContext } from '../contexts/CompanyContext';
 
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
 
-
 const SalesOrderBook = () => {
+  const {Lang,setLang,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
+
   const current = new Date();
   // const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
   const [dataSource, setDataSource] = useState();
@@ -25,15 +27,35 @@ const SalesOrderBook = () => {
 
   useEffect(() => {
     getorderbooks();
-  }, []);
+    console.log('company changed ',Company.id);
+  }, [Company.id]);
 
 
   const getorderbooks = async ()=>{
-    await axios.get(`${JSON_API}/orderbook`)
+    await axios.get(`${JSON_API}/OrderBooks/enterprise/${Company.id}`)
     .then((response)=>{
       console.log("orderbook:",response.data);
       setDataSource(response.data);
-    })
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      setDataSource(null);
+
+      console.log(error.config);
+    });
   };
 
   const handleDelete = async(id) => {
@@ -75,14 +97,17 @@ const SalesOrderBook = () => {
     },
     {
       title: 'Creation Date',
-      dataIndex: 'date',
+      dataIndex: 'createdAt',
       render: (_, record) =>(
-        <>{dayjs(record.createdAt).format('YYYY/MM/DD')}</>
+        <div style={{textAlign: "center"}} >{dayjs(record.createdAt).format('YYYY/MM/DD')}</div>
       )
     },
     {
       title: 'Total',
       dataIndex: 'total',
+      render: (_, record) =>(
+        <div style={{textAlign: "right"}} >{record.total}</div>
+      )
     },
 
     {
@@ -140,21 +165,40 @@ const SalesOrderBook = () => {
 
     const orderbook = {
       name:values.name,
-      createdAt:now
+      enterpriseId:Company.id
     }
 
     console.log('Success:', orderbook);
 
-    await axios.post(`${JSON_API}/orderbook`,orderbook)
+    await axios.post(`${JSON_API}/OrderBooks`,orderbook)
     .then((response) => {
+
       getorderbooks();
       console.log('Orderbook added Successfully!');
-
       messageApi.open({
         type: 'success',
         content: 'Orderbook added Successfully!'
       });
-    })
+
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+
+      console.log(error.config);
+    });
   };
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
