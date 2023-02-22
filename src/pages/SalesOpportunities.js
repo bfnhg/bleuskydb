@@ -16,7 +16,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
 
-const SalesOrderBook = () => {
+const SalesOpportunities = () => {
   let {t} =useTranslation();
 
   const {Lang,setLang,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
@@ -35,9 +35,9 @@ const SalesOrderBook = () => {
 
 
   const getorderbooks = async ()=>{
-    await axios.get(`${JSON_API}/OrderBooks/enterprise/${Company.id}`)
+    await axios.get(`${JSON_API}/OpportunityBook/enterprise/${Company.id}`)
     .then((response)=>{
-      console.log("orderbook:",response.data);
+      console.log("OpportunityBook:",response.data);
       setDataSource(response.data);
     }).catch(function (error) {
       if (error.response) {
@@ -62,10 +62,10 @@ const SalesOrderBook = () => {
   };
 
   const handleDelete = async(id) => {
-    await axios.delete(`${JSON_API}/OrderBooks/${id}`)
+    await axios.delete(`${JSON_API}/OpportunityBook/${id}`)
     .then(() => { 
     
-      messageApi.info(`${t("orderbookdeleted")}`);
+      messageApi.info(`${t("opportunitybookdeleted")}`);
       getorderbooks();
     })
     // const newData = dataSource.filter((item) => item.key !== id);
@@ -78,7 +78,6 @@ const SalesOrderBook = () => {
       dataIndex: 'name',
       width: '30%',
       align:"center",
-
       render: (text, record) => {
         if (editingRow === record.id) {
           return (
@@ -87,7 +86,7 @@ const SalesOrderBook = () => {
               rules={[
                 {
                   required: true,
-                  message: `${t("orderbooknamerequired")}`,
+                  message:`${t("opportunitybooknamerequired")}`,
                 },
               ]}
             >
@@ -120,7 +119,7 @@ const SalesOrderBook = () => {
     },
 
     {
-      title: 'Actions',
+      title:  'Actions',
       dataIndex: 'operation',
       align:"center",
 
@@ -131,14 +130,15 @@ const SalesOrderBook = () => {
             editingRow === record.id?
             <>
             <Button type="link" onClick={()=>setEditingRow(null)}>
-              {t("cancel")}
+            {t("cancel")}
             </Button>
             <Button type="link" htmlType="submit">
-              {t("save")}
+            {t("save")}
             </Button>
             </>
             
             :
+
             <>
             <Button
               type="link"
@@ -150,14 +150,14 @@ const SalesOrderBook = () => {
                 });
               }}
             >
-              {t("edit")} 
+              {t("edit")}  
             </Button>
             <Popconfirm title={t("deleterow")} onConfirm={() => handleDelete(record.id)} okText="Yes" cancelText="No">
             <a>{t('Delete')}</a>
             </Popconfirm>
 
             <Link to={{
-              pathname:`/orderbook/${record.id}`,
+              pathname:`/opportunitybook/${record.id}`,
               state:{stateParam:record.id}
             }}>{t('details')}</Link>
 
@@ -181,14 +181,14 @@ const SalesOrderBook = () => {
 
     console.log('Success:', orderbook);
 
-    await axios.post(`${JSON_API}/OrderBooks`,orderbook)
+    await axios.post(`${JSON_API}/OpportunityBook`,orderbook)
     .then((response) => {
 
       getorderbooks();
-      console.log('Orderbook added Successfully!');
+      console.log('OpportunityBook added Successfully!');
       messageApi.open({
         type: 'success',
-        content: `${t("orderbookcreation")}`
+        content: `${t("opportunitybookcreation")}`
       });
 
     }).catch(function (error) {
@@ -222,16 +222,16 @@ const SalesOrderBook = () => {
       name:values.name,
     }
 
-    console.log("orderbookedited: ",orderbookobj);
+    console.log("Opportunity edited: ",orderbookobj);
 
-    await axios.put(`${JSON_API}/OrderBooks`,orderbookobj)
+    await axios.put(`${JSON_API}/OpportunityBook`,orderbookobj)
     .then((response) => {
       getorderbooks();
-      console.log('Orderbook updated Successfully!');
+      console.log('Opportunity updated Successfully!');
 
       messageApi.open({
         type: 'success',
-        content: `${t("orderbookupdate")}`
+        content: `${t("opportunitybookupdate")}`
       });
     })
     setEditingRow(null);
@@ -246,19 +246,12 @@ const SalesOrderBook = () => {
     bordered={false}
     className="header-solid mb-24"
     title={
-        <h6 className="font-semibold">{t("orderbook")}</h6>
+        <h6 className="font-semibold">{t("opportunitybook")}</h6>
     }
   >
     
     <Form
       name="basic"
-      // labelCol={{
-      //   span: 8,
-      // }}
-      // wrapperCol={{
-      //   span: 16,
-      // }}
-
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -275,7 +268,7 @@ const SalesOrderBook = () => {
         rules={[
           {
             required: true,
-            message: `${t("orderbooknamerequired")}`,
+            message: `${t("opportunitybooknamerequired")}`,
           },
         ]}
       >
@@ -288,7 +281,7 @@ const SalesOrderBook = () => {
         }}
       >
         <Button type="primary" htmlType="submit">
-          {t("create")} 
+        {t("create")} 
         </Button>
       </Form.Item>
       </Space>
@@ -306,4 +299,7 @@ const SalesOrderBook = () => {
     </>
   );
 };
-export default SalesOrderBook
+
+
+export default SalesOpportunities
+

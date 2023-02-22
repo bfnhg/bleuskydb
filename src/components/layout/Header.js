@@ -458,7 +458,7 @@ const onChange = async (value) => {
 
   messageApi.open({
     type: 'loading',
-    content: 'Switching Company in progress..',
+    content: `${t("loadingcompanyinformation")}`,
     duration: 0,
   });
 
@@ -469,7 +469,7 @@ const onChange = async (value) => {
     setTimeout(messageApi.destroy);
     console.log("info of this company", Company)
 
-  }).then(() => message.success('Loading finished', 2));
+  }).then(() => message.success(`${t("Loadingfinished")}`, 2));
 
 };
   const { Title, Text } = Typography;

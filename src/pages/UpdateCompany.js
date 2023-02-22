@@ -100,33 +100,47 @@ const UpdateCompany = () => {
     {
       title: 'Id',
       dataIndex: 'id',
+      align:"center",
+
+      render: (text, record) =>(
+        <div style={{textAlign: "right"}}>{text}</div>
+      )
     },
     {
-      title: 'Shareholder name',
+      title: `${t("Leadersname")}`,
       dataIndex: 'name',
       width: '30%',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
+
     },
     {
-      title: 'Shares',
+      title:  `${t("Shares")}`,
       dataIndex: 'shares',
+      align:"center",
+
       render: (_, record) =>(
-          <>{record.shares}%</>
+          <div style={{textAlign: "right"}}>{record.shares}%</div>
         )
     },
     {
-      title: 'Start date',
+      title:  `${t("Startdate")}`,
       dataIndex: 'startedAt',
+      align:"center",
+
       render: (_, record) =>(
-          <>{dayjs(record.startedAt).format('YYYY/MM/DD')}</>
+          <div style={{textAlign: "center"}}>{dayjs(record.startedAt).format('YYYY/MM/DD')}</div>
         )
     },
     {
-      title: 'operation',
+      title: 'Actions',
       dataIndex: 'operation',
+      align:"center",
+
       render: (_, record) =>
         shareHolderData.length >= 1 ? (
-          <Popconfirm title="Sure to delete?" onConfirm={() => handleshareholderDelete(record.id)}>
-            <a>Delete</a>
+          <Popconfirm title={t("Suretodelete")} onConfirm={() => handleshareholderDelete(record.id)}>
+            <a>{t("Delete")}</a>
           </Popconfirm>
         ) : null,
     },
@@ -135,28 +149,52 @@ const UpdateCompany = () => {
     {
       title: 'Id',
       dataIndex: 'id',
+      align:"center",
+
+      render: (text, record) =>(
+        <div style={{textAlign: "right"}}>{text}</div>
+      )
     },
     {
-      title: 'Lastname',
+      title:  `${t("Lastname")}`,
       dataIndex: 'name',
       width: '30%',
-    },
-    {
-      title: 'Firstname',
-      dataIndex: 'firstName',
-    },
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
 
-    {
-      title: 'Years of Experience',
-      dataIndex: 'yearsofExperience',
     },
     {
-      title: 'operation',
+      title: `${t("Firstname")}`,
+      dataIndex: 'firstName',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
+
+    },
+    {
+      title: `${t("Titles")}`,
+      dataIndex: 'titles',
+      align:"center",
+
+      render :(_,record)=>{
+        return record.titles.map(o=><div style={{textAlign: "left"}}><Tag >{o.title.label}</Tag></div> )
+      }
+    },
+    {
+      title:  `${t("Yearsofexperience")}`,
+      dataIndex: 'yearsOfExperience',
+      align:"center",
+
+      render:(text,record)=><div style={{textAlign: "right"}}>{text}</div>
+    },
+    {
+      title: 'Actions',
       dataIndex: 'operation',
+      align:"center",
+
       render: (_, record) =>
       ManagerData.length >= 1 ? (
-          <Popconfirm title="Sure to delete?" onConfirm={() => handlemanagerDelete(record.id)}>
-            <a>Delete</a>
+          <Popconfirm title={t("Suretodelete")} cancelText={t("no")} okText={t("yes")} onConfirm={() => handlemanagerDelete(record.id)}>
+            <a>{t("Delete")}</a>
           </Popconfirm>
         ) : null,
     },
@@ -182,6 +220,8 @@ const [Managers,setManagers]=useState([{}]);
 const [Titles,setTitles]=useState([{}]);
 const [TitlesData,setTitlesData]=useState([{}]);
 const [Datestart,setDatestart]=useState();
+const [Datefound,setDatefound]=useState();
+
 const [Dateend,setDateend]=useState();
 
 const[Tabkey,setTabkey]=useState("1");
@@ -194,7 +234,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
   console.log("open state"+open);
   console.log('data est ', data);
   {
-    return ["Shareholder","Main customers","Business partners","Strategic Target"].includes(data.data)?
+    return ["Shareholder","Customer","Business partners"].includes(data.data)?
       <Modal
         open={open}
         title={"Create a new "+data.data}
@@ -307,7 +347,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
      
 
       <Form.Item
-        name="yearsofexperience"
+        name="yearsOfExperience"
         label="Years of experience"
       >
         <InputNumber
@@ -392,6 +432,51 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
             </Modal> 
         
        
+       :data.data==="Strategic Target"?
+       <Modal
+        open={open}
+        title={"Create a new "+data.data}
+        okText="Create"
+        cancelText="Cancel"
+        onCancel={onCancel}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              form.resetFields();
+              onCreate({values:values,url:data.url,data:data.data});
+            })
+            .catch((info) => {
+              console.log('Validate Failed:', info);
+            });
+        }}
+        >
+  
+        <Form
+                          {...formItemLayout}
+        form={form}
+        // layout="vertical"
+        name="form_in_modal"
+        // initialValues={{
+        //   modifier: 'public',
+        // }}
+        >
+          
+        <Form.Item
+        name="label"
+        label="Label"
+        
+        rules={[
+          {
+            required: true,
+            message: `Please input the ${data.data} label!`,
+          },
+        ]}
+        >
+        <Input placeholder={data.data+"  label"}/>
+        </Form.Item>
+        </Form>
+       </Modal> 
        :
 
       <Modal
@@ -441,6 +526,120 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
   }
 };
 const [company, setCompany] = useState(Company);
+
+const getIndustryTypes = async()=>{
+  await axios.get(`${JSON_API}/IndustryTypes`)
+  .then((response) => {
+    setTypeIndustries(response.data);
+    console.log(TypeIndustries,'TypeIndustries');
+  }).catch(function (error) {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+  });
+}
+
+const getManagers = async()=>{
+  await axios.get(`${JSON_API}/Managers`)
+  .then((response) => {
+    setManagers(response.data);
+  }).catch(function (error) {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+  });
+}
+
+const getShareholders = async()=>{
+  await axios.get(`${JSON_API}/ShareHolders`)
+  .then((response) => {
+    setShareHolders(response.data);
+    console.log('ShareHolders',ShareHolders);
+    const companyshareholders = ShareHolders.filter(o => {
+      let Found = false;
+      company.shareHolders.forEach(d=>{
+        if(d.id == o.id) Found = true;
+      });
+      return Found;
+      });
+
+ console.log("shareholders of company test",companyshareholders.filter(o=>{
+  let Found = false;
+  o.shares.forEach(d=>{
+    if(d.enterpriseId == company.id) Found = true;
+  });
+  return Found;
+}))
+
+  }).catch(function (error) {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+  });
+}
+
+const getTitles = async()=>{
+  await axios.get(`${JSON_API}/Titles`)
+  .then((response) => {
+    setManagers(response.data);
+  }).catch(function (error) {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+  });
+}
 
     // needed of update
 useEffect(()=>{getData();},[]);
@@ -518,7 +717,7 @@ useEffect(()=>{getData();},[]);
       console.log(error.config);
     });
 
-    await axios.get(`${JSON_API}/MainCustomers`)
+    await axios.get(`${JSON_API}/Customers`)
     .then((response) => {
       setMainCustomer(response.data);
     }).catch(function (error) {
@@ -764,7 +963,7 @@ const [Open, setOpen] = useState({
 
       messageApi.open({
         type: 'success',
-        content: 'values were added to ' + data + " Successfully!",
+        content: `${t("addedsuccessfully")}`,
       });
     })
     setOpen(false);
@@ -780,7 +979,7 @@ const [Open, setOpen] = useState({
     province:"",// dropdrown list
     code_postal:"",
     pays:"",
-    date_de_fondation:"", //ex  date selector 01/01/2022
+    date_start:"", //ex  date selector 01/01/2022
     date_fin_exercice:"", //ex date selector 12/31/2022
     numéro_entreprise:null, //ex 1700
     nombre_employés:null, //5
@@ -822,7 +1021,7 @@ const [Open, setOpen] = useState({
           name:m[0].name,
           firstName:m[0].firstName,
           titles:m[0].titles,
-          yearsofExperience:m[0].yearsofExperience,
+          yearsOfExperience:m[0].yearsOfExperience,
         }]);
       }
       
@@ -834,7 +1033,7 @@ const [Open, setOpen] = useState({
     console.log("manager name info:",m[0].name);
     console.log("manager firstname info:",m[0].firstName);
     console.log("manager title info:",m[0].titles);
-    console.log("manager yearsofExperience info:",m[0].yearsofExperience);
+    console.log("manager yearsofExperience info:",m[0].yearsOfExperience);
 
     console.log("ManagerData state:",ManagerData);
 
@@ -870,27 +1069,28 @@ const [Open, setOpen] = useState({
       id:company.id,
       name: values.nom_de_la_société,
       businessNumber: values.numéro_entreprise,
-      // budgetRange: values.budget,
-      startingDate: values.date_de_fondation,
+      budgetRange: values.budget,
+      startingDate: values.date_start,
+      foundingDate: values.date_de_fondation,
       endDate: values.date_fin_exercice,
-      empoyeesCount: values.nombre_employés,
+      employeesCount: values.nombre_employés,
       address: values.adresse,
       postalCode: values.code_postal,
       // cityId: values.ville,
       taxes: values.taux_imposition_annuel_estimé,
       activityTypes: values.activity_type,
       products: values.product,
-      mainCustomers: values.main_customers,
+      customers: values.main_customers,
       markets: values.market,
       revenueModelItems: values.revenue_model,
       businessPartners: values.business_partners,
       industryTypes: values.type_industrie,
-      strategicTargets: values.strategic_target,
+      // strategicTargets: values.strategic_target,
       managers: ManagerData.map(i=>i.id),
       shareHolders:shareHolderData.map(i=>{return{
         shareHolderId:i.id,
         shares: i.shares&&i.shares,
-        startedAt:i.startedAt
+        startedAt:i.date
       }})
 
      
@@ -967,27 +1167,29 @@ const [Open, setOpen] = useState({
         nom_de_la_société:company.name,
         numéro_entreprise:company.businessNumber,
         budget:company.budgetRange,
-        date_de_fondation: dayjs(company.startingDate),
+        date_de_fondation: dayjs(company.foundingDate),
+        date_start: dayjs(company.startingDate),
         date_fin_exercice:dayjs(company.endDate),
-        nombre_employés:company.empoyeesCount,
+        nombre_employés:company.employeesCount,
         adresse:company.address,
         code_postal:company.postalCode,
-        ville:company.city,
+        ville:company.cityId,
         taux_imposition_annuel_estimé:company.taxes,
         activity_type:company.activityTypes.map(e=>e.id),
         product:company.products.map(e=>e.id),
-        main_customers:company.mainCustomers.map(e=>e.id),
+        main_customers:company.customers.map(e=>e.id),
         market:company.markets.map(e=>e.id),
         revenue_model:company.revenueModelItems.map(e=>e.id),
         business_partners:company.businessPartners.map(e=>e.id),
         type_industrie:company.industryTypes.map(e=>e.id),
         strategic_target:company.strategicTargets.map(e=>e.id)
+
       }}
       scrollToFirstError
     >
     
 
-    <Title>{t("UpdateCompany")}: {company.name}</Title>
+    <Title>{company.name}</Title>
     <Text type="secondary">{t("textupdate")}</Text>
     <Divider orientation="left">{t("generalinf")}</Divider>
             <Form.Item
@@ -1006,6 +1208,24 @@ const [Open, setOpen] = useState({
     >
       <Input />
     </Form.Item>
+    <Form.Item
+          {...formItemLayout}
+
+      name="date_de_fondation"
+      label={t("foundingdate")}
+     
+      // tooltip="What do you want others to call you?"
+      // validateStatus="error"
+      // help="Please select right date"
+    >
+        <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+      const d = new Date(date).toLocaleDateString('en-US');
+      console.log(d);
+      setDatefound(d);
+    }}/>
+
+    </Form.Item>
+
     <Form.Item
           {...formItemLayout}
 
@@ -1059,9 +1279,6 @@ const [Open, setOpen] = useState({
     >
       <Input />
     </Form.Item>
-
-  
-
     <Form.Item
           {...formItemLayout}
 
@@ -1077,8 +1294,8 @@ const [Open, setOpen] = useState({
     <Form.Item
           {...formItemLayout}
 
-      name="date_de_fondation"
-      label={t("foundingdate")}
+      name="date_start"
+      label={t("Startdate")}
      
       // tooltip="What do you want others to call you?"
       // validateStatus="error"
@@ -1168,12 +1385,6 @@ const [Open, setOpen] = useState({
           </Col>
         </Row>
       </Form.Item>
-
-
-
-
-
-    
    
     <Form.Item
           {...formItemLayout}
@@ -1185,9 +1396,9 @@ const [Open, setOpen] = useState({
 
     >
       <Select placeholder={t("selectthebudget")}>
-        <Option value="50-100">50 - 100</Option>
-        <Option value="100-1000">100 - 1000</Option>
-        <Option value="+1000">+1000</Option>
+        <Option value={0}>50 - 100</Option>
+        <Option value={1}>100 - 1000</Option>
+        <Option value={2}>+1000</Option>
       </Select>
     </Form.Item>
 
@@ -1270,7 +1481,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                   setOpen({open:true,
-                  url:"MainCustomers",
+                  url:"Customers",
                   data:`${t("MainCustomers")}`});
                 }}
             >
@@ -1624,11 +1835,11 @@ const [Open, setOpen] = useState({
     <Form.Item {...tailFormItemLayout}>
       
       <Space style={{marginTop:10}}>
-          <Button type="primary" htmlType="submit" style={{width:100}} >
+          <Button type="primary" htmlType="submit" style={{width:"auto"}} >
           {t("submit")}
           </Button>
-          <Button htmlType="button">
-            Cancel
+          <Button htmlType="button" onClick={gotoGI}>
+          {t("cancel")}
           </Button>
         </Space>
     </Form.Item>

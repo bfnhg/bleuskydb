@@ -23,9 +23,11 @@ import UpdateCompany from "./pages/UpdateCompany";
 import StrategicPlanning from "./pages/StrategicPlanning";
 import Chartofaccounts from "./pages/Chartofaccounts";
 import Newchartofaccounts from "./pages/Newchartofaccounts";
+import SalesOpportunities from "./pages/SalesOpportunities";
+import OpportunityDetails from "./pages/OpportunityDetails";
 
 function App() {
-  const [Company,setCompany]=useState({});
+  const [Company,setCompany]=useState(null);
   const [Companies,setCompanies]=useState([{}]);
 
   const[TempCompany,setTempCompany]=useState({});
@@ -60,8 +62,11 @@ function App() {
         <RouteGuard exact path='/billing'><Billing /></RouteGuard>
         <RouteGuard exact path='/rtl'><Rtl /></RouteGuard>
         <RouteGuard exact path='/profile'><Profile /></RouteGuard>
-        <RouteGuard exact path='/orderbook'><SalesOrderBook /></RouteGuard>
+        <RouteGuard exact path='/orderbooks'><SalesOrderBook /></RouteGuard>
+        <RouteGuard exact path='/opportunities'><SalesOpportunities /></RouteGuard>
         <RouteGuard exact path='/orderbook/:id'><OrderBookDetails /></RouteGuard>
+        <RouteGuard exact path='/opportunitybook/:id'><OpportunityDetails /></RouteGuard>
+
         <RouteGuard exact path='/generalinformations'><GeneralInformations /></RouteGuard>
         <RouteGuard exact path='/addcompany'><AddCompany /></RouteGuard>
         <RouteGuard exact path='/updatecompany'><UpdateCompany /></RouteGuard>

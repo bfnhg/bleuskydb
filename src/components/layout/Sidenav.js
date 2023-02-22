@@ -1,17 +1,22 @@
 import { Menu, Button } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/images/blueskylogo.png";
+import { useTranslation } from 'react-i18next';
+
 import {
-  HomeOutlined,
+  HomeFilled,
   LoadingOutlined,
   SettingFilled,
   SmileOutlined,
   SyncOutlined,
-  AimOutlined
+  AimOutlined,
+  BookFilled,
+  BookOutlined
 } from '@ant-design/icons';
 function Sidenav({ color }) {
   const { pathname } = useLocation();
   const page = pathname.replace("/", "");
+  let {t} =useTranslation();
 
   const dashboard = [
     <svg
@@ -171,9 +176,9 @@ function Sidenav({ color }) {
                 background: page === "dashboard" ? color : "",
               }}
             >
-                  <HomeOutlined />
+                  <HomeFilled />
             </span>
-            <span className="label">Dashboard</span>
+            <span className="label">{t("dashboard")}</span>
           </NavLink>
         </Menu.Item>
         <Menu.Item key="2">
@@ -186,7 +191,7 @@ function Sidenav({ color }) {
             > 
               {tables}
             </span>
-            <span className="label">General Informations</span>
+            <span className="label">{t("generalinf")}</span>
           </NavLink>
         </Menu.Item>
         <Menu.Item key="3">
@@ -199,39 +204,39 @@ function Sidenav({ color }) {
             >            <AimOutlined />
 
             </span>
-            <span className="label">Strategic Planning</span>
+            <span className="label">{t("strategicplanning")}</span>
           </NavLink>
         </Menu.Item>
 
         <Menu.Item className="menu-item-header" key="10">
-        Sales
+        {t("sales")}
         </Menu.Item>
         <Menu.Item key="4">
-          <NavLink to="/orderbook">
+          <NavLink to="/orderbooks">
           <span
               className="icon"
               style={{
                 background:"",
               }}
             >
-    <LoadingOutlined />
+              <BookFilled  />
 
             </span>
-            <span className="label">Order Book</span>
+            <span className="label">{t("orderbook")}</span>
           </NavLink>
         </Menu.Item>
         
         <Menu.Item key="5">
-          <NavLink to="/ComingSoon">
+          <NavLink to="/opportunities">
           <span
               className="icon"
               style={{
                 background:"",
               }}
-            >            <LoadingOutlined />
-
+            >           
+            <BookOutlined />
             </span>
-            <span className="label">Opportunities</span>
+            <span className="label">{t("opportunitybook")}</span>
           </NavLink>
         </Menu.Item>
          {/* <Menu.Item className="menu-item-header" key="5">

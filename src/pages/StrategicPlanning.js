@@ -1,5 +1,7 @@
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import {
   Space,
   Table,
@@ -14,13 +16,22 @@ import {
   DatePicker,
   Radio,
   Modal,
+  message
 } from "antd";
-
+import {JSON_API} from '../services/Constants';
+import dayjs from 'dayjs';
 import { useForm } from "rc-field-form";
 import { PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Card, Col, Row } from "antd";
+import { CompanyContext } from '../contexts/CompanyContext';
+import { useTranslation } from 'react-i18next';
+
 import axios from "axios";
 // import "./Tableau.css";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
+
 const items = [
   {
     key: "1",
@@ -34,77 +45,110 @@ const items = [
 
 
 function StrategicPlanning() {
+  let {t} =useTranslation();
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const {Lang,setLang,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
+  const [editingRow, setEditingRow] = useState(null);
+  const [form] = Form.useForm();
+
   const [id, setid] = useState("");
   const [detail, setdetail] = useState("");
   const [type, settype] = useState("");
   const [count, setCount] = useState(2);
    const [Object, setObject] = useState([]);
-    useEffect(() => {
+   const [year,setYear]=useState(null);
+  let date;
 
-      // axios
-      //   .get("http://localhost:5000/StratigicTarget")
+  useEffect(() => {
+    date =  new Date().getFullYear();
+    setYear(year==null?date:year);
+    console.log("year"+date);
+    displayTargets();
+    }, [Company.id,year]);
 
-      //   .then((res) => {
-      //     console.log(res);
-      //     //  const array = res.data;
-      //     // console.log(array[0]);
-
-          setObject([{id:1,type:"Visibilité et notoriété",details:"Augmenter la visibilité et notoriété du collectif d'Experts",status:"valider"},
-          {id:2,type:"Croissance",details:"Augmenter les ventes avec de la récurrence",status:"en attend"},
-          {id:3,type:"Fidélisation des clients",details:"Ajouter à l'offre de valeur des produits",status:"en attend"}]);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    }, []);
    const onChangee = (date, dateString) => {
-     console.log(date, dateString);
+    console.log(date.$y);
+    setYear(date.$y);
+    console.log("."+year);
    };
-   const [open, setOpen] = useState(false);
-   const { TextArea } = Input;
+  const displayTargets = async () => {
+  console.log(".."+year);
+  await axios.get(`${JSON_API}/StrategicTargets/AllStrategicTagetsWithAllDEpartments/${Company.id}/${year}`)
 
-  //  const [dataSource, setDataSource] = useState([]);
+  .then((res) => {
+    console.log("data:",res.data);
 
-    // useEffect(() => {
-    //   (async () => {
-    //     axios
-    //       .get("http://localhost:5000/StratigicTarget")
-    //       .then((res) => {
-    //         console.log(res);
-    //         setObject(res);
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   })();
-    // }, []);
-   
+    setObject(res.data);
 
-  // const handleDelete = (key) => {
-  //   const newData = dataSource.filter((item) => item.key !== key);
-  //   setDataSource(newData);
-  // };
+  })
+  .catch((err) => {
+    setObject(null);
+    console.log(err);
+  });
+  }
+
+  const [open, setOpen] = useState(false);
+  const { TextArea } = Input;
   
+  const onFinishEdit = async (values) => {
 
+    const obj={
+      id: editingRow,
+      type: values.type,
+      details: values.details
+    }
 
+    console.log("edited values: ",obj);
+
+    await axios.put(`${JSON_API}/StrategicTargets`,obj)
+    .then((response) => {
+     displayTargets();
+
+      messageApi.open({
+        type: 'success',
+        content: `Target edited successfully!`
+      });
+    })
+
+    setEditingRow(null);
+  };
+  const handleDelete = async (e) => {
+    console.log(e);
+    await axios
+      .delete(`${JSON_API}/StrategicTargets/${e}`)
+      .then((response) => {
+        console.log(response);
+        displayTargets();
+      });
+  };
   const submite = async (e) => {
     //construction dobjet json
     const formData = {
-      id: id,
-      type: e.type,
-      detail: e.detail,
+        year: year,
+        type: e.type,
+        details: e.detail,
+        enterpriseId: Company.id
+      
     };
 
     console.log(formData);
-    axios
-      .post(`http://localhost:5000/StratigicTarget`, formData)
+    axios.post(`${JSON_API}/StrategicTargets`, formData)
       .then((res) => {
         console.log(res);
         console.log(res.data);
+        displayTargets();
+
+        messageApi.open({
+          type: 'success',
+          content: `Target added successfully!`
+        });
       })
       .catch(function (error) {
         console.log(error);
       });
+      setOpen(false);
   };
 
   
@@ -117,10 +161,50 @@ function StrategicPlanning() {
     {
       title: "Type de champ",
       dataIndex: "type",
+      render: (text, record) => {
+        if (editingRow === record.id) {
+          return (
+            <Form.Item
+              name="type"
+              rules={[
+                {
+                  required: true,
+                  message: `please enter type`,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          );
+        } else {
+          return <div style={{textAlign: "left"}}>{text}</div>;
+        }
+
+      }
     },
     {
       title: "Detail",
       dataIndex: "details",
+      render: (text, record) => {
+        if (editingRow === record.id) {
+          return (
+            <Form.Item
+              name="details"
+              rules={[
+                {
+                  required: true,
+                  message: `please enter details`,
+                },
+              ]}
+            >
+            <TextArea rows={2}></TextArea>
+            </Form.Item>
+          );
+        } else {
+          return <div style={{textAlign: "left"}}>{text}</div>;
+        }
+
+      }
     },
     {
       title: "statut",
@@ -140,7 +224,7 @@ function StrategicPlanning() {
               return (
                 <div className="">
                   <Tag color={color} key={record.status}>
-                    {record.status.toUpperCase()}
+                    {record.status}
                   </Tag>
                 </div>
               );
@@ -151,6 +235,7 @@ function StrategicPlanning() {
     },
     {
       title: "Progression",
+      dataIndex:"progress",
       render: (_, record) => {
         return (
           <tr>
@@ -166,20 +251,51 @@ function StrategicPlanning() {
     
 
     {
-      title: "Action",
+      title: "Actions",
       key: "operation",
-      render: (_, record) =>{
-        <button> </button>
+      render: (_, record) =>(
+        <Space size="middle">
+        {
+        editingRow === record.id?
+        <>
+        <Button type="link" onClick={()=>setEditingRow(null)}>
+          {t("cancel")}
+        </Button>
+        <Button type="link" htmlType="submit">
+          {t("save")}
+        </Button>
+        </>
         
-          // <Popconfirm
-          //   title="Sure to delete?"
-          //   onConfirm={() => handleDelete(record.key)}
-          // >
-            
-            {/* <a style={{ margin: 20 }} >
-              Add
-            </a> */}
-          }
+        :
+        <>
+        <Button
+          type="link"
+          onClick={() => {
+
+            setEditingRow(record.id);
+            form.setFieldsValue({
+              details: record.details,
+              type: record.type,
+            });
+          }}
+        >
+          {t("edit")} 
+        </Button>
+        <Popconfirm title={t("deleterow")} onConfirm={() => handleDelete(record.id)} okText="Yes" cancelText="No">
+        <a>{t('Delete')}</a>
+        </Popconfirm>
+
+        {/* <Link to={{
+          pathname:`/orderbook/${record.id}`,
+          state:{stateParam:record.id}
+        }}>{t('details')}</Link> */}
+
+        </>
+        }
+        
+      </Space>
+      
+      )
           
     },
   ];
@@ -232,9 +348,6 @@ function StrategicPlanning() {
             modifier: "public",
           }}
         >
-          <Form.Item name="id" label="id">
-            <Input />
-          </Form.Item>
 
           <Form.Item
             name="type"
@@ -251,10 +364,7 @@ function StrategicPlanning() {
           <Form.Item name="detail" label="detail">
             <TextArea rows={4}></TextArea>
           </Form.Item>
-          <Form.Item
-            name="modifier"
-            className="collection-create-form_last-form-item"
-          ></Form.Item>
+         
         </Form>
       </Modal>
     );
@@ -268,14 +378,17 @@ function StrategicPlanning() {
 
   return (
     <>
+        {contextHolder}
+
       <div>
         <span>
-          Strategic Planning (Selected Year)
+          
           <a style={{ marginLeft: ".5rem" }}>
-            <DatePicker onChange={onChangee} />
+            <DatePicker defaultValue={dayjs(date)} onChange={onChangee} picker="year" />
           </a>
         </span>
       </div>
+     
       <h3>Strategic targets </h3>{" "}
       <div>
         <Button
@@ -296,7 +409,10 @@ function StrategicPlanning() {
           }}
         />
       </div>
+      {year!=null&&  <>
+      <Form form={form} onFinish={onFinishEdit}>
       <Table columns={columns} dataSource={Object} />
+      </Form>
       <h2> Departements</h2>
       <div className="site-card-wrapper">
         <Row gutter={16}>
@@ -364,7 +480,9 @@ function StrategicPlanning() {
         <br></br>
       </div>
       <br></br>
-    </>
+      </>
+    } 
+     </>
   );
 }
 

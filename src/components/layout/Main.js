@@ -1,6 +1,8 @@
 import { useState, useEffect,useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { Layout, Drawer, Affix } from "antd";
+import { Button, Result } from 'antd';
+
 import Sidenav from "./Sidenav";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -21,7 +23,7 @@ function Main({ children }) {
   const [sidenavColor, setSidenavColor] = useState("#1890ff");
   const [sidenavType, setSidenavType] = useState("transparent");
   const [fixed, setFixed] = useState(false);
-  const {Lang,setLang}=useContext(CompanyContext);
+  const {Lang,setLang,Company,setCompany}=useContext(CompanyContext);
 
 
   const openDrawer = () => setVisible(!visible);
@@ -48,6 +50,10 @@ function Main({ children }) {
         postalcode:"Postal code",
         foundingdate:"Founding date",
         Yearenddate:"Year-end date",
+        loadingcompanyinformation: "Loading company information..",
+        Loadingfinished:"Loading finished",
+        dashboard:"Dashboard",
+        sales:"Sales",
         //
         // general informations
         companyname: "Company name",
@@ -56,21 +62,37 @@ function Main({ children }) {
         select: "Select and Access Company Information:",
         Targetcustomers: "Target customers",
         Market: "Market",
-        Themaincustomers: "The main customers",
-        Revenuemodel: "Revenue model",
+        Themaincustomers: "Customers",
+        Revenuemodel: "Revenue models",
         Businesspartners: "Business partners",
         Businessnumber: "Business number",
         Typeofindustry: "Type of industry",
         Postalcode: "Postal code",
         Foundingdate: "Founding date",
         Yearenddate: "Year-end date",
-        Estimatedannualtaxrate: "Estimated annual tax rate",
+        Estimatedannualtaxrate: "Estimated annual tax rate (%)",
         Numberofemployees: "Number of employees" ,
         editcompany:"Edit informations",
         deletecompany:"Delete company",
         deletecompanytext:"Are you sure you want to delete",
         yes:"Yes",
         no:"No",
+        addedsuccessfully:"values ​​added successfully!",
+        Suretodelete:"Sure to delete?",
+        //order book
+        orderbook:"Order book",
+        orderbookdeleted:"Order book deleted successfully!",
+        orderbookcreation:"Order book added Successfully!",
+        orderbookupdate:"Order book updated Successfully!",
+        deleterow:"Are you sure you want to delete this row?",
+        orderbooknamerequired:"Please input a name for the orderbook!",
+        creationdate:"Creation date",
+         //opportunity book
+         opportunitybook:"Opportunity Book",
+         opportunitybookdeleted:"Opportunity Bookdeleted successfully!",
+         opportunitybookcreation:"Opportunity Book added Successfully!",
+         opportunitybookupdate:"Opportunity Book updated Successfully!",
+         opportunitybooknamerequired:"Please input a name for the opportunity Book!",
         //
         //ADD company
           //informations générales
@@ -86,8 +108,8 @@ function Main({ children }) {
           //
           //Targetcustomer
           selectthemarket: "select the market",
-          MainCustomers: "Main Customers",
-          selectthemaincustomers: "select the main customers",
+          MainCustomers: "Customer",
+          selectthemaincustomers: "select the customers",
           RevenueModel: "Revenue Model",
           AddnewmarketButton: "Add new market",
           AddnewcustomerButton: " Add new customers",
@@ -98,6 +120,8 @@ function Main({ children }) {
           Addnewbusinesspartner:"Add new business partner",
           //Description of services and products Cibles stratégiques
           Descriptionofservicesandproducts: "Description of services and products",
+          Descriptionofoffer:"Description of the offer",
+          strategicplanning:"Strategic planning",
           Strategictargets: " Strategic targets",
           selectthestrategictarget:"select the strategic target",
           selectthetypeofactivities:"select the type of activities",
@@ -111,13 +135,18 @@ function Main({ children }) {
           Createanewmanager: "Create a new manager",
           Leadersname:"Leader's name",
 
-          Lastname: "Last name",
-          Firstname: "Firstname",
+          Lastname: "Leader's name",
+          Firstname: "First name",
           Titles: "Titles",
+          Title: "Title",
           Yearsofexperience: "Years of experience",
-          cancel: "cancel",
-          create: "create",
-          Delete: "delete",
+          cancel: "Cancel",
+          create: "Create",
+          Delete: "Delete",
+          edit:"Edit",
+          save:"Save",
+          details:"Details",
+
           Managetitles: "",
           Createanewtitle: " Create a new title",
           Addtitle: "Add title",
@@ -133,7 +162,9 @@ function Main({ children }) {
           ShareHolders: "ShareHolders",
           CreateanewShareholder: "Add the Shareholder",
           Name: "Name",
+          Nameshareholders:"Name of shareholders",
           Shares: "Shares",
+          percentshares:"% of shares",
           Startdate: "Start date",
           Addshareholders: "shareholders",
           submit: "Submit company"
@@ -147,11 +178,17 @@ function Main({ children }) {
         generalinf:"Informations générales",
         companyname:"Nom de la société",
         address:"Adresse",
+        country:"Pays",
         province:"Province",
         city:"Ville",
         postalcode:"Code postal",
         foundingdate:"Date de fondation",
-
+        loadingcompanyinformation: "Chargement des informations sur l'entreprise..",
+        Loadingfinished:"Chargement terminé",
+        Suretodelete:"Voulez-vous vraiment supprimer ?",
+        orderbook:"Carnet de commande",
+        dashboard:"Tableau de bord",
+        sales:"Ventes",
         //     
         //generale informations
         "company name": "Nom de la société",
@@ -160,22 +197,34 @@ function Main({ children }) {
         select: "Sélectionnez et accédez aux informations sur l'entreprise :",
         Targetcustomers: "Clientèle cible",
         Market: "Marché",
-        Themaincustomers: "Principaux Clients",
+        Themaincustomers: "Clients",
         Revenuemodel: "Modèles de revenus",
         Businesspartners: " Partenaires d'affaires",
         Businessnumber: "Numéro d'entreprise",
-        Address: "Addresse",
-        Typeofindustr: "Type d'industrie",
+        Typeofindustry: "Type d'industrie",
         Postalcode: "Code Postal",
         Foundingdate: "Date de fondation",
         Yearenddate: "Date fin exercice",
-        Estimatedannualtaxrate: "Taux d'imposition annuel estimé",
+        Estimatedannualtaxrate: "Taux d'imposition annuel estimé (%)",
         Numberofemployees: "Nombre d'employés" ,
         editcompany:"Modifier les informations",
         deletecompany:"Supprimer l'entreprise",
         deletecompanytext:"Etes-vous sûr que vous voulez supprimer",
         yes:"Oui",
         no:"Non",
+        //order book
+        orderbookdeleted:"Carnet de commande supprimé!",
+        orderbookcreation:"Carnet de commande ajouté!",
+        orderbookupdate:"Carnet de commande modifié!",
+        deleterow:"Etes-vous sûr que vous voulez supprimer cette ligne?",
+        orderbooknamerequired:"Veuillez saisir le nom de la commande!",
+        creationdate:"Date de création",
+        //opportunity book
+        opportunitybook:"Carnet d'opportunités",
+        opportunitybookdeleted:"Opportunité supprimée!",
+        opportunitybookcreation:"Opportunité ajoutée!",
+        opportunitybookupdate:"Opportunité modifiée!",
+        opportunitybooknamerequired:"Veuillez saisir le nom de l'opportunité!",
         //
         //AJoutercompany
           //informations générales
@@ -191,9 +240,9 @@ function Main({ children }) {
           //Clientèle cible
 
           selectthemarket: "sélectionner un marché",
-          MainCustomers: "Principaux Clients",
-          selectthemaincustomers: "sélectionner les principaux clients",
-          RevenueModel: "Modèles de revenus",
+          MainCustomers: "Client",
+          selectthemaincustomers: "sélectionner les clients",
+          RevenueModel: "Modèle de revenus",
           selecttherevenuemodel: "sélectionner le modèles de revenus",
           AddnewmarketButton: "Ajouter un nouveau marché",
           AddnewcustomerButton: "Ajouter un nouveau Client",
@@ -203,25 +252,32 @@ function Main({ children }) {
           Addnewbusinesspartner:"Ajouter de nouveaux partenaires d'affaires",
           //Description of services and products Cibles stratégiques
           Descriptionofservicesandproducts: "Description des services et produits",
-          Strategictargets: " Cibles stratégiques",
+          Descriptionofoffer:"Description de l’offre",
+          Strategictargets: "Objectifs stratégiques",
           selectthestrategictarget:"sélectionner les cibles stratégiques",
           selectthetypeofactivities:"sélectionner les type d'activités",
           selecttheproductsservices:"select the products / services",
           Typeofactivities: "Type d'activités",
           ProductsServices: "Produits / Services",
+          strategicplanning:"Planification stratégique",
           StrategictargetsButton: "Ajouter de nouvelles cibles stratégiques",
           TypeofactivitiesButton: " Ajouter de nouvelles Type d'activités",
           ProductsServicesButton: " Ajouter de nouveaux Produits / Services",
           //Management team
           Managementteam: "Équipe de direction",
           Createanewmanager: " Créer un nouveau gestionnaire",
-          Lastname: "Nom ",
+          Lastname: "Nom du dirigeant",
           Firstname: "Prénom",
-          Titles: "Titre",
+          Titles: "Titres",
+          Title: "Titre",
+          addedsuccessfully:"Les valeurs ont été ajoutées avec succès !",
           Yearsofexperience: "Années d'expériences",
-          cancel: "annuler",
-          create: "créer",
+          cancel: "Annuler",
+          create: "Créer",
           Delete: "Supprimer",
+          save:"Enregistrer",
+          edit:"Modifier",
+          details:"Détails",
           Managetitles: "Géstion des titres",
           Createanewtitle: " Créer un nouveau titre",
           Addtitle: "Ajouter titre",
@@ -237,6 +293,9 @@ function Main({ children }) {
           ShareHolders: "Actionnaires",
           CreateanewShareholder: "Ajouter l'actionnaire",
           Name: "Nom",
+          Nameshareholders:"Nom des actionnaires",
+          percentshares:"% d’actions",
+
           Shares: "Actions",
           Startdate: "Date début",
           Addshareholders: "",
@@ -340,7 +399,24 @@ function Main({ children }) {
             />
           </AntHeader>
         )}
-        <Content className="site-layout">{children}</Content>
+
+       
+        <Content className="site-layout">
+          
+          {Company? children
+              :
+              <Result
+              title="Select a company to display its data."
+              // extra={
+              //   <Button type="primary" key="console">
+              //     Go Console
+              //   </Button>
+              // }
+            />
+          }
+          
+          </Content>
+        
         <Footer />
       </Layout>
     </Layout>

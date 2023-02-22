@@ -16,7 +16,7 @@ const { Text, Link, Title } = Typography;
 const { TextArea } = Input;
 
 
-const OrderBookDetails = () => {
+const OpportunityDetails = () => {
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -47,7 +47,7 @@ const OrderBookDetails = () => {
     return data.data==="OrderDetail"?
       <Modal
         open={open}
-        title="Create a new collection"
+        title="Create a new opportunity"
         okText="Create"
         cancelText="Cancel"
         onCancel={onCancel}
@@ -123,6 +123,34 @@ const OrderBookDetails = () => {
   
           <Form.Item name="endDate" label="End date">
             <DatePicker />
+          </Form.Item>
+
+          <Form.Item
+            name="status"
+            label="Status"
+            // rules={[
+            //   {
+            //     required: true,
+            //     message: 'Please select a status!',
+            //   },
+            // ]}
+          >
+            <Select
+            placeholder="Select opportunity status"
+            style={{
+              // width: 120,
+            }}>
+              
+  
+           <Option value={0}>Open</Option>
+           <Option value={1}>Waiting</Option>
+           <Option value={2}>Suspended</Option>
+           <Option value={3}>Gained</Option>
+           <Option value={4}>Lost</Option>
+
+           
+            </Select>
+            {/* <Input type="textarea" /> */}
           </Form.Item>
 
           <Form.Item name="pricePerDay" label="Price Per Day">
@@ -290,7 +318,7 @@ const OrderBookDetails = () => {
       console.log(error.config);
     });
     
-    await axios.get(`${JSON_API}/Orders/orderBook/${stateParamVal}`)
+    await axios.get(`${JSON_API}/Opportunity/opportunity/${stateParamVal}`)
     .then((response)=>{
 
       const newState = response.data.map(obj => {
@@ -322,7 +350,7 @@ const OrderBookDetails = () => {
       console.log(error.config);
     });
 
-    await axios.get(`${JSON_API}/OrderBooks/TotalPerMonthOfOrderBookBy/${stateParamVal}`)
+    await axios.get(`${JSON_API}/OpportunityBook/TotalPerMonthOfOpportunityBookBy/${stateParamVal}`)
     .then((response)=>{
 
       setSummaryDetails(response.data);
@@ -351,7 +379,7 @@ const OrderBookDetails = () => {
   
 
   const handleshareholderDelete = async (id) => {
-    await axios.delete(`${JSON_API}/Orders/${id}`).then(()=>{console.log("order detail"+id+" deleted successfully");getData()}).catch(function (error) {
+    await axios.delete(`${JSON_API}/Opportunity/${id}`).then(()=>{console.log("opportunity "+id+" deleted successfully");getData()}).catch(function (error) {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
@@ -410,7 +438,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -430,7 +458,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -447,7 +475,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -467,7 +495,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -487,7 +515,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -507,7 +535,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -527,7 +555,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -547,7 +575,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -567,7 +595,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -587,7 +615,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -604,7 +632,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -624,7 +652,7 @@ const OrderBookDetails = () => {
             </Form.Item>
           );
         } else {
-          return <div style={{textAlign: "right"}}>{text}</div>;
+          return <>{text}</>;
         }
 
       }
@@ -636,9 +664,6 @@ const OrderBookDetails = () => {
     key: 'total',
     fixed: 'right',
     width: 130,
-    render:(_,record)=>{
-       return <div style={{textAlign: "right"}}>{record.total}</div>
-    }
   },
      {
       title: 'Action',
@@ -835,8 +860,55 @@ const OrderBookDetails = () => {
       }
     },
     {
+        title: 'Status',
+        dataIndex: 'opportunityStatus',
+        render: (_, record) =>{
+          if (editingRowbook === record.id) {
+            return (
+                <Form.Item name="status">
+                    <Select
+                    placeholder="Select opportunity status"
+                    style={{
+                    // width: 120,
+                    }}
+                    >
+                    
+        
+                        <Option value={0}>Open</Option>
+                        <Option value={1}>Waiting</Option>
+                        <Option value={2}>Suspended</Option>
+                        <Option value={3}>Gained</Option>
+                        <Option value={4}>Lost</Option>
+        
+                
+                    </Select>
+              </Form.Item>
+            );
+          } else {
+
+            switch(record.opportunityStatus) {
+                case 0:
+                  return 'Open';
+                case 1:
+                    return 'Waiting';
+                case 2:
+                    return 'Suspended';
+                case 3:
+                    return 'Gained';
+                case 4:
+                    return 'Lost';
+                default:
+                  return '__';
+              }
+          }
+  
+         
+        }
+      },
+    {
       title: 'Price per day',
       dataIndex: 'pricePerDay',
+      width: 70,
       render: (text, record) => {
           if (editingRowbook === record.id) {
             return (
@@ -904,14 +976,17 @@ const OrderBookDetails = () => {
           onClick={() => {
 
             setEditingRowbook(record.key);
+
             form2.setFieldsValue({
               name: record.customer.id,
               product: record.product.id,
               startDate: dayjs(record.startDate),
               endDate: dayjs(record.endDate),
+              status: record.opportunityStatus,
               description: record.description,
               priceperday:record.pricePerDay,
             });
+            
           }}
         >
           Edit 
@@ -936,13 +1011,14 @@ const OrderBookDetails = () => {
   const onCreate = async({values,url,data}) => {
 if (data=="OrderDetail"){
   const obj={
-      orderBookId:stateParamVal,
+      opportunityBookId:stateParamVal,
       customerId:values.customer,
       startDate:values.startDate,
       endDate:values.endDate,
       pricePerDay:values.pricePerDay,
       description:values.description,
       productId:values.product,
+      opportunityStatus: values.status,
       // costdetails:{
       //   costPerDay: 0,
       //   januaryCost: 0,
@@ -962,7 +1038,7 @@ if (data=="OrderDetail"){
 
     console.log("obj",obj);
 
-    await axios.post(`${JSON_API}/Orders`,obj).then(()=>{
+    await axios.post(`${JSON_API}/Opportunity`,obj).then(()=>{
       getData();
     }).catch(function (error) {
       if (error.response) {
@@ -1011,6 +1087,7 @@ if (data=="OrderDetail"){
     setOpen(false);
   };
   const Edited = async (values) => {
+
     console.log("values are :",values);
 
     const orderobj={ 
@@ -1021,20 +1098,26 @@ if (data=="OrderDetail"){
       description: values.description,
       customerId: values.name,
       productId: values.product,
-      orderBookId: stateParamVal
+      opportunityBookId: stateParamVal,
+      opportunityStatus:values.status
     }
-    console.log("orderobj is :",orderobj);
 
-    await axios.put(`${JSON_API}/Orders`,orderobj)
+    const oppstatus={
+      id: editingRowbook,
+      opportunityStatus: values.status
+    }
+    console.log("opportunityobj is :",orderobj);
+
+    await axios.put(`${JSON_API}/Opportunity`,orderobj)
     .then((response) => {
-      console.log('Order updated Successfully!',response);
+      console.log('Opportunity updated Successfully!',response);
       getData();
       // setCostDataSource([response.data.revenueDetail]);
       
 
       messageApi.open({
         type: 'success',
-        content: 'Order updated Successfully!'
+        content: 'Opportunity updated Successfully!'
       });
       setEditingRowbook(null);
     }).catch(function (error) {
@@ -1057,6 +1140,40 @@ if (data=="OrderDetail"){
       setEditingRowbook(null);
 
     });
+
+    await axios.put(`${JSON_API}/Opportunity/UpdateStatus`,oppstatus)
+    .then((response)=>{
+      console.log('Opportunity status updated Successfully!',response);
+      getData();      
+
+      messageApi.open({
+        type: 'success',
+        content: 'Opportunity status updated Successfully!'
+      });
+      setEditingRowbook(null);
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+      setEditingRowbook(null);
+
+    });
+
+
+
 
   };
 
@@ -1083,18 +1200,18 @@ if (data=="OrderDetail"){
       
     }
 
-    console.log("orderbookcostedited: ",orderbookobj);
+    console.log("Opportunitycostedited: ",orderbookobj);
 
 
-    await axios.put(`${JSON_API}/Orders/UpdateRevenueDetail`,orderbookobj)
+    await axios.put(`${JSON_API}/Opportunity/UpdateRevenueDetail`,orderbookobj)
     .then((response) => {
-      console.log('Orderbook updated Successfully!',response);
+      console.log('Opportunity updated Successfully!',response);
       getData();
       setCostDataSource([response.data.revenueDetail]);
 
       messageApi.open({
         type: 'success',
-        content: 'Order cost details updated Successfully!'
+        content: 'Opportunity revenue details updated Successfully!'
       });
     })
     setEditingRow(null);
@@ -1281,7 +1398,7 @@ function handleSubmit() {
                 url:"orderdetail",
                 data:"OrderDetail"});
             }}>
-            <PlusOutlined /> Create book
+            <PlusOutlined /> Create Book
           </Button>
         </Space>
       </Row>
@@ -1329,4 +1446,6 @@ function handleSubmit() {
   )
 }
 
-export default OrderBookDetails
+
+
+export default OpportunityDetails

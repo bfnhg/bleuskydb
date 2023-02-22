@@ -3,6 +3,8 @@ import axios from 'axios';
 import TutorialDataService from "../services/TutorialService";
 import { NavLink,useHistory } from 'react-router-dom';
 import {JSON_API} from '../services/Constants';
+import dayjs from 'dayjs';
+
 import {PlusOutlined,SettingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -65,10 +67,6 @@ const tailFormItemLayout = {
 
 };
 
-  // needed of update
-
- 
-
        
 const AddCompany = () => {
   const ref = useRef(null);
@@ -97,23 +95,39 @@ const AddCompany = () => {
     {
       title: 'Id',
       dataIndex: 'id',
+      align:"center",
+      render: (text, record) =>(
+        <div style={{textAlign: "right"}}>{text}</div>
+      )
     },
     {
       title: `${t("Leadersname")}`,
       dataIndex: 'name',
       width: '30%',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
+
     },
     {
       title: `${t("Shares")}`,
       dataIndex: 'shares',
+      align:"center",
+      render: (_, record) =>(
+        <div style={{textAlign: "right"}}>{record.shares}%</div>
+      )
     },
     {
       title: `${t("Startdate")}`,
-      dataIndex: 'datestring',
+      dataIndex: 'startedAt',
+      align:"center",
+      render: (_, record) =>(
+        <div style={{textAlign: "center"}}>{dayjs(record.startedAt).format('YYYY/MM/DD')}</div>
+      )
     },
     {
       title: 'Actions',
       dataIndex: 'operation',
+      align:"center",
       render: (_, record) =>
         shareHolderData.length >= 1 ? (
           <Popconfirm title="Sure to delete?" onConfirm={() => handleshareholderDelete(record.id)}>
@@ -126,24 +140,46 @@ const AddCompany = () => {
     {
       title: 'Id',
       dataIndex: 'id',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "right"}}>{text}</div>
+
     },
     {
       title: `${t("Lastname")}`,
       dataIndex: 'name',
       width: '30%',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
+
     },
     {
       title: `${t("Firstname")}`,
       dataIndex: 'firstName',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
+
+    },
+    {
+      title: `${t("Titles")}`,
+      dataIndex: 'titles',
+      align:"center",
+
+      render :(_,record)=>{
+        return record.titles.map(o=><div style={{textAlign: "left"}}><Tag >{o.title.label}</Tag></div> )
+      }
     },
     {
       title: `${t("Yearsofexperience")}`,
       dataIndex: 'yearsofExperience',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "right"}}>{text}</div>
+
     },
 
     {
       title: 'Actions',
       dataIndex: 'operation',
+      align:"center",
       render: (_, record) =>
       ManagerData.length >= 1 ? (
           <Popconfirm title="Sure to delete?" onConfirm={() => handlemanagerDelete(record.id)}>
@@ -205,19 +241,25 @@ const [Managers,setManagers]=useState([{}]);
 const [Titles,setTitles]=useState([{}]);
 const [TitlesData,setTitlesData]=useState([{}]);
 const [Datestart,setDatestart]=useState();
+const [Datefound,setDatefound]=useState();
+
 const [Dateend,setDateend]=useState();
 
 const[Tabkey,setTabkey]=useState("1");
 const onTabChange = (key) => {
+
   setTabkey(key);
   console.log(Tabkey);
+
 };
 const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
+
   const [form] = Form.useForm();
   console.log("open state"+open);
   console.log('data est ', data);
+
   {
-    return ["Shareholder","Main customers","Business partners","Strategic Target"].includes(data.data)?
+    return ["Shareholder","Customer","Business partners"].includes(data.data)?
       <Modal
         open={open}
         title={"Create a new "+data.data}
@@ -236,7 +278,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
             });
         }}
       >
-        <Form
+      <Form
         form={form}
         // layout="vertical"
         name="form_in_modal"
@@ -280,7 +322,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       >
       <Form
         form={form}
-         layout="vertical"
+        layout="vertical"
         name="form_in_modal"
         // initialValues={{
         //   modifier: 'public',
@@ -314,23 +356,21 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         </Form.Item>
 
       <Form.Item
-          name="titles"
-          label="Titles"
-          
-        >
+        name="titles"
+        label="Titles"
+      >
         <Select mode="multiple" allowClear placeholder="select manager's titles" size={'large'} onChange={titlesState}>
-            {Titles.map((e)=>(
+          {Titles.map((e)=>(
 
-              e&&<Option value={e.id}>{e.label}</Option>
+            e&&<Option value={e.id}>{e.label}</Option>
 
-            ))}
+          ))}
         </Select>
-      
+
       </Form.Item>
      
-
       <Form.Item
-        name="yearsofexperience"
+        name="yearsOfExperience"
         label="Years of experience"
       >
         <InputNumber
@@ -339,7 +379,6 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
           max={100}
           size={'large'}
         />
-
       </Form.Item>
       </Form>
       </Modal>
@@ -382,13 +421,9 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
             <Form
             {...formItemLayout}
             form={form}
-            // layout="vertical"
             name="form_in_modal"
-            // initialValues={{
-            //   modifier: 'public',
-            // }}
             >
-              
+          
             <Form.Item
             name="label"
             label="Label"
@@ -412,10 +447,53 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
             },
           ]}
         />
-            </Modal> 
-        
+      </Modal> 
        
-       :
+       :data.data==="Strategic Target"?
+
+      <Modal
+      open={open}
+      title={"Create a new "+data.data}
+      okText="Create"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onCreate({values:values,url:data.url,data:data.data});
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+      >
+
+      <Form
+        {...formItemLayout}
+        form={form}
+        name="form_in_modal"
+
+      >
+        
+      <Form.Item
+        name="label"
+        label="Label"
+        
+        rules={[
+          {
+            required: true,
+            message: `Please input the ${data.data} label!`,
+          },
+        ]}
+      >
+
+      <Input placeholder={data.data+"  label"}/>
+      </Form.Item>
+      </Form>
+      </Modal> 
+      :
 
       <Modal
       open={open}
@@ -463,7 +541,6 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       </Modal> 
   }
 };
-
     // needed of update
 useEffect(()=>{getData();},[]);
   const getData = async () =>{
@@ -535,7 +612,7 @@ useEffect(()=>{getData();},[]);
       console.log(error.config);
     });
 
-    await axios.get(`${JSON_API}/MainCustomers`)
+    await axios.get(`${JSON_API}/Customers`)
     .then((response) => {
       setMainCustomer(response.data);
     }).catch(function (error) {
@@ -770,6 +847,7 @@ const [Open, setOpen] = useState({
       });
     })
     setOpen(false);
+
   };
 
   const onFinish = (values) => {
@@ -798,10 +876,9 @@ const [Open, setOpen] = useState({
     Target_customers:{},
 
   };
-   // needed of update
    const [company, setCompany] = useState(initialCompanyState);
-    // needed of update
-  const [submitted, setSubmitted] = useState(false);
+
+   const [submitted, setSubmitted] = useState(false);
   
   const addShareholderdata = () => {
     if(shareHolderId){
@@ -811,7 +888,7 @@ const [Open, setOpen] = useState({
         setShareHolderData([...shareHolderData, {
           id:d.length>0 && d[0].id,
           name: d.length>0 && d[0].name,
-          shares:shareHolderShares&&shareHolderShares+"%",
+          shares:shareHolderShares&&shareHolderShares,
           date:Cdate&&Cdate.date,
           datestring:Cdate&&Cdate.d
         }]);
@@ -843,7 +920,7 @@ const [Open, setOpen] = useState({
     console.log("manager name info:",m[0].name);
     console.log("manager firstname info:",m[0].firstName);
     console.log("manager title info:",m[0].titles);
-    console.log("manager yearsofExperience info:",m[0].yearsofExperience);
+    console.log("manager yearsofExperience info:",m[0].yearsOfExperience);
 
     console.log("ManagerData state:",ManagerData);
 
@@ -878,32 +955,29 @@ const [Open, setOpen] = useState({
     var companyinfo = {
       name: values.nom_de_la_société,
       businessNumber: values.numéro_entreprise,
-      // budgetRange: values.budget,
-      startingDate: values.date_de_fondation,
+      budgetRange: values.budget,
+      startingDate: values.date_start,
+      foundingDate: values.date_de_fondation,
       endDate: values.date_fin_exercice,
-      empoyeesCount: values.nombre_employés,
+      employeesCount: values.nombre_employés,
       address: values.adresse,
       postalCode: values.code_postal,
       // cityId: values.ville,
       taxes: values.taux_imposition_annuel_estimé,
       activityTypes: values.activity_type,
       products: values.product,
-      mainCustomers: values.main_customers,
+      customers: values.main_customers,
       markets: values.market,
       revenueModelItems: values.revenue_model,
       businessPartners: values.business_partners,
       industryTypes: values.type_industrie,
-      strategicTargets: values.strategic_target,
+      // strategicTargets: values.strategic_target,
       managers: ManagerData.map(i=>i.id),
       shareHolders:shareHolderData.map(i=>{return{
         shareHolderId:i.id,
-        shares: i.shares.replace('%',''),
+        shares: i.shares&&i.shares,
         startedAt:i.date
       }})
-
-     
-        
-
       
     };
     console.log('Received values of form: ', companyinfo);
@@ -999,18 +1073,37 @@ const [Open, setOpen] = useState({
     >
       <Input />
     </Form.Item>
+
     <Form.Item
           {...formItemLayout}
 
+      name="date_de_fondation"
+      label={t("foundingdate")}
+     
+      // tooltip="What do you want others to call you?"
+      // validateStatus="error"
+      // help="Please select right date"
+    >
+        <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+      const d = new Date(date).toLocaleDateString('en-US');
+      console.log(d);
+      setDatefound(d);
+    }}/>
+
+    </Form.Item>
+
+    <Form.Item
+          
+      {...formItemLayout}
       name="adresse"
       label={t("address")}
-           >
+    >
+
       <Input />
     </Form.Item>
 
     <Form.Item
-          {...formItemLayout}
-
+      {...formItemLayout}
       name="pays"
       label={t("country")}
        
@@ -1022,10 +1115,9 @@ const [Open, setOpen] = useState({
 
     <Form.Item
           {...formItemLayout}
-
       name="province"
       label={t("province")}
-       
+    
       // tooltip="What do you want others to call you?"
     >
       <Select placeholder={t("ProvinceSelect")}>
@@ -1046,9 +1138,7 @@ const [Open, setOpen] = useState({
 
       name="ville"
       label={t("city")}
-       
       // tooltip="What do you want others to call you?"
-  
     >
       <Input />
     </Form.Item>
@@ -1070,8 +1160,8 @@ const [Open, setOpen] = useState({
     <Form.Item
           {...formItemLayout}
 
-      name="date_de_fondation"
-      label={t("foundingdate")}
+      name="date_start"
+      label={t("Startdate")}
      
       // tooltip="What do you want others to call you?"
       // validateStatus="error"
@@ -1084,6 +1174,8 @@ const [Open, setOpen] = useState({
     }}/>
 
     </Form.Item>
+
+    
 
     <Form.Item
       {...formItemLayout}
@@ -1161,13 +1253,7 @@ const [Open, setOpen] = useState({
           </Col>
         </Row>
       </Form.Item>
-
-
-
-
-
     
-   
     <Form.Item
           {...formItemLayout}
 
@@ -1178,9 +1264,9 @@ const [Open, setOpen] = useState({
 
     >
       <Select placeholder={t("selectthebudget")}>
-        <Option value="50-100">50 - 100</Option>
-        <Option value="100-1000">100 - 1000</Option>
-        <Option value="+1000">+1000</Option>
+      <Option value={0}>50 - 100</Option>
+        <Option value={1}>100 - 1000</Option>
+        <Option value={2}>+1000</Option>
       </Select>
     </Form.Item>
 
@@ -1264,7 +1350,7 @@ const [Open, setOpen] = useState({
                 type="link"
                 onClick={() => {
                   setOpen({open:true,
-                  url:"MainCustomers",
+                  url:"Customers",
                   data:`${t("MainCustomers")}`});
                 }}
             >
@@ -1589,7 +1675,7 @@ const [Open, setOpen] = useState({
 
 
       <Form.Item
-      name="shares_startdate"
+      name="startedAt"
       label={t("Startdate")}
       >
         <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
@@ -1619,12 +1705,14 @@ const [Open, setOpen] = useState({
       
 
     <Form.Item {...tailFormItemLayout}>
-      <Button type="primary" htmlType="submit">
-        {t("submit")}
-      </Button>
-      <Button htmlType="button">
-            Cancel
+    <Space style={{marginTop:10}}>
+          <Button type="primary" htmlType="submit" style={{width:"auto"}} >
+          {t("submit")}
           </Button>
+          <Button htmlType="button" onClick={gotoGI}>
+          {t("cancel")}
+          </Button>
+        </Space>
     </Form.Item>
    
   </Form>

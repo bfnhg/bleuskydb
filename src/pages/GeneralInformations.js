@@ -1,9 +1,9 @@
-import { Radio,Card,DatePicker,Select,Divider,Typography,Row,Col,Button,Descriptions,Modal,Avatar,Tabs, Form, Input,Tag  } from 'antd';
+import { Radio,Card,DatePicker,Select,Divider,Typography,Row,Col,Button,Descriptions,Modal,Avatar,Tabs, Form, Input,Tag,Table  } from 'antd';
 import axios from 'axios';
 import React,{useState,useEffect, useContext} from 'react';
 import { Redirect,NavLink,useHistory } from 'react-router-dom';
 import {JSON_API} from '../services/Constants';
-import { ExclamationCircleOutlined,CaretRightOutlined,EditOutlined,SaveFilled,DeleteOutlined     } from '@ant-design/icons';
+import { ExclamationCircleOutlined,CaretRightOutlined,EditOutlined,SaveFilled,DeleteOutlined, PicCenterOutlined     } from '@ant-design/icons';
 import moment from 'moment';
 import BgProfile from "../assets/images/bg-profile.jpg";
 import { CompanyContext } from '../contexts/CompanyContext';
@@ -24,7 +24,83 @@ const GeneralInformations = () => {
   const history = useHistory();
   let {t} =useTranslation();
   const {Lang,setLang,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
+  const [ManagerData, setManagerData] = useState([]);
 
+  const defaultshareholderColumns = [
+    {
+      title: 'Id',
+      dataIndex: 'id',
+      align:"center",
+      render: (text, record) =>(
+        <div style={{textAlign: "right"}}>{text}</div>
+      )
+    },
+    {
+      title: `${t("Nameshareholders")}`,
+      dataIndex: 'name',
+      width: '30%',
+      align:"center",
+      render: (_, record) =>(
+        <div style={{textAlign: "left"}}>{record.name}</div>
+      )
+    },
+    {
+      title: `${t("percentshares")}`,
+      dataIndex: 'shares',
+      align:"center",
+      render: (_, record) =>(
+          <div style={{textAlign: "right"}}>{record.shares}%</div>
+        )
+    },
+    {
+      title:  `${t("Startdate")}`,
+      dataIndex: 'startedAt',
+      align:"center",
+      render: (_, record) =>(
+          <div style={{textAlign: "center"}}>{dayjs(record.startedAt).format('YYYY/MM/DD')}</div>
+        )
+    },
+    
+  ];
+  const defaultmanagerColumns = [
+    {
+      title: 'Id',
+      dataIndex: 'id',
+      align:"center",
+      render: (text, record) =>(
+        <div style={{textAlign: "right"}}>{text}</div>
+      )
+    },
+    {
+      title: `${t("Lastname")}`,
+      dataIndex: 'name',
+      width: '30%',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
+
+    },
+    {
+      title: `${t("Firstname")}`,
+      dataIndex: 'firstName',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
+
+    },
+    {
+      title: `${t("Titles")}`,
+      dataIndex: 'titles',
+      align:"center",
+      render :(_,record)=>{
+       return record.titles.map(o=><div style={{textAlign: "left"}}><Tag >{o.title.label}</Tag></div> )
+      }
+    },
+    {
+      title: `${t("Yearsofexperience")}`,
+      dataIndex: 'yearsOfExperience',
+      align:"center",
+      render:(text,record)=><div style={{textAlign: "right"}}>{text}</div>
+    }
+  ];
   const showDeleteConfirm = () => {
     confirm({
       title: `${t("deletecompanytext")} ${Company.name} ?`,
@@ -207,33 +283,55 @@ Company.name &&
         <Descriptions.Item label={t("companyname")}>{Company.name?Company.name:""}</Descriptions.Item>
         <Descriptions.Item label={t("Businessnumber")}>{Company.businessNumber?Company.businessNumber:""}</Descriptions.Item>
         <Descriptions.Item label={t("Typeofindustry")}>{Company.industryTypes&&Company.industryTypes.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
-        <Descriptions.Item label={t("Address")}>{Company.address?Company.address:""}</Descriptions.Item>
-        <Descriptions.Item label={t("City")}>{Company.city?Company.city:""}</Descriptions.Item>
+        <Descriptions.Item label={t("address")}>{Company.address?Company.address:""}</Descriptions.Item>
+        {/* <Descriptions.Item label={t("City")}>{Company.city?Company.city:""}</Descriptions.Item> */}
         <Descriptions.Item label={t("Postalcode")}>{Company.postalCode?Company.postalCode:""} </Descriptions.Item>
 
-        <Descriptions.Item label={t("Foundingdate")}>{Company.startingDate?dayjs(Company.startingDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
-        <Descriptions.Item label={t("Yearenddate")}>{Company.endDate?dayjs(Company.endDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
+        <Descriptions.Item contentStyle={{textAlign:'center'}} label={t("Foundingdate")}>{Company.startingDate?dayjs(Company.startingDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
+        <Descriptions.Item contentStyle={{textAlign:'center'}} label={t("Yearenddate")}>{Company.endDate?dayjs(Company.endDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
         {/* <Descriptions.Item label="Country">{Company&&Company.pays}</Descriptions.Item> */}
         {/* <Descriptions.Item label="Province">{Company&&Company.province}</Descriptions.Item> */}
-        <Descriptions.Item label={t("Numberofemployees")}>{Company.empoyeesCount?Company.empoyeesCount:""}</Descriptions.Item>
-        <Descriptions.Item label="Budget">{Company.budget?Company.budget:""}</Descriptions.Item>
-        <Descriptions.Item label={t("Estimatedannualtaxrate")}>{Company.taxes?(Company.taxes+"%"):""}</Descriptions.Item>
+        <Descriptions.Item contentStyle={{textAlign:'right'}} label={t("Numberofemployees")}>{Company.employeesCount?Company.employeesCount:""}</Descriptions.Item>
+        <Descriptions.Item label="Budget">{Company.budget?Company.budget==0?"50 - 100":Company.budget==1?"100 - 1000":"+1000":""}</Descriptions.Item>
+        <Descriptions.Item contentStyle={{textAlign:'right'}} label={t("Estimatedannualtaxrate")}>{Company.taxes?(Company.taxes+"%"):""}</Descriptions.Item>
       </Descriptions>
 
     </Tabs.TabPane>
 
     <Tabs.TabPane tab={t("Targetcustomers")} key="2">
-      <Descriptions bordered   size={"small"}>
+      <Descriptions bordered  >
         <Descriptions.Item label={t("Market")}>{Company.markets&&Company.markets.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
-        <Descriptions.Item label={t("Themaincustomers")}>{Company.mainCustomers&&Company.mainCustomers.map((e)=>{return (<Tag>{e.name}</Tag> )})}</Descriptions.Item>
-        <Descriptions.Item label={t("Revenuemodel")}>{Company.revenueModelItems&&Company.revenueModelItems.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label={t("Themaincustomers")}>{Company.customers&&Company.customers.map((e)=>{return (<Tag>{e.name}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label={t("RevenueModel")}>{Company.revenueModelItems&&Company.revenueModelItems.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
         <Descriptions.Item label={t("Businesspartners")}>{Company.businessPartners&&Company.businessPartners.map((e)=>{return (<Tag>{e.name}</Tag> )})}</Descriptions.Item>
       </Descriptions>
     </Tabs.TabPane>
 
-    {/* <Tabs.TabPane tab="Tab 3" key="3">
-      Content of Tab Pane 3
-    </Tabs.TabPane> */}
+    <Tabs.TabPane tab={t("Descriptionofservicesandproducts")} key="3">
+      <Descriptions bordered   >
+        {/* <Descriptions.Item label={t("Strategictargets")}>{Company.strategicTargets&&Company.strategicTargets.map((e)=>{return (<Tag>{e.type}</Tag> )})}</Descriptions.Item> */}
+        <Descriptions.Item label={t("Typeofactivities")}>{Company.activityTypes&&Company.activityTypes.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
+        <Descriptions.Item label={t("Descriptionofservicesandproducts")}>{Company.products&&Company.products.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
+      </Descriptions>
+    </Tabs.TabPane>
+
+    <Tabs.TabPane tab={t("Managementteam")} key="4">
+     {Company.managers&&<Table
+        bordered
+        dataSource={Company.managers}
+        columns={defaultmanagerColumns}
+
+      />}
+    </Tabs.TabPane>
+
+    <Tabs.TabPane tab={t("Legalstructure")} key="5">
+    {Company.shareHolders&& <Table
+        bordered
+        dataSource={Company.shareHolders}
+        columns={defaultshareholderColumns}
+
+      />}
+    </Tabs.TabPane>
   </Tabs>
   </Form>
 
