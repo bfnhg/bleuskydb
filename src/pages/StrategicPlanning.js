@@ -52,6 +52,7 @@ function StrategicPlanning() {
   const {Lang,setLang,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
   const [editingRow, setEditingRow] = useState(null);
   const [form] = Form.useForm();
+  const [departments,setDepartments]=useState(null);
 
   const [id, setid] = useState("");
   const [detail, setdetail] = useState("");
@@ -66,6 +67,7 @@ function StrategicPlanning() {
     setYear(year==null?date:year);
     console.log("year"+date);
     displayTargets();
+    getDepartments();
     }, [Company.id,year]);
 
    const onChangee = (date, dateString) => {
@@ -73,6 +75,16 @@ function StrategicPlanning() {
     setYear(date.$y);
     console.log("."+year);
    };
+   const getDepartments = async ()=>{
+    await axios.get(`${JSON_API}/Departments`)
+    .then((res)=>{
+      console.log("departments",res);
+      setDepartments(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+   }
   const displayTargets = async () => {
   console.log(".."+year);
   await axios.get(`${JSON_API}/StrategicTargets/AllStrategicTagetsWithAllDEpartments/${Company.id}/${year}`)
@@ -302,19 +314,6 @@ function StrategicPlanning() {
  
   
 
-  // const onAddChamp = () => {
-  //   const newChamp = {
-  //     key: "",
-  //     title: "",
-  //     dataIndex: "",
-  //   };
-  //   // setDataSource((pre) => {
-  //   //   return [...pre, newChamp];
-  //   // });
-  // };
-  
-  
-
   const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm();
        
@@ -370,11 +369,6 @@ function StrategicPlanning() {
     );
   };
 
- 
-  // const onCreate = (values) => {
-  //   console.log("Received values of form: ", values);
-  //   setOpen(false);
-  // };
 
   return (
     <>
@@ -405,7 +399,6 @@ function StrategicPlanning() {
           onCreate={submite}
           onCancel={() => {
             setOpen(false);
-            // onAddChamp();
           }}
         />
       </div>
@@ -414,72 +407,19 @@ function StrategicPlanning() {
       <Table columns={columns} dataSource={Object} />
       </Form>
       <h2> Departements</h2>
-      <div className="site-card-wrapper">
-        <Row gutter={16}>
-          <Col span={8}>
-            <Card size="small" title="Comptabilité & Finance">
-              <span>
-                <h4>
-                  Progression :
-                  <Progress
-                    style={{ marginLeft: ".5rem" }}
-                    type="circle"
-                    percent={90}
-                    strokeColor={{
-                      "0%": "#108ee9",
-                      "100%": "#87d068",
-                    }}
-                    width={40}
-                  />
-                </h4>
-              </span>
-              <span>
-                <h4> Targets : Financement</h4>
-              </span>
-
-              <button className="details-button">Details</button>
-            </Card>
-          </Col>
-
-          <Col span={8}>
-            <Card size="small" title="Human Resources" bordered={false}>
-              {" "}
-              <span>
-                <h4>
-                  Progression :
-                  <Progress
-                    style={{ marginLeft: ".5rem" }}
-                    type="circle"
-                    percent={30}
-                    width={40}
-                  />
-                </h4>
-              </span>
-              <span>
-                <h4> Targets : ressources humaines</h4>
-              </span>
-              <button className="details-button">Details</button>
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card size="small" title="Human Resources" bordered={false}>
-              <h4>
-                Progression :
-                <Progress
-                  style={{ marginLeft: ".5rem" }}
-                  type="circle"
-                  percent={30}
-                  width={40}
-                />
-              </h4>
-              <h4> Targets : Croissance,Financement</h4>
-              <button className="details-button">Details</button>
-            </Card>
-          </Col>
-        </Row>
-        <br></br>
-      </div>
-      <br></br>
+      <Space size={16} wrap>
+      {departments && departments.map((d)=>
+        <Card
+        title={<a href="#">{d.label}</a>}
+        // extra={<a href="#">More</a>}
+        style={{
+          width: 300,
+        }}
+      >
+        <p>Progress: _ %</p>
+      </Card>
+      )}
+      </Space>
       </>
     } 
      </>

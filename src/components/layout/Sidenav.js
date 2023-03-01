@@ -194,7 +194,8 @@ function Sidenav({ color }) {
             <span className="label">{t("generalinf")}</span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="3">
+
+        {/* <Menu.Item key="3">
           <NavLink to="/strategicplanning">
           <span
               className="icon"
@@ -206,7 +207,7 @@ function Sidenav({ color }) {
             </span>
             <span className="label">{t("strategicplanning")}</span>
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
 
         <Menu.Item className="menu-item-header" key="10">
         {t("sales")}
@@ -255,7 +256,7 @@ function Sidenav({ color }) {
             <span className="label">Budget</span>
           </NavLink>
         </Menu.Item> */}
-        <Menu.Item key="6">
+        {/* <Menu.Item key="6">
         <NavLink to="/chartofaccounts">
           <span
               className="icon"
@@ -267,7 +268,7 @@ function Sidenav({ color }) {
             </span>
             <span className="label">Chart of accounts</span>
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
         {/*<Menu.Item key="6">
         <NavLink to="/ComingSoon">
           <span

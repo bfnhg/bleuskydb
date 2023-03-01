@@ -8,7 +8,6 @@ import { CompanyContext } from '../contexts/CompanyContext';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useTranslation } from 'react-i18next';
-
 import {
   DatePicker,
   AutoComplete,
@@ -1561,7 +1560,7 @@ const [Open, setOpen] = useState({
       <Divider orientation="left">{t("Descriptionofservicesandproducts")}</Divider>
 
 
-      <Form.Item label={t("Strategictargets")}      {...formItemLayout} >
+      {/* <Form.Item label={t("Strategictargets")}      {...formItemLayout} >
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -1592,7 +1591,7 @@ const [Open, setOpen] = useState({
           </Button>
           </Col>
         </Row>
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item label={t("Typeofactivities")}       {...formItemLayout}>
         <Row gutter={8}>

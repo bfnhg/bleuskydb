@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 
 import {PlusOutlined,SettingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 
 import {
   DatePicker,
@@ -32,11 +33,13 @@ import {
   Tabs,
   message,
 } from 'antd';
+
 import TutorialService from "../services/TutorialService";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 const { Text, Title } = Typography;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
   // needed of update
 const formItemLayout = {
@@ -240,10 +243,10 @@ const [ShareHolders,setShareHolders]=useState([{}]);
 const [Managers,setManagers]=useState([{}]);
 const [Titles,setTitles]=useState([{}]);
 const [TitlesData,setTitlesData]=useState([{}]);
-const [Datestart,setDatestart]=useState();
-const [Datefound,setDatefound]=useState();
-
-const [Dateend,setDateend]=useState();
+const [Datestart,setDatestart]=useState(null);
+const [Datefound,setDatefound]=useState(null);
+const [DateEndString,setDateEndString]=useState(null);
+const [Dateend,setDateend]=useState(null);
 
 const[Tabkey,setTabkey]=useState("1");
 const onTabChange = (key) => {
@@ -252,6 +255,13 @@ const onTabChange = (key) => {
   console.log(Tabkey);
 
 };
+const [dateRange, setDateRange] = useState([null, null]);
+
+const handleDateRangeChange = (dates) => {
+  const startDate = dates[0];
+  const endDate = dates[1] ? dates[1] : startDate.clone().add(11, 'months');
+  setDateRange([startDate, endDate]);
+};
 const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
 
   const [form] = Form.useForm();
@@ -259,7 +269,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
   console.log('data est ', data);
 
   {
-    return ["Shareholder","Customer","Business partners"].includes(data.data)?
+    return ["ShareHolders","Customers","BusinessPartners"].includes(data.url)?
       <Modal
         open={open}
         title={"Create a new "+data.data}
@@ -301,7 +311,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         </Form.Item>
       </Form>
       </Modal> 
-      :data.data==="Managers"?
+      :data.url==="Managers"?
       <Modal
         open={open}
         title={"Create a new manager"}
@@ -382,49 +392,103 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       </Form.Item>
       </Form>
       </Modal>
-       :data.data==="Title"?
-       <Modal
-            open={open}
-            title={Tabkey=='1'?"Create a new title":"Edit titles"}
-            okText={Tabkey=='1'?"Create":"Save"}
-            cancelText="Cancel"
-            onCancel={onCancel}
-            onOk={() => {
-              console.log(Tabkey);
-              if(Tabkey=="1"){
-              form
-                .validateFields()
-                .then((values) => {
+       :data.url==="Titles"?
+
+      //  <Modal
+      //       open={open}
+      //       title={Tabkey=='1'?"Create a new title":"Edit titles"}
+      //       okText={Tabkey=='1'?"Create":"Save"}
+      //       cancelText="Cancel"
+      //       onCancel={onCancel}
+      //       onOk={() => {
+      //         console.log(Tabkey);
+      //         if(Tabkey=="1"){
+      //         form
+      //           .validateFields()
+      //           .then((values) => {
                   
-                  form.resetFields();
+      //             form.resetFields();
                   
-                    onCreate({values:values,url:data.url,data:data.data});
-                  }
+      //               onCreate({values:values,url:data.url,data:data.data});
+      //             }
                 
-                )
-                .catch((info) => {
-                  console.log('Validate Failed:', info);
-                });
-              }else{
-                console.log("title updated");
-              }
-            }}
-            >
-      <Tabs
-       defaultActiveKey="1"
-       onChange={onTabChange}
-       items={[
-         {
-           label: 'Add title',
-           key: '1',
-           children: 
-            <Form
-            {...formItemLayout}
-            form={form}
-            name="form_in_modal"
-            >
+      //           )
+      //           .catch((info) => {
+      //             console.log('Validate Failed:', info);
+      //           });
+      //         }else{
+      //           console.log("title updated");
+      //         }
+      //       }}
+      //       >
+      // <Tabs
+      //  defaultActiveKey="1"
+      //  onChange={onTabChange}
+      //  items={[
+      //    {
+      //      label: 'Add title',
+      //      key: '1',
+      //      children: 
+      //       <Form
+      //       {...formItemLayout}
+      //       form={form}
+      //       name="form_in_modal"
+      //       >
           
-            <Form.Item
+      //       <Form.Item
+      //       name="label"
+      //       label="Label"
+            
+      //       rules={[
+      //         {
+      //           required: true,
+      //           message: `Please input the ${data.data} label!`,
+      //         },
+      //       ]}
+      //       >
+      //       <Input placeholder={data.data+"  label"}/>
+      //       </Form.Item>
+      //       </Form>
+      //       },
+      //       {
+      //         label: 'Edit Titles',
+      //         key: '2',
+      //         children: 'Tab 2',
+      //         disabled: true,
+      //       },
+      //     ]}
+      //   />
+      // </Modal> 
+      <Modal
+      open={open}
+      title={"Create a new "+data.data}
+      okText="Create"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onCreate({values:values,url:data.url,data:data.data});
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+      >
+
+      <Form
+                        {...formItemLayout}
+      form={form}
+      // layout="vertical"
+      name="form_in_modal"
+      // initialValues={{
+      //   modifier: 'public',
+      // }}
+      >
+        
+        <Form.Item
             name="label"
             label="Label"
             
@@ -437,19 +501,9 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
             >
             <Input placeholder={data.data+"  label"}/>
             </Form.Item>
-            </Form>
-            },
-            {
-              label: 'Edit Titles',
-              key: '2',
-              children: 'Tab 2',
-              disabled: true,
-            },
-          ]}
-        />
+      </Form>
       </Modal> 
-       
-       :data.data==="Strategic Target"?
+       :data.url==="StrategicTargets"?
 
       <Modal
       open={open}
@@ -908,7 +962,7 @@ const [Open, setOpen] = useState({
           name:m[0].name,
           firstName:m[0].firstName,
           titles:m[0].titles,
-          yearsofExperience:m[0].yearsofExperience,
+          yearsofExperience:m[0].yearsOfExperience,
         }]);
       }
       
@@ -937,6 +991,21 @@ const [Open, setOpen] = useState({
 
   }
 
+  const handleStartDateChange = (date) => {
+    setDatestart(date);
+    // setDateend(date.clone().add(11, 'months'));
+    setDateend( date.clone().add(11, 'months') );
+    
+    console.log("Dateend",Dateend);
+
+    setDateEndString(new Date(Dateend).toLocaleDateString('en-US'));
+    console.log(DateEndString);
+
+  };
+
+  const handleEndDateChange = (date) => {
+    setDateend(date);
+  };
   const titlesState = event => {
     console.log(event);
     // setTitlesData(event)
@@ -958,7 +1027,7 @@ const [Open, setOpen] = useState({
       budgetRange: values.budget,
       startingDate: values.date_start,
       foundingDate: values.date_de_fondation,
-      endDate: values.date_fin_exercice,
+      endDate: Dateend,
       employeesCount: values.nombre_employés,
       address: values.adresse,
       postalCode: values.code_postal,
@@ -1155,40 +1224,33 @@ const [Open, setOpen] = useState({
       <Input />
     </Form.Item>
 
-   
 
     <Form.Item
           {...formItemLayout}
 
       name="date_start"
       label={t("Startdate")}
-     
-      // tooltip="What do you want others to call you?"
-      // validateStatus="error"
-      // help="Please select right date"
     >
-        <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
-      const d = new Date(date).toLocaleDateString('en-US');
-      console.log(d);
-      setDatestart(d);
-    }}/>
+        <DatePicker format={"YYYY-MM-DD"} size={'large'} 
+
+    value={Datestart}
+
+    onChange={handleStartDateChange}
+
+    
+    />
 
     </Form.Item>
 
     
-
     <Form.Item
       {...formItemLayout}
-
       name="date_fin_exercice"
       label={t("Yearenddate")}
        
     >
-      <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
-      const d = new Date(date).toLocaleDateString('en-US');
-      console.log(d);
-      setDateend(d);
-    }}/>
+      {DateEndString}
+
     </Form.Item>
  
     <Form.Item
@@ -1431,7 +1493,7 @@ const [Open, setOpen] = useState({
      <Divider orientation="left">{t("Descriptionofservicesandproducts")}</Divider>
 
 
-      <Form.Item label={t("Strategictargets")}      {...formItemLayout} >
+      {/* <Form.Item label={t("Strategictargets")}      {...formItemLayout} >
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -1462,7 +1524,7 @@ const [Open, setOpen] = useState({
           </Button>
           </Col>
         </Row>
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item label={t("Typeofactivities")}        {...formItemLayout}>
         <Row gutter={8}>

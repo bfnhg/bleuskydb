@@ -35,7 +35,7 @@ const SalesOpportunities = () => {
 
 
   const getorderbooks = async ()=>{
-    await axios.get(`${JSON_API}/OpportunityBook/enterprise/${Company.id}`)
+    await axios.get(`${JSON_API}/OpportunityBooks/enterprise/${Company.id}`)
     .then((response)=>{
       console.log("OpportunityBook:",response.data);
       setDataSource(response.data);
@@ -62,7 +62,7 @@ const SalesOpportunities = () => {
   };
 
   const handleDelete = async(id) => {
-    await axios.delete(`${JSON_API}/OpportunityBook/${id}`)
+    await axios.delete(`${JSON_API}/OpportunityBooks/${id}`)
     .then(() => { 
     
       messageApi.info(`${t("opportunitybookdeleted")}`);
@@ -181,7 +181,7 @@ const SalesOpportunities = () => {
 
     console.log('Success:', orderbook);
 
-    await axios.post(`${JSON_API}/OpportunityBook`,orderbook)
+    await axios.post(`${JSON_API}/OpportunityBooks`,orderbook)
     .then((response) => {
 
       getorderbooks();
@@ -224,7 +224,7 @@ const SalesOpportunities = () => {
 
     console.log("Opportunity edited: ",orderbookobj);
 
-    await axios.put(`${JSON_API}/OpportunityBook`,orderbookobj)
+    await axios.put(`${JSON_API}/OpportunityBooks`,orderbookobj)
     .then((response) => {
       getorderbooks();
       console.log('Opportunity updated Successfully!');
