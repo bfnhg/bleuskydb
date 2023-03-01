@@ -79,12 +79,16 @@ const AddCompany = () => {
   const [shareHolderData, setShareHolderData] = useState([]);
   const [ManagerbyId, setManagerbyId] = useState({});
   const [country, setcountry] = useState([{}]);
-  const [province, setprovince] = useState([]);
+  const [province, setprovince] = useState([{}]);
+  const [city, setcity] = useState([{}]);
+
   const [ManagerData, setManagerData] = useState([]);
   // new Date().toLocaleDateString('en-US')
   const [Cdate, setDate] = useState();
 
-  const [count, setCount] = useState(2);
+  const [count, setCount] = useState(1);
+  const [countsh, setCountsh] = useState(1);
+
 
   const getCountry = async () => {
     await axios
@@ -113,9 +117,21 @@ const AddCompany = () => {
       .catch((err) => {
         console.log(err);
       });
+
+      await axios
+      .get(`${JSON_API}/cities/country/${e}`)
+
+      .then((res) => {
+        console.log(res);
+
+        setcity(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  
-  const handlecity = async (e) => {
+
+  const handleprovince = async (e) => {
     // console.log(e);
     await axios
       .get(`${JSON_API}/cities/province/${e}`)
@@ -129,6 +145,8 @@ const AddCompany = () => {
         console.log(err);
       });
   };
+ 
+  
   const handleshareholderDelete = (id) => {
     const newData = shareHolderData.filter((item) => item.id !== id);
     setShareHolderData(newData);
@@ -213,7 +231,7 @@ const AddCompany = () => {
       align:"center",
 
       render :(_,record)=>{
-        return record.titles.map(o=><div style={{textAlign: "left"}}><Tag >{o.title.label}</Tag></div> )
+        return record.titles.map(o=><div style={{textAlign: "left"}}><Tag >{o.label}</Tag></div> )
       }
     },
     {
@@ -276,18 +294,18 @@ const AddCompany = () => {
   // };
 
     // needed of update
-const [TypeIndustries,setTypeIndustries]=useState([{}]);
-const [Market,setMarket]=useState([{}]);
-const [RevenueModel,setRevenueModel]=useState([{}]);
-const [MainCustomer,setMainCustomer]=useState([{}]);
-const [BusinessPartner,setBusinessPartner]=useState([{}]);
-const [StrategicTarget,setStrategicTarget]=useState([{}]);
-const [ActivityType,setActivityType]=useState([{}]);
-const [Product,setProduct]=useState([{}]);
-const [ShareHolders,setShareHolders]=useState([{}]);
-const [Managers,setManagers]=useState([{}]);
-const [Titles,setTitles]=useState([{}]);
-const [TitlesData,setTitlesData]=useState([{}]);
+const [TypeIndustries,setTypeIndustries]=useState([]);
+const [Market,setMarket]=useState([]);
+const [RevenueModel,setRevenueModel]=useState([]);
+const [Customer,setCustomer]=useState([]);
+const [BusinessPartner,setBusinessPartner]=useState([]);
+const [StrategicTarget,setStrategicTarget]=useState([]);
+const [ActivityType,setActivityType]=useState([]);
+const [Product,setProduct]=useState([]);
+const [ShareHolders,setShareHolders]=useState([]);
+const [Managers,setManagers]=useState([]);
+const [Titles,setTitles]=useState([]);
+const [TitlesData,setTitlesData]=useState([]);
 const [Datestart,setDatestart]=useState(null);
 const [Datefound,setDatefound]=useState(null);
 const [DateEndString,setDateEndString]=useState(null);
@@ -385,7 +403,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       >
         <Form.Item
           name="name"
-          label="Lastname"
+          label="Last name"
           
           rules={[
             {
@@ -398,7 +416,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         </Form.Item>
         <Form.Item
           name="firstName"
-          label="Firstname"
+          label="First name"
           
           rules={[
             {
@@ -413,6 +431,12 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       <Form.Item
         name="titles"
         label="Titles"
+        rules={[
+          {
+            required: true,
+            message: `Please input the manager title!`,
+          },
+        ]}
       >
         <Select mode="multiple" allowClear placeholder="select manager's titles" size={'large'} onChange={titlesState}>
           {Titles.map((e)=>(
@@ -711,27 +735,27 @@ useEffect(()=>{getData();getCountry()},[]);
       console.log(error.config);
     });
 
-    await axios.get(`${JSON_API}/Customers`)
-    .then((response) => {
-      setMainCustomer(response.data);
-    }).catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
+    // await axios.get(`${JSON_API}/Customers`)
+    // .then((response) => {
+    //   setMainCustomer(response.data);
+    // }).catch(function (error) {
+    //   if (error.response) {
+    //     // The request was made and the server responded with a status code
+    //     // that falls out of the range of 2xx
+    //     console.log(error.response.data);
+    //     console.log(error.response.status);
+    //     console.log(error.response.headers);
+    //   } else if (error.request) {
+    //     // The request was made but no response was received
+    //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    //     // http.ClientRequest in node.js
+    //     console.log(error.request);
+    //   } else {
+    //     // Something happened in setting up the request that triggered an Error
+    //     console.log('Error', error.message);
+    //   }
+    //   console.log(error.config);
+    // });
 
     await axios.get(`${JSON_API}/BusinessPartners`)
     .then((response) => {
@@ -821,51 +845,51 @@ useEffect(()=>{getData();getCountry()},[]);
       console.log(error.config);
     });
 
-    await axios.get(`${JSON_API}/ShareHolders`)
-    .then((response) => {
-      setShareHolders(response.data);
-      console.log(ShareHolders,'ShareHolders');
+    // await axios.get(`${JSON_API}/ShareHolders`)
+    // .then((response) => {
+    //   setShareHolders(response.data);
+    //   console.log(ShareHolders,'ShareHolders');
 
-    }).catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
+    // }).catch(function (error) {
+    //   if (error.response) {
+    //     // The request was made and the server responded with a status code
+    //     // that falls out of the range of 2xx
+    //     console.log(error.response.data);
+    //     console.log(error.response.status);
+    //     console.log(error.response.headers);
+    //   } else if (error.request) {
+    //     // The request was made but no response was received
+    //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    //     // http.ClientRequest in node.js
+    //     console.log(error.request);
+    //   } else {
+    //     // Something happened in setting up the request that triggered an Error
+    //     console.log('Error', error.message);
+    //   }
+    //   console.log(error.config);
+    // });
 
-    await axios.get(`${JSON_API}/Managers`)
-    .then((response) => {
-      setManagers(response.data);
-    }).catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
+    // await axios.get(`${JSON_API}/Managers`)
+    // .then((response) => {
+    //   setManagers(response.data);
+    // }).catch(function (error) {
+    //   if (error.response) {
+    //     // The request was made and the server responded with a status code
+    //     // that falls out of the range of 2xx
+    //     console.log(error.response.data);
+    //     console.log(error.response.status);
+    //     console.log(error.response.headers);
+    //   } else if (error.request) {
+    //     // The request was made but no response was received
+    //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    //     // http.ClientRequest in node.js
+    //     console.log(error.request);
+    //   } else {
+    //     // Something happened in setting up the request that triggered an Error
+    //     console.log('Error', error.message);
+    //   }
+    //   console.log(error.config);
+    // });
 
     await axios.get(`${JSON_API}/Titles`)
     .then((response) => {
@@ -935,7 +959,48 @@ const [Open, setOpen] = useState({
     console.log('Received values of form: ', values);
     console.log('Received url of form: ', url);
 
-    await axios.post(`${JSON_API}/${url}`,values)
+    if(url=="Customers"){
+      setCustomer([...Customer,{
+        name:values.name
+      }]);
+      
+    }else if(url=="Products"){
+      setProduct([...Product,{
+        label:values.label
+      }])
+    }
+    else if(url=="Managers"){
+
+      const titles = Titles.filter(o => {
+        let notFound = false;
+        values.titles.forEach(d=>{
+          if(d == o.id) notFound = true;
+        });
+        return notFound;
+      });
+      console.log("titles",titles);
+
+      setManagers([...Managers,{
+      id: count,
+      key: count,
+      name: values.name,
+      firstName: values.firstName,
+      titles:titles,
+      yearsOfExperience: values.yearsOfExperience
+
+      }])
+
+      setCount(count+1)
+    }
+    else if(url=="ShareHolders"){
+      setShareHolders([...ShareHolders,{
+        id:countsh,
+        name:values.name
+      }]);
+      setCountsh(countsh+1)
+    }
+  else{
+ await axios.post(`${JSON_API}/${url}`,values)
     .then((response) => {
       getData();
       console.log('values were added to ' + data + " Successfully!");
@@ -945,6 +1010,9 @@ const [Open, setOpen] = useState({
         content: 'values were added to ' + data + " Successfully!",
       });
     })
+    }
+
+   
     setOpen(false);
 
   };
@@ -1001,6 +1069,8 @@ const [Open, setOpen] = useState({
       const m= Managers.filter(e=>e.id===ManagerId);
       console.log("m",m);
 
+
+      
       if(m){
         setManagerData([...ManagerData, {
           id:m[0].id,
@@ -1035,7 +1105,6 @@ const [Open, setOpen] = useState({
   }
 
   const handleStartDateChange = (date) => {
-    setDatestart(date);
     // setDateend(date.clone().add(11, 'months'));
     setDateend( date.clone().add(11, 'months') );
     
@@ -1070,23 +1139,31 @@ const [Open, setOpen] = useState({
       budgetRange: values.budget,
       startingDate: values.date_start,
       foundingDate: values.date_de_fondation,
+      startYear: ''+values.startyear.$y,
+      startPeriod: values.startPeriod.$M+1,
+      yearsInterval: values.yearsInterval,
       endDate: Dateend,
       employeesCount: values.nombre_employés,
       address: values.adresse,
       postalCode: values.code_postal,
-      // cityId: values.ville,
       taxes: values.taux_imposition_annuel_estimé,
       activityTypes: values.activity_type,
-      products: values.product,
-      customers: values.main_customers,
+      products: values.product.map(o=>{return{label:o}}),
+      customers: values.customers.map(o=>{return{name:o}}),
+      cityId:values.city,
       markets: values.market,
       revenueModelItems: values.revenue_model,
       businessPartners: values.business_partners,
       industryTypes: values.type_industrie,
       // strategicTargets: values.strategic_target,
-      managers: ManagerData.map(i=>i.id),
+      managers: ManagerData.map(i=>{return{
+        name:i.name,
+        firstName:i.firstName,
+        title:i.titles.map(o=>o.id),
+        yearsofExperience:i.yearsofExperience
+      }}),
       shareHolders:shareHolderData.map(i=>{return{
-        shareHolderId:i.id,
+        name:i.name,
         shares: i.shares&&i.shares,
         startedAt:i.date
       }})
@@ -1224,6 +1301,25 @@ const [Open, setOpen] = useState({
   "startPeriod": 1,
   "yearsInterval": 3, */}
 
+  
+<Form.Item
+        {...formItemLayout}
+      name="startPeriod"
+      label="Start Period"
+       
+      // tooltip="What do you want others to call you?"
+      rules={[
+        {
+          required: true,
+          message: `${t("PleaseInputTheStartPeriod")}`,
+          // whitespace: true,
+        },
+      ]}
+      
+    >
+      <DatePicker picker="month" size={'large'}   onChange={handleStartDateChange}/>
+    </Form.Item>
+
       <Form.Item
         {...formItemLayout}
       name="startyear"
@@ -1262,58 +1358,82 @@ const [Open, setOpen] = useState({
 
     </Form.Item>
 
+
+
     <Form.Item
+            {...formItemLayout}
+            name="pays"
+            label={t("country")}
+
+            // tooltip="What do you want others to call you?"
+          >
+            <Select
+              defaultValue=""
+              style={{
+                width: 605,
+              }}
+              onChange={handlecountry}
+              size={'large'}
+            >
+              {country.map((o) => {
+                return <Option value={o.id}>{o.name}</Option>;
+              })}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            {...formItemLayout}
+            name="province"
+            label={t("province")}
+          >
+            <Select
+              defaultValue=""
+              style={{
+                width: 605,
+              }}
+              onChange={handleprovince}
+              placeholder={t("ProvinceSelect")}
+              size={'large'}
+            >
+              {province.map((t) => {
+                return <Option value={t.id}>{t.name}</Option>;
+              })}
+            </Select>
+          </Form.Item>
+
+
+          <Form.Item
+                {...formItemLayout}
+
+            name="city"
+            label={t("city")}
+            // tooltip="What do you want others to call you?"
+          >
+            <Select
+              defaultValue=""
+              style={{
+                width: 605,
+              }}
+              // onChange={handlecity}
+              placeholder={t("CitySelect")}
+              size={'large'}
+            >
+              {city.map((t) => {
+                return <Option value={t.id}>{t.name}</Option>;
+              })}
+            </Select>    
+            
+            </Form.Item>
+
+            <Form.Item
           
-      {...formItemLayout}
-      name="adresse"
-      label={t("address")}
-    >
-
-      <Input />
-    </Form.Item>
-
-    <Form.Item
-      {...formItemLayout}
-      name="pays"
-      label={t("country")}
-       
-      // tooltip="What do you want others to call you?"
-      
-    >
-      <Input />
-    </Form.Item>
-
-    <Form.Item
           {...formItemLayout}
-      name="province"
-      label={t("province")}
+          name="adresse"
+          label={t("address")}
+        >
     
-      // tooltip="What do you want others to call you?"
-    >
-      <Select placeholder={t("ProvinceSelect")}>
-        <Option value="ON">ON</Option>
-        <Option value="QC">QC</Option>
-        <Option value="NS">NS</Option>
-        <Option value="NB">NB</Option>
-        <Option value="MB">MB</Option>
-        <Option value="BC">BC</Option>
-        <Option value="SK">SK</Option>
-        <Option value="AB">AB</Option>
-        <Option value="NL">NL</Option>
-      </Select>
-    </Form.Item>
-
-    <Form.Item
-          {...formItemLayout}
-
-      name="ville"
-      label={t("city")}
-      // tooltip="What do you want others to call you?"
-    >
-      <Input />
-    </Form.Item>
-
-  
+          <Input />
+        </Form.Item>
 
     <Form.Item
           {...formItemLayout}
@@ -1334,9 +1454,7 @@ const [Open, setOpen] = useState({
     >
         <DatePicker format={"YYYY-MM-DD"} size={'large'} 
 
-    value={Datestart}
 
-    onChange={handleStartDateChange}
 
     
     />
@@ -1344,7 +1462,7 @@ const [Open, setOpen] = useState({
     </Form.Item>
 
     
-    <Form.Item
+    {/* <Form.Item
       {...formItemLayout}
       name="date_fin_exercice"
       label={t("Yearenddate")}
@@ -1352,7 +1470,7 @@ const [Open, setOpen] = useState({
     >
       {DateEndString}
 
-    </Form.Item>
+    </Form.Item> */}
  
 
 
@@ -1486,15 +1604,15 @@ const [Open, setOpen] = useState({
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
-              name="main_customers"
+              name="customers"
               label={t("MainCustomers")}  
               noStyle
               // rules={[{ required: true, message: 'Please input the main customers!'}]}
             >
               <Select mode="multiple" allowClear placeholder={t("selectthemaincustomers")}   size={'large'} style={{ width: '100%', }}>
-                  {MainCustomer.map((e)=>(
+                  {Customer.map((e)=>(
 
-                    e&&<Option value={e.id}>{e.name}</Option>
+                    e&&<Option value={e.name}>{e.name}</Option>
 
                   ))}
               </Select>
@@ -1565,7 +1683,7 @@ const [Open, setOpen] = useState({
 
                   ))}
               </Select>
-              </Form.Item>
+            </Form.Item>
           </Col>
           <Col span={12}>
           <Button
@@ -1663,7 +1781,7 @@ const [Open, setOpen] = useState({
               <Select mode="multiple" allowClear placeholder={t("selecttheproductsservices")}  size={'large'} style={{ width: '100%', }}>
                   {Product.map((e)=>(
 
-                    e&&<Option value={e.id}>{e.label}</Option>
+                    e&&<Option value={e.label}>{e.label}</Option>
 
                   ))}
               </Select>

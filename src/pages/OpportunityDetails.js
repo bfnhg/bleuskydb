@@ -333,9 +333,11 @@ const OpportunityDetails = () => {
         console.log("all orderdetails ", newState);
       })
       .catch(function (error) {
-        if (error.response) {
+        if (error.response.status==404) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
+          setOrderDetails(null);
+
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
@@ -1071,9 +1073,10 @@ const OpportunityDetails = () => {
         setEditingRowbook(null);
       })
       .catch(function (error) {
-        if (error.response) {
+        if (error.response.status==404) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
+          setOrderDetails(null);
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
