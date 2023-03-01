@@ -17,6 +17,7 @@ import {
   Checkbox,
   Collapse,
   Col,
+  Radio,
   Form,
   Input,
   InputNumber,
@@ -77,13 +78,57 @@ const AddCompany = () => {
 
   const [shareHolderData, setShareHolderData] = useState([]);
   const [ManagerbyId, setManagerbyId] = useState({});
-
+  const [country, setcountry] = useState([{}]);
+  const [province, setprovince] = useState([]);
   const [ManagerData, setManagerData] = useState([]);
   // new Date().toLocaleDateString('en-US')
   const [Cdate, setDate] = useState();
 
   const [count, setCount] = useState(2);
+
+  const getCountry = async () => {
+    await axios
+      .get(`${JSON_API}/countries`)
+
+      .then((res) => {
+        console.log(res);
+
+        setcountry(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handlecountry = async (e) => {
+    // console.log(e);
+    await axios
+      .get(`${JSON_API}/Provinces/country/${e}`)
+
+      .then((res) => {
+        console.log(res);
+
+        setprovince(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   
+  const handlecity = async (e) => {
+    // console.log(e);
+    await axios
+      .get(`${JSON_API}/cities/province/${e}`)
+
+      .then((res) => {
+        console.log(res);
+
+        setcity(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const handleshareholderDelete = (id) => {
     const newData = shareHolderData.filter((item) => item.id !== id);
     setShareHolderData(newData);
@@ -596,7 +641,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
   }
 };
     // needed of update
-useEffect(()=>{getData();},[]);
+useEffect(()=>{getData();getCountry()},[]);
   const getData = async () =>{
 
     await axios.get(`${JSON_API}/IndustryTypes`)
@@ -987,8 +1032,6 @@ const [Open, setOpen] = useState({
   const displaydata=()=>{
     console.log("shareHolderData:",shareHolderData);
     console.log("datestart :",Datestart);
-
-
   }
 
   const handleStartDateChange = (date) => {
@@ -1126,6 +1169,22 @@ const [Open, setOpen] = useState({
     <Title>{t("AddCompany")}</Title>
     <Text type="secondary">{t("textButtonAJT")}</Text>
 <Divider orientation="left">{t("generalinf")}</Divider>
+
+<Form.Item
+          {...formItemLayout}
+
+      name="numéro_entreprise"
+      label={t("Businessnumber")}
+      rules={[
+        {
+          required: true,
+          message: `${t("PleaseInputTheBusinessNumber")}`,
+          // whitespace: true,
+        },
+      ]}
+    >
+      <Input />
+    </Form.Item>
             <Form.Item
                   {...formItemLayout}
       name="nom_de_la_société"
@@ -1158,6 +1217,48 @@ const [Open, setOpen] = useState({
       console.log(d);
       setDatefound(d);
     }}/>
+
+    </Form.Item>
+
+    {/* "startYear": "string",
+  "startPeriod": 1,
+  "yearsInterval": 3, */}
+
+      <Form.Item
+        {...formItemLayout}
+      name="startyear"
+      label="Start year"
+       
+      // tooltip="What do you want others to call you?"
+      rules={[
+        {
+          required: true,
+          message: `${t("PleaseInputTheStartYear")}`,
+          // whitespace: true,
+        },
+      ]}
+    >
+      <DatePicker picker="year" size={'large'}/>
+    </Form.Item>
+
+    <Form.Item
+        {...formItemLayout}
+      name="yearsInterval"
+      label="Years Interval"
+       
+      // tooltip="What do you want others to call you?"
+      rules={[
+        {
+          required: true,
+          message: `${t("PleaseInputTheYearsInterval")}`,
+          // whitespace: true,
+        },
+      ]}
+    >
+        <Radio.Group>
+          <Radio value={3}>3</Radio>
+          <Radio value={5}>5</Radio>
+        </Radio.Group>
 
     </Form.Item>
 
@@ -1253,15 +1354,7 @@ const [Open, setOpen] = useState({
 
     </Form.Item>
  
-    <Form.Item
-          {...formItemLayout}
 
-      name="numéro_entreprise"
-      label={t("Businessnumber")}
-     
-    >
-      <Input />
-    </Form.Item>
 
     <Form.Item
           {...formItemLayout}

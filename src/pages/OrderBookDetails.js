@@ -63,7 +63,7 @@ const OrderBookDetails = () => {
       return data.data === "OrderDetail" ? (
         <Modal
           open={open}
-          title={t("Createanewcollection")}
+          title={t("Createaneworder")}
           okText={t("Create")}
           cancelText={t("Cancel")}
           onCancel={onCancel}
@@ -97,7 +97,7 @@ const OrderBookDetails = () => {
                 },
               ]}
             >
-              <Select placeholder="Select a customer" style={{}}>
+              <Select placeholder={t("selectcustomer")} style={{}}>
                 {Customer?.map(
                   (e) => e && <Option value={e.id}>{e.name}</Option>
                 )}
@@ -116,7 +116,7 @@ const OrderBookDetails = () => {
               ]}
             >
               <Select
-                placeholder="Select a product"
+                placeholder={t("selectproduct")}
                 style={
                   {
                     // width: 120,
@@ -130,11 +130,11 @@ const OrderBookDetails = () => {
               {/* <Input type="textarea" /> */}
             </Form.Item>
             <Form.Item name="startDate" label={t("Startdate")}>
-              <DatePicker />
+              <DatePicker placeholder={t("selectdate")} />
             </Form.Item>
 
             <Form.Item name="endDate" label={t("Enddate")}>
-              <DatePicker />
+              <DatePicker placeholder={t("selectdate")} />
             </Form.Item>
 
             <Form.Item name="pricePerDay" label={t("Priceperday")}>
@@ -871,7 +871,8 @@ const OrderBookDetails = () => {
             </Button>
 
             <Popconfirm
-              title="Sure to delete?"
+              title={t("Suretodelete")}
+              cancelText={t("cancel")}
               onConfirm={() => handleshareholderDelete(record.id)}
             >
               <a> {t("Delete")}</a>
