@@ -28,28 +28,28 @@ import OpportunityDetails from "./pages/OpportunityDetails";
 
 function App() {
   const [Company,setCompany]=useState(null);
-  const [Companies,setCompanies]=useState([{}]);
+  const [Companies,setCompanies]=useState([]);
 
   const[TempCompany,setTempCompany]=useState({});
 
   const [Actionstate,setActionstate]=useState(true);
   const [Edited,setEdited]=useState(true);
 
-  const [TypeIndustries,setTypeIndustries]=useState([{}]);
-  const [Market,setMarket]=useState([{}]);
-  const [RevenueModel,setRevenueModel]=useState([{}]);
-  const [MainCustomer,setMainCustomer]=useState([{}]);
-  const [BusinessPartner,setBusinessPartner]=useState([{}]);
-  const [StrategicTarget,setStrategicTarget]=useState([{}]);
-  const [ActivityType,setActivityType]=useState([{}]);
-  const [Product,setProduct]=useState([{}]);
-  const [ShareHolders,setShareHolders]=useState([{}]);
-  const [Shares,setShares]=useState([{}]);
+  const [TypeIndustries,setTypeIndustries]=useState([]);
+  const [Market,setMarket]=useState([]);
+  const [RevenueModel,setRevenueModel]=useState([]);
+  const [MainCustomer,setMainCustomer]=useState([]);
+  const [BusinessPartner,setBusinessPartner]=useState([]);
+  const [StrategicTarget,setStrategicTarget]=useState([]);
+  const [ActivityType,setActivityType]=useState([]);
+  const [Product,setProduct]=useState([]);
+  const [ShareHolders,setShareHolders]=useState([]);
+  const [Shares,setShares]=useState([]);
   const [Lang,setLang]=useState("en");
-
+  const [submitted, setSubmitted]=useState(false);
   return (
     <div className="App">
-      <CompanyContext.Provider value={{Lang,setLang,TempCompany,setTempCompany,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}}>
+      <CompanyContext.Provider value={{submitted, setSubmitted,Lang,setLang,TempCompany,setTempCompany,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}}>
       <Switch>
         
         <Route path="/sign-in" exact component={SignIn} />

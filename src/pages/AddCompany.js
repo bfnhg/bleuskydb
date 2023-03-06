@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useRef } from "react";
+import React, { useState,useEffect,useRef,useContext } from "react";
 import axios from 'axios';
 import TutorialDataService from "../services/TutorialService";
 import { NavLink,useHistory } from 'react-router-dom';
@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import {PlusOutlined,SettingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+import { CompanyContext } from '../contexts/CompanyContext';
 
 import {
   DatePicker,
@@ -81,14 +82,13 @@ const AddCompany = () => {
   const [country, setcountry] = useState([{}]);
   const [province, setprovince] = useState([{}]);
   const [city, setcity] = useState([{}]);
+  const {submitted, setSubmitted}=useContext(CompanyContext);
 
   const [ManagerData, setManagerData] = useState([]);
   // new Date().toLocaleDateString('en-US')
   const [Cdate, setDate] = useState();
-
   const [count, setCount] = useState(1);
   const [countsh, setCountsh] = useState(1);
-
 
   const getCountry = async () => {
     await axios
@@ -145,18 +145,19 @@ const AddCompany = () => {
         console.log(err);
       });
   };
- 
   
   const handleshareholderDelete = (id) => {
     const newData = shareHolderData.filter((item) => item.id !== id);
     setShareHolderData(newData);
     console.log('after delete',shareHolderData);
   };
+
   const handlemanagerDelete = (id) => {
     const newData = ManagerData.filter((item) => item.id !== id);
     setManagerData(newData);
     console.log('after delete',ManagerData);
   };
+
   const defaultshareholderColumns = [
     {
       title: 'Id',
@@ -202,6 +203,7 @@ const AddCompany = () => {
         ) : null,
     },
   ];
+
   const defaultmanagerColumns = [
     {
       title: 'Id',
@@ -269,6 +271,7 @@ const AddCompany = () => {
     //   }),
     // };
   });
+  
   const managercolumns = defaultmanagerColumns.map((col) => {
       return col;
   });
@@ -1045,7 +1048,6 @@ const [Open, setOpen] = useState({
   };
    const [company, setCompany] = useState(initialCompanyState);
 
-   const [submitted, setSubmitted] = useState(false);
   
   const addShareholderdata = () => {
     if(shareHolderId){
@@ -1159,7 +1161,7 @@ const [Open, setOpen] = useState({
       managers: ManagerData.map(i=>{return{
         name:i.name,
         firstName:i.firstName,
-        title:i.titles.map(o=>o.id),
+        titles:i.titles.map(o=>o.id),
         yearsofExperience:i.yearsofExperience
       }}),
       shareHolders:shareHolderData.map(i=>{return{

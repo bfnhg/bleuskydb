@@ -269,16 +269,18 @@ function Header({
   handleSidenavType,
   handleFixedNavbar,
 }) {
-  const {Lang,setLang,TempCompany,setTempCompany,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
+  const {submitted, setSubmitted,Lang,setLang,TempCompany,setTempCompany,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
   const [messageApi, contextHolder] = message.useMessage();
 
   const handleChangeLang = (value)=>{
     setLang(value);
     // console.log(Lang);
   }
-
   const history = useHistory();
-  useEffect(()=>{getalltablesdata();},[]);
+  useEffect(()=>{
+    getalltablesdata();
+    // onChange();
+  },[submitted]);
 
   const getalltablesdata = async () =>{
     await axios.get(`${JSON_API}/Enterprises`)
@@ -453,7 +455,7 @@ function addCompany() {
   history.push(path);    
 }
 const onChange = async (value) => {
-
+console.log(" ttessttt ",Companies.map(c=>c.id)[0]);
   console.log(`selected ${value}`);
 
   messageApi.open({
@@ -506,7 +508,7 @@ const onChange = async (value) => {
           </div> 
         </Col> 
         <Col span={24} md={12}>
-            <Select
+          { Companies && <Select
               disabled={!Edited}
               placeholder={t("select")}
               style={{width:350}}
@@ -514,14 +516,15 @@ const onChange = async (value) => {
               onChange={onChange}
               >
 
-                {Companies&&Companies.map((company)=>(
+              {Companies.map((company)=>(
 
-              <Option value={company.id}>{company.name} N°{company.businessNumber}</Option>
+                <Option value={company.id}>{company.name} {company.businessNumber}</Option>
               
-              ))
-                }
+              ))}
 
-              </Select>
+              </Select>}
+            
+
               <Select
                 defaultValue="en"
                 style={{

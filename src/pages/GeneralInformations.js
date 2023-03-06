@@ -91,7 +91,7 @@ const GeneralInformations = () => {
       dataIndex: 'titles',
       align:"center",
       render :(_,record)=>{
-       return record.titles.map(o=><div style={{textAlign: "left"}}><Tag >{o.title.label}</Tag></div> )
+       return record.titles.map(o=><Tag >{o.title.label}</Tag> )
       }
     },
     {
@@ -279,20 +279,17 @@ Company.name &&
 <Tabs defaultActiveKey="1">
     <Tabs.TabPane tab={t("generalinf")} key="1">
 
-      <Descriptions  bordered size={"small"}>
+      <Descriptions  bordered >
         <Descriptions.Item label={t("companyname")}>{Company.name?Company.name:""}</Descriptions.Item>
         <Descriptions.Item label={t("Businessnumber")}>{Company.businessNumber?Company.businessNumber:""}</Descriptions.Item>
         <Descriptions.Item label={t("Typeofindustry")}>{Company.industryTypes&&Company.industryTypes.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
         <Descriptions.Item label={t("address")}>{Company.address?Company.address:""}</Descriptions.Item>
-        {/* <Descriptions.Item label={t("City")}>{Company.city?Company.city:""}</Descriptions.Item> */}
+        <Descriptions.Item label={t("city")}>{Company.city?Company.city.name:""}</Descriptions.Item>
         <Descriptions.Item label={t("Postalcode")}>{Company.postalCode?Company.postalCode:""} </Descriptions.Item>
-
         <Descriptions.Item contentStyle={{textAlign:'center'}} label={t("Foundingdate")}>{Company.startingDate?dayjs(Company.startingDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
         <Descriptions.Item contentStyle={{textAlign:'center'}} label={t("Yearenddate")}>{Company.endDate?dayjs(Company.endDate).format('YYYY/MM/DD'):""}</Descriptions.Item>
-        {/* <Descriptions.Item label="Country">{Company&&Company.pays}</Descriptions.Item> */}
-        {/* <Descriptions.Item label="Province">{Company&&Company.province}</Descriptions.Item> */}
         <Descriptions.Item contentStyle={{textAlign:'right'}} label={t("Numberofemployees")}>{Company.employeesCount?Company.employeesCount:""}</Descriptions.Item>
-        <Descriptions.Item label="Budget">{Company.budget?Company.budget==0?"50 - 100":Company.budget==1?"100 - 1000":"+1000":""}</Descriptions.Item>
+        <Descriptions.Item label="Budget">{Company.budgetRange?Company.budgetRange==0?"50 - 100":Company.budgetRange==1?"100 - 1000":"+1000":""}</Descriptions.Item>
         <Descriptions.Item contentStyle={{textAlign:'right'}} label={t("Estimatedannualtaxrate")}>{Company.taxes?(Company.taxes+"%"):""}</Descriptions.Item>
       </Descriptions>
 
