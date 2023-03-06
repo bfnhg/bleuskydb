@@ -15,6 +15,7 @@ import {
   Cascader,
   Checkbox,
   Collapse,
+  Radio,
   Col,
   Form,
   Input,
@@ -56,8 +57,8 @@ const formItemLayout = {
       lg: { span: 12 }
     }
 
-
 };
+
 const tailFormItemLayout = {
 
   wrapperCol: {
@@ -77,13 +78,79 @@ const UpdateCompany = () => {
   const {Companies,setCompanies,Company,Actionstate,setActionstate,Edited,setEdited}=useContext(CompanyContext);
   let {t} =useTranslation();
 
+
+
+  const [country, setcountry] = useState([]);
+
+  const [province, setprovince] = useState([]);
+  const [city, setcity] = useState([]);
+
   const [shareHolderData, setShareHolderData] = useState([]);
   const [ManagerbyId, setManagerbyId] = useState({});
 
   const [ManagerData, setManagerData] = useState([]);
   const [Cdate, setDate] = useState();
 
-  const [count, setCount] = useState(2);
+  const [count, setCount] = useState(1);
+  const [countsh, setCountsh] = useState(1);
+
+  const getCountry = async () => {
+
+    await axios
+      .get(`${JSON_API}/countries`)
+      .then((res) => {
+        console.log(res);
+
+        setcountry(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+  };
+
+  const handlecountry = async (e) => {
+    // console.log(e);
+    await axios
+      .get(`${JSON_API}/Provinces/country/${e}`)
+
+      .then((res) => {
+        console.log(res);
+
+        setprovince(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+      await axios
+      .get(`${JSON_API}/cities/country/${e}`)
+
+      .then((res) => {
+        console.log(res);
+
+        setcity(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleprovince = async (e) => {
+    // console.log(e);
+    await axios
+      .get(`${JSON_API}/cities/province/${e}`)
+
+      .then((res) => {
+        console.log(res);
+
+        setcity(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+ 
   
   const handleshareholderDelete = (id) => {
     const newData = shareHolderData.filter((item) => item.id !== id);
@@ -206,21 +273,22 @@ const UpdateCompany = () => {
       return col;
   });
 
-const [TypeIndustries,setTypeIndustries]=useState([{}]);
-const [Market,setMarket]=useState([{}]);
-const [RevenueModel,setRevenueModel]=useState([{}]);
-const [MainCustomer,setMainCustomer]=useState([{}]);
-const [BusinessPartner,setBusinessPartner]=useState([{}]);
-const [StrategicTarget,setStrategicTarget]=useState([{}]);
-const [ActivityType,setActivityType]=useState([{}]);
-const [Product,setProduct]=useState([{}]);
-const [ShareHolders,setShareHolders]=useState([{}]);
-const [Managers,setManagers]=useState([{}]);
-const [Titles,setTitles]=useState([{}]);
-const [TitlesData,setTitlesData]=useState([{}]);
+const [TypeIndustries,setTypeIndustries]=useState([]);
+const [Market,setMarket]=useState([]);
+const [RevenueModel,setRevenueModel]=useState([]);
+const [Customer,setCustomer]=useState([]);
+const [BusinessPartner,setBusinessPartner]=useState([]);
+const [StrategicTarget,setStrategicTarget]=useState([]);
+const [ActivityType,setActivityType]=useState([]);
+const [Product,setProduct]=useState([]);
+const [ShareHolders,setShareHolders]=useState([]);
+const [Managers,setManagers]=useState([]);
+const [Titles,setTitles]=useState([]);
+const [TitlesData,setTitlesData]=useState([]);
 const [Datestart,setDatestart]=useState();
 const [Datefound,setDatefound]=useState();
-
+const [DateEndString,setDateEndString]=useState(null);
+const [cityID,setcityId]=useState(null);
 const [Dateend,setDateend]=useState();
 
 const[Tabkey,setTabkey]=useState("1");
@@ -233,7 +301,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
   console.log("open state"+open);
   console.log('data est ', data);
   {
-    return ["Shareholder","Customer","Business partners"].includes(data.data)?
+    return ["ShareHolders","Customers","BusinessPartners"].includes(data.url)?
       <Modal
         open={open}
         title={"Create a new "+data.data}
@@ -275,7 +343,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         </Form.Item>
       </Form>
       </Modal> 
-      :data.data==="Managers"?
+      :data.url==="Managers"?
       <Modal
         open={open}
         title={"Create a new manager"}
@@ -359,80 +427,55 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       </Form.Item>
       </Form>
       </Modal>
-       :data.data==="Title"?
+       :data.url==="Titles"?
        <Modal
-            open={open}
-            title={Tabkey=='1'?"Create a new title":"Edit titles"}
-            okText={Tabkey=='1'?"Create":"Save"}
-            cancelText="Cancel"
-            onCancel={onCancel}
-            onOk={() => {
-              console.log(Tabkey);
-              if(Tabkey=="1"){
-              form
-                .validateFields()
-                .then((values) => {
-                  
-                  form.resetFields();
-                  
-                    onCreate({values:values,url:data.url,data:data.data});
-                  }
-                
-                )
-                .catch((info) => {
-                  console.log('Validate Failed:', info);
-                });
-              }else{
-                console.log("title updated");
-              }
-            }}
-            >
-      <Tabs
-       defaultActiveKey="1"
-       onChange={onTabChange}
-       items={[
-         {
-           label: 'Add title',
-           key: '1',
-           children: 
-            <Form
-            {...formItemLayout}
-            form={form}
-            // layout="vertical"
-            name="form_in_modal"
-            // initialValues={{
-            //   modifier: 'public',
-            // }}
-            >
-              
-            <Form.Item
-            name="label"
-            label="Label"
-            
-            rules={[
-              {
-                required: true,
-                message: `Please input the ${data.data} label!`,
-              },
-            ]}
-            >
-            <Input placeholder={data.data+"  label"}/>
-            </Form.Item>
-            </Form>
-            },
-            {
-              label: 'Edit Titles',
-              key: '2',
-              children: 'Tab 2',
-              disabled: true,
-            },
-          ]}
-        />
-            </Modal> 
-        
+       open={open}
+       title={"Create a new "+data.data}
+       okText="Create"
+       cancelText="Cancel"
+       onCancel={onCancel}
+       onOk={() => {
+         form
+           .validateFields()
+           .then((values) => {
+             form.resetFields();
+             onCreate({values:values,url:data.url,data:data.data});
+           })
+           .catch((info) => {
+             console.log('Validate Failed:', info);
+           });
+       }}
+       >
+ 
+       <Form
+                         {...formItemLayout}
+       form={form}
+       // layout="vertical"
+       name="form_in_modal"
+       // initialValues={{
+       //   modifier: 'public',
+       // }}
+       >
+         
+         <Form.Item
+             name="label"
+             label="Label"
+             
+             rules={[
+               {
+                 required: true,
+                 message: `Please input the ${data.data} label!`,
+               },
+             ]}
+             >
+             <Input placeholder={data.data+"  label"}/>
+             </Form.Item>
+       </Form>
+       </Modal> 
        
-       :data.data==="Strategic Target"?
-       <Modal
+       :data.url==="StrategicTargets"?
+
+      <Modal
         open={open}
         title={"Create a new "+data.data}
         okText="Create"
@@ -475,7 +518,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         <Input placeholder={data.data+"  label"}/>
         </Form.Item>
         </Form>
-       </Modal> 
+      </Modal> 
        :
 
       <Modal
@@ -551,29 +594,29 @@ const getIndustryTypes = async()=>{
   });
 }
 
-const getManagers = async()=>{
-  await axios.get(`${JSON_API}/Managers`)
-  .then((response) => {
-    setManagers(response.data);
-  }).catch(function (error) {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.headers);
-    } else if (error.request) {
-      // The request was made but no response was received
-      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-      // http.ClientRequest in node.js
-      console.log(error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log('Error', error.message);
-    }
-    console.log(error.config);
-  });
-}
+// const getManagers = async()=>{
+//   await axios.get(`${JSON_API}/Managers`)
+//   .then((response) => {
+//     setManagers(response.data);
+//   }).catch(function (error) {
+//     if (error.response) {
+//       // The request was made and the server responded with a status code
+//       // that falls out of the range of 2xx
+//       console.log(error.response.data);
+//       console.log(error.response.status);
+//       console.log(error.response.headers);
+//     } else if (error.request) {
+//       // The request was made but no response was received
+//       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+//       // http.ClientRequest in node.js
+//       console.log(error.request);
+//     } else {
+//       // Something happened in setting up the request that triggered an Error
+//       console.log('Error', error.message);
+//     }
+//     console.log(error.config);
+//   });
+// }
 
 const getShareholders = async()=>{
   await axios.get(`${JSON_API}/ShareHolders`)
@@ -641,11 +684,14 @@ const getTitles = async()=>{
 }
 
     // needed of update
-useEffect(()=>{getData();},[]);
+useEffect(()=>{getData();getCountry()},[]);
   const getData = async () =>{
-
+    setcityId(company.city.id);
+    setManagers(company.managers);
+    setShareHolders(company.shareHolders)
     setManagerData(company.managers);
-
+    setCustomer(company.customers);
+    setProduct(company.products);
     const d= ShareHolders.filter(e=>e.id===shareHolderId);
     setShareHolderData(company.shareHolders);
 
@@ -716,27 +762,27 @@ useEffect(()=>{getData();},[]);
       console.log(error.config);
     });
 
-    await axios.get(`${JSON_API}/Customers`)
-    .then((response) => {
-      setMainCustomer(response.data);
-    }).catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
+    // await axios.get(`${JSON_API}/Customers`)
+    // .then((response) => {
+    //   setMainCustomer(response.data);
+    // }).catch(function (error) {
+    //   if (error.response) {
+    //     // The request was made and the server responded with a status code
+    //     // that falls out of the range of 2xx
+    //     console.log(error.response.data);
+    //     console.log(error.response.status);
+    //     console.log(error.response.headers);
+    //   } else if (error.request) {
+    //     // The request was made but no response was received
+    //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    //     // http.ClientRequest in node.js
+    //     console.log(error.request);
+    //   } else {
+    //     // Something happened in setting up the request that triggered an Error
+    //     console.log('Error', error.message);
+    //   }
+    //   console.log(error.config);
+    // });
 
     await axios.get(`${JSON_API}/BusinessPartners`)
     .then((response) => {
@@ -804,88 +850,88 @@ useEffect(()=>{getData();},[]);
       console.log(error.config);
     });
 
-    await axios.get(`${JSON_API}/Products`)
-    .then((response) => {
-      setProduct(response.data);
-    }).catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
+    // await axios.get(`${JSON_API}/Products`)
+    // .then((response) => {
+    //   setProduct(response.data);
+    // }).catch(function (error) {
+    //   if (error.response) {
+    //     // The request was made and the server responded with a status code
+    //     // that falls out of the range of 2xx
+    //     console.log(error.response.data);
+    //     console.log(error.response.status);
+    //     console.log(error.response.headers);
+    //   } else if (error.request) {
+    //     // The request was made but no response was received
+    //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    //     // http.ClientRequest in node.js
+    //     console.log(error.request);
+    //   } else {
+    //     // Something happened in setting up the request that triggered an Error
+    //     console.log('Error', error.message);
+    //   }
+    //   console.log(error.config);
+    // });
 
-    await axios.get(`${JSON_API}/ShareHolders`)
-    .then((response) => {
-      setShareHolders(response.data);
-      console.log('ShareHolders',ShareHolders);
-      const companyshareholders = ShareHolders.filter(o => {
-        let Found = false;
-        company.shareHolders.forEach(d=>{
-          if(d.id == o.id) Found = true;
-        });
-        return Found;
-        });
+  //   await axios.get(`${JSON_API}/ShareHolders`)
+  //   .then((response) => {
+  //     setShareHolders(response.data);
+  //     console.log('ShareHolders',ShareHolders);
+  //     const companyshareholders = ShareHolders.filter(o => {
+  //       let Found = false;
+  //       company.shareHolders.forEach(d=>{
+  //         if(d.id == o.id) Found = true;
+  //       });
+  //       return Found;
+  //       });
 
-   console.log("shareholders of company test",companyshareholders.filter(o=>{
-    let Found = false;
-    o.shares.forEach(d=>{
-      if(d.enterpriseId == company.id) Found = true;
-    });
-    return Found;
-  }))
+  //  console.log("shareholders of company test",companyshareholders.filter(o=>{
+  //   let Found = false;
+  //   o.shares.forEach(d=>{
+  //     if(d.enterpriseId == company.id) Found = true;
+  //   });
+  //   return Found;
+  // }))
 
-    }).catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
+  //   }).catch(function (error) {
+  //     if (error.response) {
+  //       // The request was made and the server responded with a status code
+  //       // that falls out of the range of 2xx
+  //       console.log(error.response.data);
+  //       console.log(error.response.status);
+  //       console.log(error.response.headers);
+  //     } else if (error.request) {
+  //       // The request was made but no response was received
+  //       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+  //       // http.ClientRequest in node.js
+  //       console.log(error.request);
+  //     } else {
+  //       // Something happened in setting up the request that triggered an Error
+  //       console.log('Error', error.message);
+  //     }
+  //     console.log(error.config);
+  //   });
 
-    await axios.get(`${JSON_API}/Managers`)
-    .then((response) => {
-      setManagers(response.data);
-    }).catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
+    // await axios.get(`${JSON_API}/Managers`)
+    // .then((response) => {
+    //   setManagers(response.data);
+    // }).catch(function (error) {
+    //   if (error.response) {
+    //     // The request was made and the server responded with a status code
+    //     // that falls out of the range of 2xx
+    //     console.log(error.response.data);
+    //     console.log(error.response.status);
+    //     console.log(error.response.headers);
+    //   } else if (error.request) {
+    //     // The request was made but no response was received
+    //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    //     // http.ClientRequest in node.js
+    //     console.log(error.request);
+    //   } else {
+    //     // Something happened in setting up the request that triggered an Error
+    //     console.log('Error', error.message);
+    //   }
+    //   console.log(error.config);
+    // });
 
     await axios.get(`${JSON_API}/Titles`)
     .then((response) => {
@@ -924,6 +970,7 @@ const filteredshareholderOptions = ShareHolders.filter(o => {
     if(d.id == o.id) notFound = false;
   });
   return notFound;
+
 });
 
 const filteredmanagerOptions = Managers.filter(o => {
@@ -950,21 +997,67 @@ const [Open, setOpen] = useState({
   });
   // needed of update
   const onCreate = async ({values,url,data}) => {
+
     console.log('Received data of form: ', data);
     console.log('Received values of form: ', values);
     console.log('Received url of form: ', url);
 
+    if(url=="Customers"){
+      setCustomer([...Customer,{
+        name:values.name
+      }]);
+      
+    }else if(url=="Products"){
+      setProduct([...Product,{
+        label:values.label
+      }])
+    }
+    else if(url=="Managers"){
 
-    await axios.post(`${JSON_API}/${url}`,values)
+      const titles = Titles.filter(o => {
+        let notFound = false;
+        values.titles.forEach(d=>{
+          if(d == o.id) notFound = true;
+        });
+        return notFound;
+      });
+      console.log("titles",titles);
+      console.log("titles 1",titles.map(t=>{return{title:t}}));
+
+      setManagers([...Managers,{
+      id: count,
+      key: count,
+      name: values.name,
+      firstName: values.firstName,
+      titles:titles.map(t=>{return{title:t}}),
+      yearsOfExperience: values.yearsOfExperience
+
+      }])
+
+      setCount(count+1);
+
+    }
+    else if(url=="ShareHolders"){
+      setShareHolders([...ShareHolders,{
+        id:countsh,
+        name:values.name
+      }]);
+      setCountsh(countsh+1)
+    }
+  else{
+ await axios.post(`${JSON_API}/${url}`,values)
     .then((response) => {
       getData();
       console.log('values were added to ' + data + " Successfully!");
 
       messageApi.open({
         type: 'success',
-        content: `${t("addedsuccessfully")}`,
+        content: 'values were added to ' + data + " Successfully!",
       });
     })
+    }
+
+   
     setOpen(false);
 
   };
@@ -991,7 +1084,16 @@ const [Open, setOpen] = useState({
    // needed of update
     // needed of update
   const [submitted, setSubmitted] = useState(false);
-  
+  const handleStartDateChange = (date) => {
+    // setDateend(date.clone().add(11, 'months'));
+    setDateend( date.clone().add(11, 'months') );
+    
+    console.log("Dateend",Dateend);
+
+    setDateEndString(new Date(Dateend).toLocaleDateString('en-US'));
+    console.log(DateEndString);
+
+  };
   const addShareholderdata = () => {
     if(shareHolderId){
       console.log("before add:",shareHolderData)
@@ -1064,6 +1166,8 @@ const [Open, setOpen] = useState({
     console.log('Received manager data of form: ', ManagerData);
     console.log('Received shareholder of form: ', shareHolderData);
 
+
+
     var companyinfo = {
       id:company.id,
       name: values.nom_de_la_société,
@@ -1071,52 +1175,61 @@ const [Open, setOpen] = useState({
       budgetRange: values.budget,
       startingDate: values.date_start,
       foundingDate: values.date_de_fondation,
+      startYear: ''+values.startYear.$y,
+      startPeriod: values.startPeriod.$M+1,
       endDate: values.date_fin_exercice,
       employeesCount: values.nombre_employés,
       address: values.adresse,
       postalCode: values.code_postal,
-      // cityId: values.ville,
+      cityId: cityID,
       taxes: values.taux_imposition_annuel_estimé,
       activityTypes: values.activity_type,
       products: values.product,
-      customers: values.main_customers,
+      customers: values.main_customers.map(c=> Customer.filter(mc=>c=mc.id)),
       markets: values.market,
       revenueModelItems: values.revenue_model,
       businessPartners: values.business_partners,
       industryTypes: values.type_industrie,
       // strategicTargets: values.strategic_target,
-      managers: ManagerData.map(i=>i.id),
+      managers: ManagerData.map(i=>{return{
+        id:i.id,
+        name:i.name,
+        firstName:i.firstName,
+        titles:i.titles.map(o=>o.title.id),
+        yearsofExperience:i.yearsofExperience
+      }}),
       shareHolders:shareHolderData.map(i=>{return{
-        shareHolderId:i.id,
+        id: i.id,
+        name:i.name,
         shares: i.shares&&i.shares,
-        startedAt:i.date
+        startedAt:i.startedAt
       }})
 
-     
-        
 
+
+        
       
     };
     console.log('Received companyinfo values of form: ', companyinfo);
 
-    axios.put(`${JSON_API}/Enterprises`,companyinfo)
-    .then(response => {
-      setSubmitted(true);
-      console.log(response.data);
+    // axios.put(`${JSON_API}/Enterprises`,companyinfo)
+    // .then(response => {
+    //   setSubmitted(true);
+    //   console.log(response.data);
 
-    })
-    .catch(function (error) {
-      if (error.response) {
+    // })
+    // .catch(function (error) {
+    //   if (error.response) {
         
-        console.log(error.toJSON());
-      } else if (error.request) {
+    //     console.log(error.toJSON());
+    //   } else if (error.request) {
         
-        console.log(error.request);
-      } else {
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
+    //     console.log(error.request);
+    //   } else {
+    //     console.log('Error', error.message);
+    //   }
+    //   console.log(error.config);
+    // });
 
   };
     
@@ -1167,12 +1280,15 @@ const [Open, setOpen] = useState({
         numéro_entreprise:company.businessNumber,
         budget:company.budgetRange,
         date_de_fondation: dayjs(company.foundingDate),
+        startYear: dayjs(company.startYear),
+        // startPeriod: company.startPeriod,
+        // yearsInterval: company.yearsInterval,
         date_start: dayjs(company.startingDate),
         date_fin_exercice:dayjs(company.endDate),
         nombre_employés:company.employeesCount,
         adresse:company.address,
         code_postal:company.postalCode,
-        ville:company.cityId,
+        city:company.city.name,
         taux_imposition_annuel_estimé:company.taxes,
         activity_type:company.activityTypes.map(e=>e.id),
         product:company.products.map(e=>e.id),
@@ -1191,6 +1307,16 @@ const [Open, setOpen] = useState({
     <Title>{company.name}</Title>
     <Text type="secondary">{t("textupdate")}</Text>
     <Divider orientation="left">{t("generalinf")}</Divider>
+
+    <Form.Item
+          {...formItemLayout}
+
+      name="numéro_entreprise"
+      label={t("Businessnumber")}
+     
+    >
+      <Input />
+    </Form.Item>
             <Form.Item
                   {...formItemLayout}
       name="nom_de_la_société"
@@ -1225,6 +1351,112 @@ const [Open, setOpen] = useState({
 
     </Form.Item>
 
+    
+<Form.Item
+        {...formItemLayout}
+      name="startPeriod"
+      label="Start Period"
+       
+      // tooltip="What do you want others to call you?"
+      rules={[
+        {
+          required: true,
+          message: `${t("PleaseInputTheStartPeriod")}`,
+          // whitespace: true,
+        },
+      ]}
+      
+    >
+      <DatePicker picker="month" size={'large'}   onChange={handleStartDateChange}/>
+    </Form.Item>
+
+      <Form.Item
+        {...formItemLayout}
+      name="startYear"
+      label="Start year"
+       
+      // tooltip="What do you want others to call you?"
+      rules={[
+        {
+          required: true,
+          message: `${t("PleaseInputTheStartYear")}`,
+          // whitespace: true,
+        },
+      ]}
+    >
+      <DatePicker picker="year" size={'large'}/>
+    </Form.Item>
+
+  
+
+
+
+    <Form.Item
+            {...formItemLayout}
+            name="pays"
+            label={t("country")}
+
+            // tooltip="What do you want others to call you?"
+          >
+            <Select
+              defaultValue=""
+              style={{
+                width: 605,
+              }}
+              onChange={handlecountry}
+              size={'large'}
+            >
+              {country.map((o) => {
+                return <Option value={o.id}>{o.name}</Option>;
+              })}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            {...formItemLayout}
+            name="province"
+            label={t("province")}
+          >
+            <Select
+              defaultValue=""
+              style={{
+                width: 605,
+              }}
+              onChange={handleprovince}
+              placeholder={t("ProvinceSelect")}
+              size={'large'}
+            >
+              {province.map((t) => {
+                return <Option value={t.id}>{t.name}</Option>;
+              })}
+            </Select>
+          </Form.Item>
+
+
+          <Form.Item
+                {...formItemLayout}
+
+            name="city"
+            label={t("city")}
+            // tooltip="What do you want others to call you?"
+          >
+            <Select
+              defaultValue=""
+              style={{
+                width: 605,
+              }}
+              // onChange={handlecity}
+              placeholder={t("CitySelect")}
+              size={'large'}
+              onChange={(value)=>setcityId(value)}
+            >
+              {city.map((t) => {
+                return <Option value={t.id}>{t.name}</Option>;
+              })}
+            </Select>    
+            
+            </Form.Item>
+
     <Form.Item
           {...formItemLayout}
 
@@ -1234,50 +1466,7 @@ const [Open, setOpen] = useState({
       <Input />
     </Form.Item>
 
-    <Form.Item
-          {...formItemLayout}
-
-      name="pays"
-      label={t("country")}
-       
-      // tooltip="What do you want others to call you?"
-      
-    >
-      <Input />
-    </Form.Item>
-
-    <Form.Item
-          {...formItemLayout}
-
-      name="province"
-      label={t("province")}
-       
-      // tooltip="What do you want others to call you?"
-    >
-      <Select placeholder={t("ProvinceSelect")}>
-        <Option value="ON">ON</Option>
-        <Option value="QC">QC</Option>
-        <Option value="NS">NS</Option>
-        <Option value="NB">NB</Option>
-        <Option value="MB">MB</Option>
-        <Option value="BC">BC</Option>
-        <Option value="SK">SK</Option>
-        <Option value="AB">AB</Option>
-        <Option value="NL">NL</Option>
-      </Select>
-    </Form.Item>
-
-    <Form.Item
-          {...formItemLayout}
-
-      name="ville"
-      label={t("city")}
-       
-      // tooltip="What do you want others to call you?"
-  
-    >
-      <Input />
-    </Form.Item>
+    
     <Form.Item
           {...formItemLayout}
 
@@ -1322,15 +1511,7 @@ const [Open, setOpen] = useState({
     }}/>
     </Form.Item>
  
-    <Form.Item
-          {...formItemLayout}
-
-      name="numéro_entreprise"
-      label={t("Businessnumber")}
-     
-    >
-      <Input />
-    </Form.Item>
+   
 
     <Form.Item
           {...formItemLayout}
@@ -1467,7 +1648,7 @@ const [Open, setOpen] = useState({
               // rules={[{ required: true, message: 'Please input the main customers!'}]}
             >
               <Select mode="multiple" allowClear placeholder={t("selectthemaincustomers")}  size={'large'} style={{ width: '100%', }}>
-                  {MainCustomer.map((e)=>(
+                  {Customer.map((e)=>(
 
                     e&&<Option value={e.id}>{e.name}</Option>
 
@@ -1542,6 +1723,7 @@ const [Open, setOpen] = useState({
               </Select>
               </Form.Item>
           </Col>
+          
           <Col span={12}>
           <Button
             type="link"
