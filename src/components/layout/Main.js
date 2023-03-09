@@ -128,7 +128,6 @@ function Main({ children }) {
           Descriptionofservicesandproducts: "Description of services and products",
           Descriptionofoffer:"Description of the offer",
           strategicplanning:"Strategic planning",
-          Strategictargets: " Strategic targets",
           selectthestrategictarget:"select the strategic target",
           selectthetypeofactivities:"select the type of activities",
           Typeofactivities: "Type of activities",
@@ -167,7 +166,6 @@ function Main({ children }) {
           Legalstructure:"Legal structure",
           ShareHolders: "ShareHolders",
           CreateanewShareholder: "Add the Shareholder",
-          Name: "Name",
           Nameshareholders:"Name of shareholders",
           Shares: "Shares",
           percentshares:"% of shares",
@@ -301,6 +299,7 @@ function Main({ children }) {
           Legalstructure: "Legal structure",
           ShareHolders: "ShareHolders",
           CreateanewShareholder: "Add the Shareholder",
+          addtolist:"Add to list",
           Name: "Name",
           Nameshareholders: "Name of shareholders",
           Shares: "Shares",
@@ -344,10 +343,10 @@ function Main({ children }) {
           Customersname: "Customer's name",
           Productslabel: "Product's label",
           CreateanewProduct: "Create a new product",
-
+          addnewmanager:"Add new manager",
+          addnewholder:"Add new shareholder",
           CreateanewCustomer: "Create a new customer",
           //Strategic Plan
-          Strategictargets: "",
           titlePage: "Strategic planning follow-up",
           title: "Create a new stratigic target",
           statut: "Status",
@@ -469,7 +468,9 @@ function Main({ children }) {
          AddnewtypeIndustry: "Ajouter un nouveau type",
          selectthebudget: "sélectionner un budget",
          //Clientèle cible
-
+         addtolist:"Ajouter à la liste",
+         addnewmanager:"Ajouter un nouveau manager",
+         addnewholder:"Ajouter un nouveau dirigeant",
          selectthemarket: "sélectionner un marché",
          MainCustomers: "Client",
          selectthemaincustomers: "sélectionner les clients",
@@ -485,7 +486,6 @@ function Main({ children }) {
          Descriptionofservicesandproducts:
            "Description des services et produits",
          Descriptionofoffer: "Description de l’offre",
-         Strategictargets: "Objectifs stratégiques",
          selectthestrategictarget: "sélectionner les cibles stratégiques",
          selectthetypeofactivities: "sélectionner les type d'activités",
          selecttheproductsservices: "select the products / services",
@@ -524,7 +524,6 @@ function Main({ children }) {
          Legalstructure: "Structure juridique",
          ShareHolders: "Actionnaires",
          CreateanewShareholder: "Ajouter l'actionnaire",
-         Name: "Nom",
          Nameshareholders: "Nom des actionnaires",
          percentshares: "% d’actions",
 
@@ -570,7 +569,6 @@ function Main({ children }) {
          Createanewopportunity: "Céer une nouvelle opportunité",
 
          //Strategic Plan
-         Strategictargets: "",
          titlePage: "Suivi de la planification stratégique",
          title: "Create a new Stratigic Target",
          statut: "Statut",

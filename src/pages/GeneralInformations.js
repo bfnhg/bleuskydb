@@ -306,7 +306,7 @@ Company.name &&
 
     <Tabs.TabPane tab={t("Descriptionofservicesandproducts")} key="3">
       <Descriptions bordered   >
-        {/* <Descriptions.Item label={t("Strategictargets")}>{Company.strategicTargets&&Company.strategicTargets.map((e)=>{return (<Tag>{e.type}</Tag> )})}</Descriptions.Item> */}
+        <Descriptions.Item label={t("Strategictargets")}>{Company.strategicTargets&&Company.strategicTargets.map((e)=>{return (<Tag>{e.type}</Tag> )})}</Descriptions.Item>
         <Descriptions.Item label={t("Typeofactivities")}>{Company.activityTypes&&Company.activityTypes.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
         <Descriptions.Item label={t("Descriptionofservicesandproducts")}>{Company.products&&Company.products.map((e)=>{return (<Tag>{e.label}</Tag> )})}</Descriptions.Item>
       </Descriptions>

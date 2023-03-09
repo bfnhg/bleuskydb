@@ -3,7 +3,7 @@ import axios from 'axios';
 import TutorialDataService from "../services/TutorialService";
 import { NavLink,useHistory } from 'react-router-dom';
 import {JSON_API} from '../services/Constants';
-import {PlusOutlined,SettingOutlined } from '@ant-design/icons';
+import {PlusOutlined,SettingOutlined,CaretDownOutlined } from '@ant-design/icons';
 import { CompanyContext } from '../contexts/CompanyContext';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -75,7 +75,7 @@ const tailFormItemLayout = {
 
        
 const UpdateCompany = () => {
-  const {Companies,setCompanies,Company,Actionstate,setActionstate,Edited,setEdited}=useContext(CompanyContext);
+  const {submitted, setSubmitted,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited}=useContext(CompanyContext);
   let {t} =useTranslation();
 
 
@@ -107,6 +107,19 @@ const UpdateCompany = () => {
         console.log(err);
       });
 
+      await axios
+      .get(`${JSON_API}/Provinces/country/${company.city.province.country.id}`)
+
+      .then((res) => {
+        console.log(res);
+
+        setprovince(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+      
   };
 
   const handlecountry = async (e) => {
@@ -277,10 +290,15 @@ const [TypeIndustries,setTypeIndustries]=useState([]);
 const [Market,setMarket]=useState([]);
 const [RevenueModel,setRevenueModel]=useState([]);
 const [Customer,setCustomer]=useState([]);
+const [Customerselected,setCustomerselected]=useState([]);
+
 const [BusinessPartner,setBusinessPartner]=useState([]);
 const [StrategicTarget,setStrategicTarget]=useState([]);
 const [ActivityType,setActivityType]=useState([]);
 const [Product,setProduct]=useState([]);
+const [Productselected,setProductselected]=useState([]);
+const [StrategicTargetselected,setStrategicTargetselected]=useState([]);
+
 const [ShareHolders,setShareHolders]=useState([]);
 const [Managers,setManagers]=useState([]);
 const [Titles,setTitles]=useState([]);
@@ -301,7 +319,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
   console.log("open state"+open);
   console.log('data est ', data);
   {
-    return ["ShareHolders","Customers","BusinessPartners"].includes(data.url)?
+    return ["Customers","BusinessPartners"].includes(data.url)?
       <Modal
         open={open}
         title={"Create a new "+data.data}
@@ -343,6 +361,95 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         </Form.Item>
       </Form>
       </Modal> 
+      :data.url==="ShareHolders"?
+      <Modal
+      open={open}
+      title={"Create a new "+data.data}
+      okText="Create"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onCreate({values:values,url:data.url,data:data.data});
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+    >
+
+    <Form
+      form={form}
+      // layout="vertical"
+      name="form_in_modal"
+      // initialValues={{
+      //   modifier: 'public',
+      // }}
+    >
+
+       <Form.Item
+         name="name"
+         label={t("Name")}
+         
+         rules={[
+           {
+             required: true,
+             message: `Please input the ${data.data} name!`,
+           },
+         ]}
+       >
+         <Input placeholder={data.data+"  name"}/>
+       </Form.Item>
+
+       <Form.Item
+         name="shares"
+         label={t("Shares")}
+         rules={[
+           {
+             required: true,
+             message: `Please input the ${data.data} Shares!`,
+           },
+         ]}
+       >
+         <InputNumber
+           // disabled={SHselected}
+           min={0}
+           max={100}
+           size={'large'}
+           formatter={(value) => `${value}%`}
+           parser={(value) => value.replace('%', '')}
+           // onChange={e=>setShareHolderShares(e)}
+
+         />
+
+       </Form.Item>
+     
+     
+
+
+       <Form.Item
+       name="startedAt"
+       label={t("Startdate")}
+       rules={[
+         {
+           required: true,
+           message: `Please input the ${data.data} Start date!`,
+         },
+       ]}
+       >
+         <DatePicker format={"YYYY-MM-DD"} size={'large'} 
+         // onChange={(date) => {
+         // const d = new Date(date).toLocaleDateString('en-US');
+         // console.log(date);
+         // setDate({date,d});
+         // }}
+         />
+       </Form.Item>
+     </Form>
+     </Modal>
       :data.url==="Managers"?
       <Modal
         open={open}
@@ -475,50 +582,63 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
        
        :data.url==="StrategicTargets"?
 
-      <Modal
-        open={open}
-        title={"Create a new "+data.data}
-        okText="Create"
-        cancelText="Cancel"
-        onCancel={onCancel}
-        onOk={() => {
-          form
-            .validateFields()
-            .then((values) => {
-              form.resetFields();
-              onCreate({values:values,url:data.url,data:data.data});
-            })
-            .catch((info) => {
-              console.log('Validate Failed:', info);
-            });
-        }}
-        >
-  
-        <Form
-                          {...formItemLayout}
-        form={form}
-        // layout="vertical"
-        name="form_in_modal"
-        // initialValues={{
-        //   modifier: 'public',
-        // }}
-        >
-          
-        <Form.Item
-        name="label"
-        label="Label"
-        
-        rules={[
-          {
-            required: true,
-            message: `Please input the ${data.data} label!`,
-          },
-        ]}
-        >
-        <Input placeholder={data.data+"  label"}/>
-        </Form.Item>
-        </Form>
-      </Modal> 
+       <Modal
+       open={open}
+       title={"Create a new "+data.data}
+       okText="Create"
+       cancelText="Cancel"
+       onCancel={onCancel}
+       onOk={() => {
+         form
+           .validateFields()
+           .then((values) => {
+             form.resetFields();
+             onCreate({values:values,url:data.url,data:data.data});
+           })
+           .catch((info) => {
+             console.log('Validate Failed:', info);
+           });
+       }}
+       >
+ 
+       <Form
+         {...formItemLayout}
+         form={form}
+         name="form_in_modal"
+ 
+       >
+         
+       <Form.Item
+         name="type"
+         label="Type"
+         
+         rules={[
+           {
+             required: true,
+             message: `Please input the ${data.data} type!`,
+           },
+         ]}
+       >
+ 
+       <Input placeholder={data.data+"  type"}/>
+       </Form.Item>
+ 
+       <Form.Item
+         name="details"
+         label="Details"
+         
+         rules={[
+           {
+             required: true,
+             message: `Please input the ${data.data} details!`,
+           },
+         ]}
+       >
+ 
+       <TextArea placeholder={data.data+"  details"}/>
+       </Form.Item>
+       </Form>
+       </Modal> 
        :
 
       <Modal
@@ -567,7 +687,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       </Modal> 
   }
 };
-const [company, setCompany] = useState(Company);
+const [company, setcompany] = useState(Company);
 
 const getIndustryTypes = async()=>{
   await axios.get(`${JSON_API}/IndustryTypes`)
@@ -684,8 +804,12 @@ const getTitles = async()=>{
 }
 
     // needed of update
-useEffect(()=>{getData();getCountry()},[]);
+useEffect(()=>{ setSubmitted(false);getData();getCountry()},[]);
   const getData = async () =>{
+    setStrategicTargetselected(company.strategicTargets)
+    setStrategicTarget(company.strategicTargets)
+    setCustomerselected(company.customers)
+    setProductselected(company.products)
     setcityId(company.city.id);
     setManagers(company.managers);
     setShareHolders(company.shareHolders)
@@ -806,27 +930,27 @@ useEffect(()=>{getData();getCountry()},[]);
       console.log(error.config);
     });
 
-    await axios.get(`${JSON_API}/StrategicTargets`)
-    .then((response) => {
-      setStrategicTarget(response.data);
-    }).catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
+    // await axios.get(`${JSON_API}/StrategicTargets`)
+    // .then((response) => {
+    //   setStrategicTarget(response.data);
+    // }).catch(function (error) {
+    //   if (error.response) {
+    //     // The request was made and the server responded with a status code
+    //     // that falls out of the range of 2xx
+    //     console.log(error.response.data);
+    //     console.log(error.response.status);
+    //     console.log(error.response.headers);
+    //   } else if (error.request) {
+    //     // The request was made but no response was received
+    //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    //     // http.ClientRequest in node.js
+    //     console.log(error.request);
+    //   } else {
+    //     // Something happened in setting up the request that triggered an Error
+    //     console.log('Error', error.message);
+    //   }
+    //   console.log(error.config);
+    // });
 
     await axios.get(`${JSON_API}/ActivityTypes`)
     .then((response) => {
@@ -1037,25 +1161,34 @@ const [Open, setOpen] = useState({
       setCount(count+1);
 
     }
+    else if(url=="StrategicTargets"){
+      setStrategicTarget([...StrategicTarget,{
+        type:values.type,
+        details:values.details
+      }]);
+    }
     else if(url=="ShareHolders"){
       setShareHolders([...ShareHolders,{
         id:countsh,
-        name:values.name
+        name:values.name,
+        shares:values.shares,
+        date:values.startedAt,
+        startedAt:new Date(values.startedAt).toLocaleDateString('en-US')
       }]);
       setCountsh(countsh+1)
     }
-  else{
- await axios.post(`${JSON_API}/${url}`,values)
-    .then((response) => {
-      getData();
-      console.log('values were added to ' + data + " Successfully!");
+    else{
+    await axios.post(`${JSON_API}/${url}`,values)
+      .then((response) => {
+        getData();
+        console.log('values were added to ' + data + " Successfully!");
 
-      messageApi.open({
-        type: 'success',
-        content: 'values were added to ' + data + " Successfully!",
-      });
-    })
-    }
+        messageApi.open({
+          type: 'success',
+          content: 'values were added to ' + data + " Successfully!",
+        });
+      })
+      }
 
    
     setOpen(false);
@@ -1083,7 +1216,6 @@ const [Open, setOpen] = useState({
   };
    // needed of update
     // needed of update
-  const [submitted, setSubmitted] = useState(false);
   const handleStartDateChange = (date) => {
     // setDateend(date.clone().add(11, 'months'));
     setDateend( date.clone().add(11, 'months') );
@@ -1094,19 +1226,28 @@ const [Open, setOpen] = useState({
     console.log(DateEndString);
 
   };
-  const addShareholderdata = () => {
-    if(shareHolderId){
-      console.log("before add:",shareHolderData)
 
-      const d= ShareHolders.filter(e=>e.id===shareHolderId);
-        setShareHolderData([...shareHolderData, {
-          id:d.length>0 && d[0].id,
-          name: d.length>0 && d[0].name,
-          shares:shareHolderShares&&shareHolderShares,
-          date:Cdate&&Cdate.date,
-          startedAt:Cdate&&Cdate.d
-        }]);
+  const handleStartPeriodChange = (e) => {
+    var e= [1,2,3,4,5,6,7,8,9].includes(e)?"0"+e:e;
+    var year = Datestart? Datestart.$y : new Date().getFullYear();
+    var dates = year+"-"+e+"-01";
+    console.log(dayjs(dates,"YYYY-MM-DD").clone().add(12, 'months'));
+    setDateend( dayjs(dates,"YYYY-MM-DD").clone().add(12, 'months'));
+
+  };
+  const addShareholderdata = () => {
+
+    const d= ShareHolders.filter(e=>e.id===shareHolderId);
+    if(d){
+      setShareHolderData([...shareHolderData, {
+      id:d[0].id,
+      name:d[0].name,
+      shares:d[0].shares,
+      date:d[0].date,
+      startedAt:d[0].startedAt
+    }]);
     }
+    
         console.log("after add:",shareHolderData);
   }
 
@@ -1166,43 +1307,47 @@ const [Open, setOpen] = useState({
     console.log('Received manager data of form: ', ManagerData);
     console.log('Received shareholder of form: ', shareHolderData);
 
-
+    // var e= [1,2,3,4,5,6,7,8,9].includes(values.startPeriod)?"0"+values.startPeriod:values.startPeriod;
+    // // var year = Datestart? Datestart.$y : new Date().getFullYear();
+    // var dates = values.date_start.$y+"-"+e+"-01";
+    // console.log(dayjs(dates,"YYYY-MM-DD").clone().add(11, 'months'));
 
     var companyinfo = {
       id:company.id,
       name: values.nom_de_la_société,
       businessNumber: values.numéro_entreprise,
       budgetRange: values.budget,
-      startingDate: values.date_start,
+      // startingDate: values.date_start,
       foundingDate: values.date_de_fondation,
-      startYear: ''+values.startYear.$y,
-      startPeriod: values.startPeriod.$M+1,
-      endDate: values.date_fin_exercice,
+      startYear: values.startYear,
+      // startPeriod: values.startPeriod,
+      // yearsInterval: values.yearsInterval,
+      // endDate: values.date_fin_exercice,
       employeesCount: values.nombre_employés,
       address: values.adresse,
       postalCode: values.code_postal,
       cityId: cityID,
       taxes: values.taux_imposition_annuel_estimé,
       activityTypes: values.activity_type,
-      products: values.product,
-      customers: values.main_customers.map(c=> Customer.filter(mc=>c=mc.id)),
+      products: Productselected,
+      customers: Customerselected,
       markets: values.market,
       revenueModelItems: values.revenue_model,
       businessPartners: values.business_partners,
       industryTypes: values.type_industrie,
-      // strategicTargets: values.strategic_target,
+      strategicTargets: StrategicTargetselected,
       managers: ManagerData.map(i=>{return{
-        id:i.id,
+        // id:i.id,
         name:i.name,
         firstName:i.firstName,
         titles:i.titles.map(o=>o.title.id),
-        yearsofExperience:i.yearsofExperience
+        yearsOfExperience:i.yearsOfExperience
       }}),
       shareHolders:shareHolderData.map(i=>{return{
-        id: i.id,
+        // id: i.id,
         name:i.name,
         shares: i.shares&&i.shares,
-        startedAt:i.startedAt
+        startedAt:i.date?i.date:i.startedAt
       }})
 
 
@@ -1212,24 +1357,25 @@ const [Open, setOpen] = useState({
     };
     console.log('Received companyinfo values of form: ', companyinfo);
 
-    // axios.put(`${JSON_API}/Enterprises`,companyinfo)
-    // .then(response => {
-    //   setSubmitted(true);
-    //   console.log(response.data);
+    axios.put(`${JSON_API}/Enterprises`,companyinfo)
+    .then(response => {
+      setSubmitted(true);
+      console.log("Company information after update ",response.data);
+      setCompany(response.data);
 
-    // })
-    // .catch(function (error) {
-    //   if (error.response) {
+    })
+    .catch(function (error) {
+      if (error.response) {
         
-    //     console.log(error.toJSON());
-    //   } else if (error.request) {
+        console.log(error.toJSON());
+      } else if (error.request) {
         
-    //     console.log(error.request);
-    //   } else {
-    //     console.log('Error', error.message);
-    //   }
-    //   console.log(error.config);
-    // });
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
 
   };
     
@@ -1238,6 +1384,7 @@ const [Open, setOpen] = useState({
         setSubmitted(false);
       };
       const gotoGI = () => {
+        setSubmitted(false);
         let path = `/generalinformations`; 
         history.push(path);    
       };
@@ -1279,9 +1426,12 @@ const [Open, setOpen] = useState({
         nom_de_la_société:company.name,
         numéro_entreprise:company.businessNumber,
         budget:company.budgetRange,
+        pays:company.city.province.country.id,
+        province:company.city.province.id,
         date_de_fondation: dayjs(company.foundingDate),
         startYear: dayjs(company.startYear),
-        // startPeriod: company.startPeriod,
+        startPeriod: company.startPeriod,
+        yearsInterval: company.yearsInterval,
         // yearsInterval: company.yearsInterval,
         date_start: dayjs(company.startingDate),
         date_fin_exercice:dayjs(company.endDate),
@@ -1297,7 +1447,7 @@ const [Open, setOpen] = useState({
         revenue_model:company.revenueModelItems.map(e=>e.id),
         business_partners:company.businessPartners.map(e=>e.id),
         type_industrie:company.industryTypes.map(e=>e.id),
-        strategic_target:company.strategicTargets.map(e=>e.id)
+        strategic_target:company.strategicTargets.map(e=>e.type)
 
       }}
       scrollToFirstError
@@ -1367,7 +1517,23 @@ const [Open, setOpen] = useState({
       ]}
       
     >
-      <DatePicker picker="month" size={'large'}   onChange={handleStartDateChange}/>
+      {/* <DatePicker picker="month" size={'large'}   onChange={handleStartDateChange}/> */}
+      <Select disabled placeholder={t("SelectStartPeriod")}
+        onChange={handleStartPeriodChange} size={'large'}>
+
+        <Option value={1}>{t("January")}</Option>
+        <Option value={2}>{t("February")}</Option>
+        <Option value={3}>{t("March")}</Option>
+        <Option value={4}>{t("April")}</Option>
+        <Option value={5}>{t("May")}</Option>
+        <Option value={6}>{t("June")}</Option>
+        <Option value={7}>{t("January")}</Option>
+        <Option value={8}>{t("August")}</Option>
+        <Option value={9}>{t("September")}</Option>
+        <Option value={10}>{t("October")}</Option>
+        <Option value={11}>{t("November")}</Option>
+        <Option value={12}>{t("December")}</Option>
+      </Select>
     </Form.Item>
 
       <Form.Item
@@ -1384,7 +1550,7 @@ const [Open, setOpen] = useState({
         },
       ]}
     >
-      <DatePicker picker="year" size={'large'}/>
+      <DatePicker  picker="year" size={'large'}/>
     </Form.Item>
 
   
@@ -1489,15 +1655,15 @@ const [Open, setOpen] = useState({
       // validateStatus="error"
       // help="Please select right date"
     >
-        <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
-      const d = new Date(date).toLocaleDateString('en-US');
-      console.log(d);
-      setDatestart(d);
+        <DatePicker disabled format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+      // const d = new Date(date).toLocaleDateString('en-US');
+      // console.log(d);
+      setDatestart(date);
     }}/>
 
     </Form.Item>
 
-    <Form.Item
+    {/* <Form.Item
       {...formItemLayout}
 
       name="date_fin_exercice"
@@ -1509,7 +1675,7 @@ const [Open, setOpen] = useState({
       console.log(d);
       setDateend(d);
     }}/>
-    </Form.Item>
+    </Form.Item> */}
  
    
 
@@ -1600,7 +1766,6 @@ const [Open, setOpen] = useState({
       ]}
     >
       <InputNumber />
-   
     </Form.Item>
     <Divider orientation="left">{t("Targetcustomers")}</Divider>
 
@@ -1647,7 +1812,7 @@ const [Open, setOpen] = useState({
               noStyle
               // rules={[{ required: true, message: 'Please input the main customers!'}]}
             >
-              <Select mode="multiple" allowClear placeholder={t("selectthemaincustomers")}  size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selectthemaincustomers")} onChange={e=>setCustomerselected(Customer.filter(p=> e.includes(p.id)))}  size={'large'} style={{ width: '100%', }}>
                   {Customer.map((e)=>(
 
                     e&&<Option value={e.id}>{e.name}</Option>
@@ -1742,7 +1907,7 @@ const [Open, setOpen] = useState({
       <Divider orientation="left">{t("Descriptionofservicesandproducts")}</Divider>
 
 
-      {/* <Form.Item label={t("Strategictargets")}      {...formItemLayout} >
+      <Form.Item label={t("Strategictargets")}      {...formItemLayout} >
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -1750,14 +1915,17 @@ const [Open, setOpen] = useState({
               label={t("Strategictargets")} 
               noStyle
             >
-              <Select mode="multiple" allowClear placeholder={t("selectthestrategictarget")} size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selectthestrategictarget")} onChange={e=>setStrategicTargetselected(StrategicTarget.filter(st=>e.includes(st.type)))}  size={'large'} style={{ width: '100%', }}>
+                  
                   {StrategicTarget.map((e)=>(
 
-                    e&&<Option value={e.id}>{e.name}</Option>
+                    e&&<Option value={e.type}>{e.type}</Option>
 
                   ))}
+
               </Select>
-              </Form.Item>
+
+            </Form.Item>
           </Col>
 
           <Col span={12}>
@@ -1773,7 +1941,7 @@ const [Open, setOpen] = useState({
           </Button>
           </Col>
         </Row>
-      </Form.Item> */}
+      </Form.Item>
 
       <Form.Item label={t("Typeofactivities")}       {...formItemLayout}>
         <Row gutter={8}>
@@ -1816,7 +1984,7 @@ const [Open, setOpen] = useState({
               label={t("ProductsServices")} 
               noStyle
             >
-              <Select mode="multiple" allowClear placeholder={t("selecttheproductsservices")}  size={'large'} style={{ width: '100%', }}>
+              <Select mode="multiple" allowClear placeholder={t("selecttheproductsservices")} onChange={e=>setProductselected(Product.filter(p=> e.includes(p.id)))}  size={'large'} style={{ width: '100%', }}>
                   {Product.map((e)=>(
 
                     e&&<Option value={e.id}>{e.label}</Option>
@@ -1901,19 +2069,19 @@ const [Open, setOpen] = useState({
 
     <Form.Item name="add">
       <Button  onClick={()=>addManagerdata()}>
-      <PlusOutlined/>{t("Addmanager")}
+      <CaretDownOutlined />{t("addtolist")}
       </Button>
     </Form.Item>
 
    
       </Space>
-     {ManagerData.length>0&&<Table
+    <Table
         rowClassName={() => 'editable-row'}
         bordered
         dataSource={ManagerData}
         columns={managercolumns}
 
-      />}
+      />
       
 
       <Divider orientation="left">{t("Legalstructure")}</Divider>
@@ -1966,52 +2134,22 @@ const [Open, setOpen] = useState({
       </Button>
 
 
-      <Form.Item
-        name="shares"
-        label={t("Shares")}
-      >
-        <InputNumber
-          // disabled={SHselected}
-          min={0}
-          max={100}
-          size={'large'}
-          formatter={(value) => `${value}%`}
-          parser={(value) => value.replace('%', '')}
-          onChange={e=>setShareHolderShares(e)}
-
-        />
-
-      </Form.Item>
-      
-      
-
-
-      <Form.Item
-      name="startedAt"
-      label={t("Startdate")}
-      >
-        <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
-      const d = new Date(date).toLocaleDateString('en-US');
-      console.log(date);
-      setDate({date,d});
-    }}/>
-      </Form.Item>
 
     <Form.Item name="add">
       <Button  onClick={()=>addShareholderdata()}>
-      <PlusOutlined/>{t("CreateanewShareholder")}
+      <CaretDownOutlined />{t("addtolist")}      
       </Button>
     </Form.Item>
 
    
       </Space>
-     {shareHolderData.length>0 && <Table
+  <Table
         rowClassName={() => 'editable-row'}
         bordered
         dataSource={shareHolderData}
         columns={shareholdercolumns}
 
-      />}
+      />
 
     <Form.Item {...tailFormItemLayout}>
       

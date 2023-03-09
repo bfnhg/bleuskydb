@@ -278,11 +278,18 @@ function Header({
   }
   const history = useHistory();
   useEffect(()=>{
+    
     getalltablesdata();
+    // if(submitted==true){
+    //   onChange(Company.id);
+    //   console.log("11")
+    // }
+    
     // onChange();
   },[submitted]);
 
   const getalltablesdata = async () =>{
+    console.log("Getting new data ... ");
     await axios.get(`${JSON_API}/Enterprises`)
     .then((response) => {
       setCompanies(response.data);
