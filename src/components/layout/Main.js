@@ -108,7 +108,6 @@ function Main({ children }) {
           Pleaseinputthecompanyname: "Please input the company name!",
           ProvinceSelect: "Select the province",
           selectthetypeofindustry: "Select the type of industry",
-          AddnewtypeIndustry: " Add new type",
           selectthebudget: "Select the budget",
           selectdate: "Select date",
           //
@@ -118,7 +117,6 @@ function Main({ children }) {
           selectthemaincustomers: "Select the customers",
           RevenueModel: "Revenue Model",
           AddnewmarketButton: "Add new market",
-          AddnewcustomerButton: " Add new customers",
           RevenueModelButton: "Add new revenue model",
           selecttherevenuemodel: "Select the revenue model",
           BusinesspartnersButton: "Business partners",
@@ -132,9 +130,9 @@ function Main({ children }) {
           selectthetypeofactivities:"select the type of activities",
           Typeofactivities: "Type of activities",
           ProductsServices: "Products/Services",
-          StrategictargetsButton: " Add new Strategic targets",
-          TypeofactivitiesButton: " Add new Type of activities",
-          ProductsServicesButton: " Add new Products/Services",
+          StrategictargetsButton: " Add new strategic targets",
+          TypeofactivitiesButton: " Add new type of activities",
+          ProductsServicesButton: " Add new products / services",
           //Management team
           Managementteam: " Management team",
           Createanewmanager: "Create a new manager",
@@ -240,7 +238,7 @@ function Main({ children }) {
           Pleaseinputthecompanyname: "Please input the company name!",
           ProvinceSelect: "select the province",
           selectthetypeofindustry: "select the type of industry",
-          AddnewtypeIndustry: " Add new type",
+          AddnewtypeIndustry: " Add new type of industry",
           selectthebudget: "select the budget",
           //
           //Targetcustomer
@@ -265,9 +263,7 @@ function Main({ children }) {
           selectthetypeofactivities: "select the type of activities",
           Typeofactivities: "Type of activities",
           ProductsServices: "Products/Services",
-          StrategictargetsButton: " Add new Strategic targets",
-          TypeofactivitiesButton: " Add new Type of activities",
-          ProductsServicesButton: " Add new Products/Services",
+     
           //Management team
           Managementteam: " Management team",
           Createanewmanager: "Create a new manager",
@@ -301,6 +297,8 @@ function Main({ children }) {
           CreateanewShareholder: "Add the Shareholder",
           addtolist:"Add to list",
           Name: "Name",
+          addtitles: "Add new title",
+
           Nameshareholders: "Name of shareholders",
           Shares: "Shares",
           percentshares: "% of shares",
@@ -465,7 +463,7 @@ function Main({ children }) {
          Pleaseinputthecompanyname: "Veuillez saisir le nom de l'entreprise",
          ProvinceSelect: "sélectionnez la province",
          selectthetypeofindustry: "  sélectionner le type d'industrie",
-         AddnewtypeIndustry: "Ajouter un nouveau type",
+         AddnewtypeIndustry: "Ajouter un nouveau type d'industrie",
          selectthebudget: "sélectionner un budget",
          //Clientèle cible
          addtolist:"Ajouter à la liste",
@@ -477,7 +475,7 @@ function Main({ children }) {
          RevenueModel: "Modèle de revenus",
          selecttherevenuemodel: "sélectionner le modèles de revenus",
          AddnewmarketButton: "Ajouter un nouveau marché",
-         AddnewcustomerButton: "Ajouter un nouveau Client",
+         AddnewcustomerButton: "Ajouter un nouveau client",
          RevenueModelButton: "Ajouter un nouveau modèle de revenus",
          BusinesspartnersButton: "Partenaires d'affaires",
          selectthebusinesspartners: "sélectionner les partenaires d'affaires",
@@ -493,8 +491,8 @@ function Main({ children }) {
          ProductsServices: "Produits / Services",
          strategicplanning: "Planification stratégique",
          StrategictargetsButton: "Ajouter de nouvelles cibles stratégiques",
-         TypeofactivitiesButton: " Ajouter de nouvelles Type d'activités",
-         ProductsServicesButton: " Ajouter de nouveaux Produits / Services",
+         TypeofactivitiesButton: " Ajouter de nouvelles type d'activités",
+         ProductsServicesButton: " Ajouter de nouveaux produits / services",
          //Management team
          Managementteam: "Équipe de direction",
          Createanewmanager: " Créer un nouveau gestionnaire",
@@ -514,11 +512,13 @@ function Main({ children }) {
          Createanewtitle: " Créer un nouveau titre",
          Addtitle: "Ajouter titre",
          EditTitles: " modifier Titres",
-         Label: "étiquette",
+         Label: "Etiquette",
          Titlelabel: "Titre d'étiquette",
          Leadersname: "Nom du dirigeant",
          selectleader: "sélectionner un dirigeant",
          Managetitles: "Gérer les titres",
+         addtitles: "Ajouter un titre",
+
          Addmanager: "Ajouter le dirigeant",
          // Legal structure
          Legalstructure: "Structure juridique",
@@ -671,7 +671,6 @@ function Main({ children }) {
           Pleaseinputthecompanyname: "Veuillez saisir le nom de l'entreprise",
           ProvinceSelect: "sélectionnez la province",
           selectthetypeofindustry: "  sélectionner le type d'industrie",
-          AddnewtypeIndustry: "Ajouter un nouveau type",
           selectthebudget: "sélectionner un budget",
           //Clientèle cible
 
@@ -681,7 +680,6 @@ function Main({ children }) {
           RevenueModel: "Modèle de revenus",
           selecttherevenuemodel: "sélectionner le modèles de revenus",
           AddnewmarketButton: "Ajouter un nouveau marché",
-          AddnewcustomerButton: "Ajouter un nouveau Client",
           RevenueModelButton: "Ajouter un nouveau modèle de revenus",
           BusinesspartnersButton: "Partenaires d'affaires",
           selectthebusinesspartners:"sélectionner les partenaires d'affaires",
@@ -697,8 +695,7 @@ function Main({ children }) {
           ProductsServices: "Produits / Services",
           strategicplanning:"Planification stratégique",
           StrategictargetsButton: "Ajouter de nouvelles cibles stratégiques",
-          TypeofactivitiesButton: " Ajouter de nouvelles Type d'activités",
-          ProductsServicesButton: " Ajouter de nouveaux Produits / Services",
+        
           //Management team
           Managementteam: "Équipe de direction",
           Createanewmanager: " Créer un nouveau gestionnaire",
@@ -718,7 +715,7 @@ function Main({ children }) {
           Createanewtitle: " Créer un nouveau titre",
           Addtitle: "Ajouter titre",
           EditTitles: " modifier Titres",
-          Label: "étiquette",
+          Label: "Etiquette",
           Titlelabel: "Titre d'étiquette",
           Leadersname:"Nom du dirigeant",
           selectleader:"sélectionner un dirigeant",

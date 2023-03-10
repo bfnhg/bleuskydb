@@ -16,6 +16,7 @@ import {
   Typography,
   Space,
   Row,
+  Statistic,
   Descriptions,
 } from "antd";
 import { JSON_API } from "../services/Constants";
@@ -51,6 +52,7 @@ const OpportunityDetails = () => {
 
   const [editingRow, setEditingRow] = useState(null);
   const [editingRowbook, setEditingRowbook] = useState(null);
+  const [datebegin, setDatebegin] = useState(null);
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
@@ -58,8 +60,123 @@ const OpportunityDetails = () => {
   const [costDataSource, setRevenueDataSource] = useState();
   const [RowRevenueData, setRowRevenueData] = useState();
 
+  const [form] = Form.useForm();
+
+  const disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current < datebegin;
+  };
+
+  const StatefulModalContent = (props) => {
+    // const [inputValue, setInputValue] = React.useState();
+ 
+    return (
+      // <Layout style={styles.modalContent}>
+      //   <Text>FORM</Text>
+      //   <Input value={inputValue} onChangeText={setInputValue} />
+      // </Layout>
+      <Form
+            form={form}
+            layout="vertical"
+            name="form_in_modal"
+            initialValues={{
+              modifier: "public",
+            }}
+          >
+            <Form.Item
+              name="customer"
+              label={t("Customer")}
+              rules={[
+                {
+                  required: true,
+                  message: "Please select a customer!",
+                },
+              ]}
+            >
+              <Select placeholder={t("selectcustomer")} style={{}}>
+                {Customer?.map(
+                  (e) => e && <Option value={e.id}>{e.name}</Option>
+                )}
+              </Select>
+              {/* <Input type="textarea" /> */}
+            </Form.Item>
+
+            <Form.Item
+              name="product"
+              label={t("Product")}
+              rules={[
+                {
+                  required: true,
+                  message: "Please select a product!",
+                },
+              ]}
+            >
+              <Select
+                placeholder={t("selectproduct")}
+                style={
+                  {
+                    // width: 120,
+                  }
+                }
+              >
+                {Product?.map(
+                  (e) => e && <Option value={e.id}>{e.label}</Option>
+                )}
+              </Select>
+              {/* <Input type="textarea" /> */}
+            </Form.Item>
+            
+            <Form.Item name="startDate" label={t("Startdate")}>
+              <DatePicker placeholder={t("selectdate")} onChange={(date)=>setDatebegin(date)}/>
+            </Form.Item>
+
+            <Form.Item name="endDate" label={t("Enddate")}>
+              <DatePicker disabled={datebegin==null?true:false} placeholder={t("selectdate")} disabledDate={disabledDate} />
+            </Form.Item>
+
+            <Form.Item
+              name="status"
+              label={t("statut")}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select a status!',
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select opportunity status"
+                style={
+                  {
+                    // width: 120,
+                  }
+                }
+              >
+                <Option value={0}>Open</Option>
+                <Option value={1}>Waiting</Option>
+                <Option value={2}>Suspended</Option>
+                <Option value={4}>Lost</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item name="pricePerDay" label={t("Priceperday")}>
+              <InputNumber
+                min={0}
+                size={"large"}
+                // style={{width:}}
+                formatter={(value) => `$${value}`}
+                parser={(value) => value.replace("$", "")}
+              />
+            </Form.Item>
+
+            <Form.Item name="description" label={t("Description")}>
+              <Input type="textarea" />
+            </Form.Item>
+          </Form>
+    );
+  };
+
   const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
-    const [form] = Form.useForm();
     {
       return data.data === "OrderDetail" ? (
         <Modal
@@ -80,104 +197,7 @@ const OpportunityDetails = () => {
               });
           }}
         >
-          <Form
-            form={form}
-            layout="vertical"
-            name="form_in_modal"
-            initialValues={{
-              modifier: "public",
-            }}
-          >
-            <Form.Item
-              name="customer"
-              label={t("Customer")}
-              rules={[
-                {
-                  required: true,
-                  message: "Please select a customer!",
-                },
-              ]}
-            >
-              <Select placeholder="Select a customer" style={{}}>
-                {Customer?.map(
-                  (e) => e && <Option value={e.id}>{e.name}</Option>
-                )}
-              </Select>
-              {/* <Input type="textarea" /> */}
-            </Form.Item>
-
-            <Form.Item
-              name="product"
-              label={t("Product")}
-              rules={[
-                {
-                  required: true,
-                  message: "Please select a product!",
-                },
-              ]}
-            >
-              <Select
-                placeholder="Select a product"
-                style={
-                  {
-                    // width: 120,
-                  }
-                }
-              >
-                {Product?.map(
-                  (e) => e && <Option value={e.id}>{e.label}</Option>
-                )}
-              </Select>
-              {/* <Input type="textarea" /> */}
-            </Form.Item>
-            <Form.Item name="startDate" label={t("Startdate")}>
-              <DatePicker />
-            </Form.Item>
-
-            <Form.Item name="endDate" label={t("Enddate")}>
-              <DatePicker />
-            </Form.Item>
-
-            <Form.Item
-              name="status"
-              label={t("statut")}
-              // rules={[
-              //   {
-              //     required: true,
-              //     message: 'Please select a status!',
-              //   },
-              // ]}
-            >
-              <Select
-                placeholder="Select opportunity status"
-                style={
-                  {
-                    // width: 120,
-                  }
-                }
-              >
-                <Option value={0}>Open</Option>
-                <Option value={1}>Waiting</Option>
-                <Option value={2}>Suspended</Option>
-                <Option value={4}>Lost</Option>
-              </Select>
-              {/* <Input type="textarea" /> */}
-            </Form.Item>
-
-            <Form.Item name="pricePerDay" label={t("Priceperday")}>
-              <InputNumber
-                min={0}
-                size={"large"}
-                // style={{width:}}
-                formatter={(value) => `$${value}`}
-                parser={(value) => value.replace("$", "")}
-              />
-            </Form.Item>
-
-            <Form.Item name="description" label={t("Description")}>
-              <Input type="textarea" />
-            </Form.Item>
-          </Form>
+          <StatefulModalContent/>
         </Modal>
       ) : data.data === "Customer" ? (
         <Modal
@@ -777,7 +797,7 @@ const OpportunityDetails = () => {
                 },
               ]}
             >
-              <DatePicker />
+              <DatePicker placeholder={t("selectdate")} onChange={(date)=>setDatebegin(date)}/>
             </Form.Item>
           );
         } else {
@@ -805,7 +825,7 @@ const OpportunityDetails = () => {
                 },
               ]}
             >
-              <DatePicker />
+              <DatePicker placeholder={t("selectdate")} disabledDate={disabledDate} />
             </Form.Item>
           );
         } else {
@@ -913,7 +933,7 @@ const OpportunityDetails = () => {
       render: (_, record) =>
         editingRowbook === record.key ? (
           <>
-            <Button type="link" onClick={() => setEditingRowbook(null)}>
+            <Button type="link" onClick={() =>{setDatebegin(null);setEditingRowbook(null)}}>
               {t("Cancel")}
             </Button>
             <Button type="link" htmlType="submit">
@@ -926,7 +946,7 @@ const OpportunityDetails = () => {
               type="link"
               onClick={() => {
                 setEditingRowbook(record.key);
-
+                setDatebegin(dayjs(record.startDate));
                 form2.setFieldsValue({
                   name: record.customer.id,
                   product: record.product.id,
@@ -942,7 +962,8 @@ const OpportunityDetails = () => {
             </Button>
 
             <Popconfirm
-              title="Sure to delete?"
+              title={t("Suretodelete")}
+              cancelText={t("cancel")}              
               onConfirm={() => handleshareholderDelete(record.id)}
             >
               <a> {t("Delete")}</a>{" "}
@@ -968,22 +989,8 @@ const OpportunityDetails = () => {
         pricePerDay: values.pricePerDay,
         description: values.description,
         productId: values.product,
-        opportunityStatus: values.status,
-        // costdetails:{
-        //   costPerDay: 0,
-        //   januaryRevenue: 0,
-        //   februaryRevenue: 0,
-        //   marchRevenue: 0,
-        //   aprilRevenue: 0,
-        //   mayRevenue: 0,
-        //   juneRevenue: 0,
-        //   julyRevenue: 0,
-        //   augustRevenue: 0,
-        //   septemberRevenue: 0,
-        //   octoberRevenue: 0,
-        //   novemberRevenue: 0,
-        //   decemberRevenue: 0
-        // }
+        status: values.status,
+
       };
 
       console.log("obj", obj);
@@ -1012,6 +1019,9 @@ const OpportunityDetails = () => {
           console.log(error.config);
         });
     } else {
+
+      values.enterpriseId=Company.id;
+
       await axios
         .post(`${JSON_API}/${url}`, values)
         .then(() => {
@@ -1036,11 +1046,12 @@ const OpportunityDetails = () => {
           console.log(error.config);
         });
     }
-
+    setDatebegin(null);
     setOpen(false);
   };
   const Edited = async (values) => {
     console.log("values are :", values);
+    setDatebegin(null);
 
     const orderobj = {
       id: editingRowbook,
@@ -1063,7 +1074,6 @@ const OpportunityDetails = () => {
       .put(`${JSON_API}/Opportunities`, orderobj)
       .then((response) => {
         console.log("Opportunity updated Successfully!", response);
-        getData();
         // setRevenueDataSource([response.data.revenueDetail]);
 
         messageApi.open({
@@ -1071,12 +1081,17 @@ const OpportunityDetails = () => {
           content: "Opportunity updated Successfully!",
         });
         setEditingRowbook(null);
+        getData();
+
       })
       .catch(function (error) {
         if (error.response.status==404) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          setOrderDetails(null);
+
+          // setOrderDetails(null);
+                  getData();
+
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
@@ -1093,37 +1108,6 @@ const OpportunityDetails = () => {
         setEditingRowbook(null);
       });
 
-    // await axios
-    //   .put(`${JSON_API}/Opportunities/UpdateStatus`, oppstatus)
-    //   .then((response) => {
-    //     console.log("Opportunity status updated Successfully!", response);
-    //     getData();
-
-    //     messageApi.open({
-    //       type: "success",
-    //       content: "Opportunity status updated Successfully!",
-    //     });
-    //     setEditingRowbook(null);
-    //   })
-    //   .catch(function (error) {
-    //     if (error.response) {
-    //       // The request was made and the server responded with a status code
-    //       // that falls out of the range of 2xx
-    //       console.log(error.response.data);
-    //       console.log(error.response.status);
-    //       console.log(error.response.headers);
-    //     } else if (error.request) {
-    //       // The request was made but no response was received
-    //       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-    //       // http.ClientRequest in node.js
-    //       console.log(error.request);
-    //     } else {
-    //       // Something happened in setting up the request that triggered an Error
-    //       console.log("Error", error.message);
-    //     }
-    //     console.log(error.config);
-    //     setEditingRowbook(null);
-    //   });
   };
 
   const onFinishEdit = async (values) => {
@@ -1280,90 +1264,102 @@ const OpportunityDetails = () => {
   function handleAgeChange(e, key) {
     const newDataSource = [...dataSource];
     const target = newDataSource.find((item) => item.key === key);
+
     if (target) {
+
       target.age = e.target.value;
       setDataSource(newDataSource);
+
     }
+
   }
 
   function handleSubmit() {
     console.log("data source is :", dataSource);
-    // axios.post('/api/updateData', dataSource)
-    //     .then(res => {
-    //         if(res.status === 200) {
-    //             console.log('Data updated successfully');
-    //         }
-    //     })
-    //     .catch(err => {
-    //         console.error(err);
-    //     });
+
   }
+
+  const DisplayRevenueSummary = () => {
+
+    console.log("ttesstt 1");
+    const items = [];
+
+    const months = [
+      t("January"),
+      t("February"),
+      t("March"),
+      t("April"),
+      t("May"),
+      t("June"),
+      t("July"),
+      t("August"),
+      t("September"),
+      t("October"),
+      t("November"),
+      t("December"),
+    ];
+  
+    const revenueData = [
+      SummaryDetails && SummaryDetails.januaryRevenue,
+      SummaryDetails && SummaryDetails.februaryRevenue,
+      SummaryDetails && SummaryDetails.marchRevenue,
+      SummaryDetails && SummaryDetails.aprilRevenue,
+      SummaryDetails && SummaryDetails.mayRevenue,
+      SummaryDetails && SummaryDetails.juneRevenue,
+      SummaryDetails && SummaryDetails.julyRevenue,
+      SummaryDetails && SummaryDetails.augustRevenue,
+      SummaryDetails && SummaryDetails.septemberRevenue,
+      SummaryDetails && SummaryDetails.octoberRevenue,
+      SummaryDetails && SummaryDetails.novemberRevenue,
+      SummaryDetails && SummaryDetails.decemberRevenue,
+    ];
+  
+    const startingMonthIndex = Company.startPeriod - 1;
+  
+    for (let i = 0; i < months.length; i++) {
+      const monthIndex = (i + startingMonthIndex) % months.length;
+      const monthName = months[monthIndex];
+      const revenue = revenueData[monthIndex];
+  
+      items.push(
+        <Descriptions.Item key={monthName} style={{ textAlign: "center" }} label={monthName}>
+          {revenue}
+        </Descriptions.Item>
+      );
+    }
+  
+    
+    return (
+       <Descriptions
+        style={{ textAlign: "right" }}
+        bordered
+        column={6}
+        size={"small"}
+      >
+        {items}
+        </Descriptions>
+    );
+  };
 
   return (
     <>
       {contextHolder}
 
-      {/* <div>OrderBook {stateParamVal}</div> */}
 
-      {/* <Table columns={coulumns} dataSource={dataSource} />
-    <Button onClick={handleSubmit}>Save Changes</Button> */}
+          <Statistic
+            title="Book Total"
+            value={ SummaryDetails && SummaryDetails.bookTotal}
+            precision={2}
+            valueStyle={{
+              color: '#3f8600',
+            }}
+            // prefix={<ArrowUpOutlined />}
+            suffix="$"
+          />
       <Title level={4}>{t("RevenueSummary")}</Title>
 
-      <Descriptions
-        contentStyle={{ textAlign: "right" }}
-        bordered
-        column={6}
-        size={"small"}
-      >
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("January")}>
-          {SummaryDetails && SummaryDetails.januaryRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item
-          style={{ textAlign: "center" }}
-          label={t("February")}
-        >
-          {SummaryDetails && SummaryDetails.februaryRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("March")}>
-          {SummaryDetails && SummaryDetails.marchRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("April")}>
-          {SummaryDetails && SummaryDetails.aprilRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("May")}>
-          {SummaryDetails && SummaryDetails.mayRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("June")}>
-          {SummaryDetails && SummaryDetails.juneRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("July")}>
-          {SummaryDetails && SummaryDetails.julyRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("August")}>
-          {SummaryDetails && SummaryDetails.augustRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item
-          style={{ textAlign: "center" }}
-          label={t("September")}
-        >
-          {SummaryDetails && SummaryDetails.septemberRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("October")}>
-          {SummaryDetails && SummaryDetails.octoberRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item
-          style={{ textAlign: "center" }}
-          label={t("November")}
-        >
-          {SummaryDetails && SummaryDetails.novemberRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item
-          style={{ textAlign: "center" }}
-          label={t("December")}
-        >
-          {SummaryDetails && SummaryDetails.decemberRevenue}
-        </Descriptions.Item>
-      </Descriptions>
+      <DisplayRevenueSummary/>
+
 
       <Title level={4}>{t("opportunities")}</Title>
       <Row justify="end" gutter={[16, 16]}>
@@ -1399,6 +1395,8 @@ const OpportunityDetails = () => {
         open={Open.open}
         onCreate={onCreate}
         onCancel={() => {
+          form.resetFields();
+          setDatebegin(null);
           setOpen({ open: false, url: null, data: null });
         }}
         data={Open}

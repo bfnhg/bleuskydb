@@ -198,7 +198,8 @@ const AddCompany = () => {
       align:"center",
       render: (_, record) =>
         shareHolderData.length >= 1 ? (
-          <Popconfirm title="Sure to delete?" onConfirm={() => handleshareholderDelete(record.id)}>
+          <Popconfirm title={t("Suretodelete")}  cancelText={t("no")}
+          okText={t("yes")} onConfirm={() => handleshareholderDelete(record.id)}>
             <a>{t("Delete")}</a>
           </Popconfirm>
         ) : null,
@@ -251,7 +252,8 @@ const AddCompany = () => {
       align:"center",
       render: (_, record) =>
       ManagerData.length >= 1 ? (
-          <Popconfirm title="Sure to delete?" onConfirm={() => handlemanagerDelete(record.id)}>
+          <Popconfirm title={t("Suretodelete")} okText={t("yes")}
+          cancelText={t("no")} onConfirm={() => handlemanagerDelete(record.id)}>
             <a>{t("Delete")}</a>
           </Popconfirm>
         ) : null,
@@ -336,14 +338,75 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
   const [form] = Form.useForm();
   console.log("open state"+open);
   console.log('data est ', data);
+  let ll;
 
+  switch (data.url) {
+    case "ShareHolders":
+      ll = t("addnewholder");
+
+      break;
+    case "Managers":
+      ll = t("addnewmanager");
+
+      break;
+   
+    case "ActivityTypes":
+      ll = t("TypeofactivitiesButton");
+
+      break;
+    case "Titles":
+      ll = t("addtitles");
+
+      break;
+   //  case "IndustryTypes":
+   //    ll = t("Typeofindustry");
+
+   //    break;
+    case "Products":
+      ll = t("ProductsServicesButton");
+
+      break;
+    case "IndustryTypes":
+      ll = t("AddnewtypeIndustry");
+
+      break;
+    case "RevenueModelItems":
+      ll = t("RevenueModelButton");
+
+      break;
+    case "StrategicTargets":
+      ll = t("StrategictargetsButton");
+
+      break;
+
+    case "Customers": // toto vaut 0 donc ce cas correspond
+      ll = t("AddnewcustomerButton");
+      break;
+    case "Markets": // toto vaut 0 donc ce cas correspond
+      ll = t("AddnewmarketButton");
+      break;
+
+    // NOTE : le break aurait du être placé ici
+    case "BusinessPartners": // pas de break pour 'case 0:' les instructions de ce cas sont
+      // exécutées aussi
+      ll = t("Addnewbusinesspartner");
+
+      break; // on a un break a ce niveau donc les instructions
+    // des cas suivants ne seront pas exécutées
+    // case 2:
+    // ;
+    //     console.log(2);
+    //     break;
+    default:
+      console.log("default");
+  }
   {
     return ["Customers","BusinessPartners"].includes(data.url)?
       <Modal
         open={open}
-        title={"Create a new "+data.data}
-        okText="Create"
-        cancelText="Cancel"
+        title={ll}
+        okText={t("create")}
+        cancelText={t("cancel")}
         onCancel={onCancel}
         onOk={() => {
           form
@@ -367,25 +430,25 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       >
         <Form.Item
           name="name"
-          label="Name"
+          label={t("Name")}
           
           rules={[
             {
               required: true,
-              message: `Please input the ${data.data} name!`,
+              message: `${t(" Pleaseinputthe") + "" + ll}`,
             },
           ]}
         >
-          <Input placeholder={data.data+"  name"}/>
+            <Input  />
         </Form.Item>
       </Form>
       </Modal> 
       :data.url==="ShareHolders"?
        <Modal
        open={open}
-       title={"Create a new "+data.data}
-       okText="Create"
-       cancelText="Cancel"
+       title={ll}
+        okText={t("create")}
+        cancelText={t("cancel")}
        onCancel={onCancel}
        onOk={() => {
          form
@@ -416,11 +479,11 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
           rules={[
             {
               required: true,
-              message: `Please input the ${data.data} name!`,
+              message: `${t(" Pleaseinputthe") + "" + ll}`,
             },
           ]}
         >
-          <Input placeholder={data.data+"  name"}/>
+          <Input />
         </Form.Item>
 
         <Form.Item
@@ -455,7 +518,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         rules={[
           {
             required: true,
-            message: `Please input the ${data.data} Start date!`,
+            message: `${t("Pleaseinputthe" + "" + ll)}`,
           },
         ]}
         >
@@ -472,9 +535,9 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       :data.url==="Managers"?
       <Modal
         open={open}
-        title={"Create a new manager"}
-        okText="Create"
-        cancelText="Cancel"
+        title={ll}
+        okText={t("Create")}
+        cancelText={t("Cancel")}
         onCancel={onCancel}
         onOk={() => {
           form
@@ -497,43 +560,41 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         // }}
       >
         <Form.Item
-          name="name"
-          label="Last name"
-          
-          rules={[
-            {
-              required: true,
-              message: `Please input the manager lastname!`,
-            },
-          ]}
-        >
-          <Input placeholder={data.data+"  lastname"}/>
+            name="name"
+            label={t("Lastname")}
+            rules={[
+              {
+                required: true,
+                message: `${t("Pleaseinputthemanagerfirstname")}`,
+              },
+            ]}
+          >
+            <Input  />
         </Form.Item>
         <Form.Item
           name="firstName"
-          label="First name"
-          
+          label={t("Firstname")}
           rules={[
             {
               required: true,
-              message: `Please input the manager firstname!`,
+              message: `${t("Pleaseinputthemanagerfirstname")}`,
             },
           ]}
         >
-          <Input placeholder={data.data+"  firstname"}/>
+            <Input  />
         </Form.Item>
 
       <Form.Item
         name="titles"
-        label="Titles"
+        label={t("Titles")}
         rules={[
           {
             required: true,
-            message: `Please input the manager title!`,
+            message: `${t("Pleaseinputthemanagertitle")}`,
           },
         ]}
       >
-        <Select mode="multiple" allowClear placeholder="select manager's titles" size={'large'} onChange={titlesState}>
+        <Select mode="multiple" allowClear placeholder={t("selectmanagerstitles")} size={'large'} onChange={titlesState}>
           {Titles.map((e)=>(
 
             e&&<Option value={e.id}>{e.label}</Option>
@@ -543,10 +604,8 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
 
       </Form.Item>
      
-      <Form.Item
-        name="yearsOfExperience"
-        label="Years of experience"
-      >
+      <Form.Item name="yearsOfExperience" label={t("Yearsofexperience")}>
+
         <InputNumber
           // disabled={SHselected}
           min={0}
@@ -557,77 +616,11 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       </Form>
       </Modal>
        :data.url==="Titles"?
-
-      //  <Modal
-      //       open={open}
-      //       title={Tabkey=='1'?"Create a new title":"Edit titles"}
-      //       okText={Tabkey=='1'?"Create":"Save"}
-      //       cancelText="Cancel"
-      //       onCancel={onCancel}
-      //       onOk={() => {
-      //         console.log(Tabkey);
-      //         if(Tabkey=="1"){
-      //         form
-      //           .validateFields()
-      //           .then((values) => {
-                  
-      //             form.resetFields();
-                  
-      //               onCreate({values:values,url:data.url,data:data.data});
-      //             }
-                
-      //           )
-      //           .catch((info) => {
-      //             console.log('Validate Failed:', info);
-      //           });
-      //         }else{
-      //           console.log("title updated");
-      //         }
-      //       }}
-      //       >
-      // <Tabs
-      //  defaultActiveKey="1"
-      //  onChange={onTabChange}
-      //  items={[
-      //    {
-      //      label: 'Add title',
-      //      key: '1',
-      //      children: 
-      //       <Form
-      //       {...formItemLayout}
-      //       form={form}
-      //       name="form_in_modal"
-      //       >
-          
-      //       <Form.Item
-      //       name="label"
-      //       label="Label"
-            
-      //       rules={[
-      //         {
-      //           required: true,
-      //           message: `Please input the ${data.data} label!`,
-      //         },
-      //       ]}
-      //       >
-      //       <Input placeholder={data.data+"  label"}/>
-      //       </Form.Item>
-      //       </Form>
-      //       },
-      //       {
-      //         label: 'Edit Titles',
-      //         key: '2',
-      //         children: 'Tab 2',
-      //         disabled: true,
-      //       },
-      //     ]}
-      //   />
-      // </Modal> 
       <Modal
       open={open}
-      title={"Create a new "+data.data}
-      okText="Create"
-      cancelText="Cancel"
+      title={ll}
+      okText={t("Create")}
+      cancelText={t("Cancel")}
       onCancel={onCancel}
       onOk={() => {
         form
@@ -654,16 +647,15 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         
         <Form.Item
             name="label"
-            label="Label"
-            
+            label={t("Label")}
             rules={[
               {
                 required: true,
-                message: `Please input the ${data.data} label!`,
+                message: `${t("Pleaseinputthemanagertitle")}`,
               },
             ]}
             >
-            <Input placeholder={data.data+"  label"}/>
+            <Input  />
             </Form.Item>
       </Form>
       </Modal> 
@@ -671,9 +663,9 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
 
       <Modal
       open={open}
-      title={"Create a new "+data.data}
-      okText="Create"
-      cancelText="Cancel"
+      title={ll}
+      okText={t("Create")}
+      cancelText={t("Cancel")}
       onCancel={onCancel}
       onOk={() => {
         form
@@ -702,27 +694,26 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         rules={[
           {
             required: true,
-            message: `Please input the ${data.data} type!`,
+            message: `${t("Pleaseinputthetypeofstrategictarget")}`,
           },
         ]}
       >
 
-      <Input placeholder={data.data+"  type"}/>
+<Input />
       </Form.Item>
 
       <Form.Item
         name="details"
-        label="Details"
-        
-        rules={[
-          {
-            required: true,
-            message: `Please input the ${data.data} details!`,
-          },
-        ]}
+        label={t("details")}
+            rules={[
+              {
+                required: true,
+                message: `${t("Pleaseinputthedetailseofstrategictarget")}`,
+              },
+            ]}
       >
 
-      <TextArea placeholder={data.data+"  details"}/>
+<TextArea />
       </Form.Item>
       </Form>
       </Modal> 
@@ -730,9 +721,9 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
 
       <Modal
       open={open}
-      title={"Create a new "+data.data}
-      okText="Create"
-      cancelText="Cancel"
+      title={ll}
+      okText={t("create")}
+      cancelText={t("cancel")}
       onCancel={onCancel}
       onOk={() => {
         form
@@ -759,8 +750,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         
       <Form.Item
       name="label"
-      label="Label"
-      
+      label={t("Label")}
       rules={[
         {
           required: true,
@@ -768,7 +758,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         },
       ]}
       >
-      <Input placeholder={data.data+"  label"}/>
+      <Input />
       </Form.Item>
       </Form>
       </Modal> 
@@ -1102,7 +1092,7 @@ const [Open, setOpen] = useState({
       name: values.name,
       firstName: values.firstName,
       titles:titles,
-      yearsOfExperience: values.yearsOfExperience
+      yearsOfExperience: values.yearsOfExperience?values.yearsOfExperience:0
 
       }])
 
@@ -1268,7 +1258,7 @@ const [Open, setOpen] = useState({
     var e= [1,2,3,4,5,6,7,8,9].includes(values.startPeriod)?"0"+values.startPeriod:values.startPeriod;
     // var year = Datestart? Datestart.$y : new Date().getFullYear();
     var dates = values.date_start.$y+"-"+e+"-01";
-    console.log(dayjs(dates,"YYYY-MM-DD").clone().add(12, 'months'));
+    console.log(dayjs(dates,"YYYY-MM-DD").clone().add(11, 'months'));
     // setDateend( dayjs(dates,"YYYY-MM-DD").clone().add(12, 'months'));
 
     var companyinfo = {
@@ -1280,7 +1270,7 @@ const [Open, setOpen] = useState({
       startYear: ''+values.startyear.$y,
       startPeriod: values.startPeriod,
       yearsInterval: values.yearsInterval,
-      endDate: dayjs(dates,"YYYY-MM-DD").clone().add(12, 'months'),
+      endDate: dayjs(dates,"YYYY-MM-DD").clone().add(11, 'months'),
       // endDate: ,
       employeesCount: values.nombre_employés,
       address: values.adresse,
@@ -1360,13 +1350,13 @@ const [Open, setOpen] = useState({
      
        <Result
        status="success"
-       title="Your Company has been added successfully"
+       title={t("YourCompanyhasbeenaddedsuccessfully")}
        extra={[
          <Button type="primary" onClick={newCompany} key="console">
-           Add another company
+        {t("Addanothercompany")}          
          </Button>,
          <Button type="link" onClick={gotoGI}>
-         <span className="label">Return to General Informations</span>
+              <span className="label">{t("ReturntoGeneralInformations")}</span>
        </Button>
        ]}
      />
@@ -1425,7 +1415,13 @@ const [Open, setOpen] = useState({
 
       name="date_de_fondation"
       label={t("foundingdate")}
-     
+      rules={[
+        {
+          required: true,
+          message: `please input the founding date`,
+          // whitespace: true,
+        },
+      ]}
       // tooltip="What do you want others to call you?"
       // validateStatus="error"
       // help="Please select right date"
@@ -1446,7 +1442,7 @@ const [Open, setOpen] = useState({
 <Form.Item
         {...formItemLayout}
       name="startPeriod"
-      label="Start Period"
+      label={t("StartPeriod")}
        
       // tooltip="What do you want others to call you?"
       rules={[
@@ -1480,7 +1476,7 @@ const [Open, setOpen] = useState({
       <Form.Item
         {...formItemLayout}
       name="startyear"
-      label="Start year"
+      label={t("Startyear")}
        
       // tooltip="What do you want others to call you?"
       rules={[
@@ -1491,22 +1487,24 @@ const [Open, setOpen] = useState({
         },
       ]}
     >
-      <DatePicker picker="year" size={'large'}/>
+      <DatePicker  placeholder={t("Selectyear")} picker="year"  style={{
+                width: "50%",
+                textAlign: "center",
+              }} size={'large'}/>
     </Form.Item>
 
     <Form.Item
         {...formItemLayout}
       name="yearsInterval"
-      label="Years Interval"
-       
-      // tooltip="What do you want others to call you?"
-      rules={[
-        {
-          required: true,
-          message: `${t("PleaseInputTheYearsInterval")}`,
-          // whitespace: true,
-        },
-      ]}
+      label={t("YearsInterval")}
+            // tooltip="What do you want others to call you?"
+            rules={[
+              {
+                required: true,
+                message: `${t("PleaseInputTheYearsInterval")}`,
+                // whitespace: true,
+              },
+            ]}
     >
         <Radio.Group>
           <Radio value={3}>3</Radio>
@@ -1525,7 +1523,6 @@ const [Open, setOpen] = useState({
             // tooltip="What do you want others to call you?"
           >
             <Select
-              defaultValue=""
               style={{
                 width: 605,
               }}
@@ -1544,7 +1541,6 @@ const [Open, setOpen] = useState({
             label={t("province")}
           >
             <Select
-              defaultValue=""
               style={{
                 width: 605,
               }}
@@ -1565,9 +1561,15 @@ const [Open, setOpen] = useState({
             name="city"
             label={t("city")}
             // tooltip="What do you want others to call you?"
+            rules={[
+              {
+                required: true,
+                message: `please input the city`,
+                // whitespace: true,
+              },
+            ]}
           >
             <Select
-              defaultValue=""
               style={{
                 width: 605,
               }}
@@ -1587,6 +1589,13 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
           name="adresse"
           label={t("address")}
+          rules={[
+            {
+              required: true,
+              message: `please input the address`,
+              // whitespace: true,
+            },
+          ]}
         >
     
           <Input />
@@ -1597,7 +1606,13 @@ const [Open, setOpen] = useState({
 
       name="code_postal"
       label={t("postalcode")}
-       
+      rules={[
+        {
+          required: true,
+          message: `please input the postal code`,
+          // whitespace: true,
+        },
+      ]}
     >
       <Input />
     </Form.Item>
@@ -1608,12 +1623,29 @@ const [Open, setOpen] = useState({
 
       name="date_start"
       label={t("Startdate")}
+      rules={[
+        {
+          required: true,
+          message: `please input the start date`,
+          // whitespace: true,
+        },
+      ]}
     >
-        <DatePicker disabledDate={d => !d || d.isBefore(Datefound)} format={"YYYY-MM-DD"} size={'large'}  onChange={(date) => {
-      // const d = new Date(date).toLocaleDateString('en-US');
-      // console.log(d);
-      setDatestart(date);
-    }}/>
+         <DatePicker
+              placeholder={t("Selectdate")}
+              style={{
+                width: "50%",
+                textAlign: "center",
+              }}
+              disabledDate={(d) => !d || d.isBefore(Datefound)}
+              format={"YYYY-MM-DD"}
+              size={"large"}
+              onChange={(date) => {
+                // const d = new Date(date).toLocaleDateString('en-US');
+                // console.log(d);
+                setDatestart(date);
+              }}
+            />
 
     </Form.Item>
 
@@ -1637,9 +1669,10 @@ const [Open, setOpen] = useState({
       label={t("Numberofemployees")}
       rules={[
         {
+          required: true,
           type: 'number',
           min: 0,
-          message: 'value cannot be less than 0',
+          message: `${t("valuecannotbelessthan0")}`,
 
         },
       ]}
@@ -1656,6 +1689,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="type_industrie"
               label={t("Typeofindustry")}
+              rules={[
+                {
+                  required: true,
+                  message: `please select the type of industry`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selectthetypeofindustry")} size={'large'} style={{ width: '100%', }}>
@@ -1688,7 +1728,13 @@ const [Open, setOpen] = useState({
 
       name="budget"
       label="budget"
-       
+      rules={[
+        {
+          required: true,
+          message: `please select the budget`,
+          // whitespace: true,
+        },
+      ]}
       value={company.budget}
 
     >
@@ -1708,10 +1754,11 @@ const [Open, setOpen] = useState({
       value={company.taux_imposition_annuel_estimé}
       rules={[
         {
+          required:true,
           type: 'number',
           min: 0,
           max:100,
-          message: 'please enter a number between 0 and 100',
+          message: `${t("pleaseenteranumberbetween0and100")}`,
 
         },
       ]}
@@ -1729,6 +1776,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="market"
               label={t("Market")}  
+              rules={[
+                {
+                  required: true,
+                  message: `please select the market`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selectthemarket")}   size={'large'} style={{ width: '100%', }}>
@@ -1762,6 +1816,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="customers"
               label={t("MainCustomers")}  
+              rules={[
+                {
+                  required: true,
+                  message: `please select the customer`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
               // rules={[{ required: true, message: 'Please input the main customers!'}]}
             >
@@ -1796,6 +1857,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="revenue_model"
               label={t("RevenueModel")} 
+              rules={[
+                {
+                  required: true,
+                  message: `please select the revenue model`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selecttherevenuemodel")} size={'large'} style={{ width: '100%', }}>
@@ -1829,6 +1897,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="business_partners"
               label={t("BusinesspartnersButton")} 
+              rules={[
+                {
+                  required: true,
+                  message: `please select the business partner`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
               // rules={[{ required: true, message: 'Please input the business partner!'}]}
             >
@@ -1866,6 +1941,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="strategic_target"
               label={t("Strategictargets")} 
+              rules={[
+                {
+                  required: true,
+                  message: `please select the strategic target`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selectthestrategictarget")} onChange={e=>setStrategicTargetselected(StrategicTarget.filter(st=>e.includes(st.type)))}  size={'large'} style={{ width: '100%', }}>
@@ -1899,6 +1981,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="activity_type"
               label={t("Typeofactivities")}
+              rules={[
+                {
+                  required: true,
+                  message: `please select the activity type`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selectthetypeofactivities")} size={'large'} style={{ width: '100%', }}>
@@ -1932,6 +2021,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="product"
               label={t("ProductsServices")} 
+              rules={[
+                {
+                  required: true,
+                  message: `please select the product / service`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selecttheproductsservices")}  size={'large'} style={{ width: '100%', }}>
@@ -2055,7 +2151,7 @@ const [Open, setOpen] = useState({
             width: 200,
           }}
           size={'large'}
-          placeholder="Search to Select"
+          placeholder={t("selectShareHolders")}
           // optionFilterProp="children"
           onChange={e=>setShareHolderId(e)}
                 // filterOption={(input, option) => (option?.label ?? '').includes(input)}

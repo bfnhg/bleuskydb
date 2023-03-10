@@ -19,6 +19,7 @@ import {
   Col,
   Form,
   Input,
+  Tooltip,
   InputNumber,
   Row,
   Select,
@@ -315,147 +316,79 @@ const onTabChange = (key) => {
   console.log(Tabkey);
 };
 const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
+
   const [form] = Form.useForm();
   console.log("open state"+open);
   console.log('data est ', data);
+  let ll;
+
+  switch (data.url) {
+    case "ShareHolders":
+      ll = t("addnewholder");
+
+      break;
+    case "Managers":
+      ll = t("addnewmanager");
+
+      break;
+   
+    case "ActivityTypes":
+      ll = t("TypeofactivitiesButton");
+
+      break;
+    case "Titles":
+      ll = t("addtitles");
+
+      break;
+   //  case "IndustryTypes":
+   //    ll = t("Typeofindustry");
+
+   //    break;
+    case "Products":
+      ll = t("ProductsServicesButton");
+
+      break;
+    case "IndustryTypes":
+      ll = t("AddnewtypeIndustry");
+
+      break;
+    case "RevenueModelItems":
+      ll = t("RevenueModelButton");
+
+      break;
+    case "StrategicTargets":
+      ll = t("StrategictargetsButton");
+
+      break;
+
+    case "Customers": // toto vaut 0 donc ce cas correspond
+      ll = t("AddnewcustomerButton");
+      break;
+    case "Markets": // toto vaut 0 donc ce cas correspond
+      ll = t("AddnewmarketButton");
+      break;
+
+    // NOTE : le break aurait du être placé ici
+    case "BusinessPartners": // pas de break pour 'case 0:' les instructions de ce cas sont
+      // exécutées aussi
+      ll = t("Addnewbusinesspartner");
+
+      break; // on a un break a ce niveau donc les instructions
+    // des cas suivants ne seront pas exécutées
+    // case 2:
+    // ;
+    //     console.log(2);
+    //     break;
+    default:
+      console.log("default");
+  }
   {
     return ["Customers","BusinessPartners"].includes(data.url)?
       <Modal
         open={open}
-        title={"Create a new "+data.data}
-        okText="Create"
-        cancelText="Cancel"
-        onCancel={onCancel}
-        onOk={() => {
-          form
-            .validateFields()
-            .then((values) => {
-              form.resetFields();
-              onCreate({values:values,url:data.url,data:data.data});
-            })
-            .catch((info) => {
-              console.log('Validate Failed:', info);
-            });
-        }}
-      >
-        <Form
-        form={form}
-        // layout="vertical"
-        name="form_in_modal"
-        // initialValues={{
-        //   modifier: 'public',
-        // }}
-      >
-        <Form.Item
-          name="name"
-          label="Name"
-          
-          rules={[
-            {
-              required: true,
-              message: `Please input the ${data.data} name!`,
-            },
-          ]}
-        >
-          <Input placeholder={data.data+"  name"}/>
-        </Form.Item>
-      </Form>
-      </Modal> 
-      :data.url==="ShareHolders"?
-      <Modal
-      open={open}
-      title={"Create a new "+data.data}
-      okText="Create"
-      cancelText="Cancel"
-      onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            form.resetFields();
-            onCreate({values:values,url:data.url,data:data.data});
-          })
-          .catch((info) => {
-            console.log('Validate Failed:', info);
-          });
-      }}
-    >
-
-    <Form
-      form={form}
-      // layout="vertical"
-      name="form_in_modal"
-      // initialValues={{
-      //   modifier: 'public',
-      // }}
-    >
-
-       <Form.Item
-         name="name"
-         label={t("Name")}
-         
-         rules={[
-           {
-             required: true,
-             message: `Please input the ${data.data} name!`,
-           },
-         ]}
-       >
-         <Input placeholder={data.data+"  name"}/>
-       </Form.Item>
-
-       <Form.Item
-         name="shares"
-         label={t("Shares")}
-         rules={[
-           {
-             required: true,
-             message: `Please input the ${data.data} Shares!`,
-           },
-         ]}
-       >
-         <InputNumber
-           // disabled={SHselected}
-           min={0}
-           max={100}
-           size={'large'}
-           formatter={(value) => `${value}%`}
-           parser={(value) => value.replace('%', '')}
-           // onChange={e=>setShareHolderShares(e)}
-
-         />
-
-       </Form.Item>
-     
-     
-
-
-       <Form.Item
-       name="startedAt"
-       label={t("Startdate")}
-       rules={[
-         {
-           required: true,
-           message: `Please input the ${data.data} Start date!`,
-         },
-       ]}
-       >
-         <DatePicker format={"YYYY-MM-DD"} size={'large'} 
-         // onChange={(date) => {
-         // const d = new Date(date).toLocaleDateString('en-US');
-         // console.log(date);
-         // setDate({date,d});
-         // }}
-         />
-       </Form.Item>
-     </Form>
-     </Modal>
-      :data.url==="Managers"?
-      <Modal
-        open={open}
-        title={"Create a new manager"}
-        okText="Create"
-        cancelText="Cancel"
+        title={ll}
+        okText={t("create")}
+        cancelText={t("cancel")}
         onCancel={onCancel}
         onOk={() => {
           form
@@ -471,7 +404,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       >
       <Form
         form={form}
-         layout="vertical"
+        // layout="vertical"
         name="form_in_modal"
         // initialValues={{
         //   modifier: 'public',
@@ -479,67 +412,25 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       >
         <Form.Item
           name="name"
-          label="Lastname"
+          label={t("Name")}
           
           rules={[
             {
               required: true,
-              message: `Please input the manager lastname!`,
+              message: `${t(" Pleaseinputthe") + "" + ll}`,
             },
           ]}
         >
-          <Input placeholder={data.data+"  lastname"}/>
+            <Input  />
         </Form.Item>
-        <Form.Item
-          name="firstName"
-          label="Firstname"
-          
-          rules={[
-            {
-              required: true,
-              message: `Please input the manager firstname!`,
-            },
-          ]}
-        >
-          <Input placeholder={data.data+"  firstname"}/>
-        </Form.Item>
-
-      <Form.Item
-          name="titles"
-          label="Titles"
-          
-        >
-        <Select mode="multiple" allowClear placeholder="select manager's titles" size={'large'} onChange={titlesState}>
-            {Titles.map((e)=>(
-
-              e&&<Option value={e.id}>{e.label}</Option>
-
-            ))}
-        </Select>
-      
-      </Form.Item>
-     
-
-      <Form.Item
-        name="yearsOfExperience"
-        label="Years of experience"
-      >
-        <InputNumber
-          // disabled={SHselected}
-          min={0}
-          max={100}
-          size={'large'}
-        />
-
-      </Form.Item>
       </Form>
-      </Modal>
-       :data.url==="Titles"?
+      </Modal> 
+      :data.url==="ShareHolders"?
        <Modal
        open={open}
-       title={"Create a new "+data.data}
-       okText="Create"
-       cancelText="Cancel"
+       title={ll}
+        okText={t("create")}
+        cancelText={t("cancel")}
        onCancel={onCancel}
        onOk={() => {
          form
@@ -552,100 +443,269 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
              console.log('Validate Failed:', info);
            });
        }}
-       >
- 
-       <Form
-                         {...formItemLayout}
+     >
+
+     <Form
        form={form}
        // layout="vertical"
        name="form_in_modal"
        // initialValues={{
        //   modifier: 'public',
        // }}
-       >
-         
-         <Form.Item
-             name="label"
-             label="Label"
-             
-             rules={[
-               {
-                 required: true,
-                 message: `Please input the ${data.data} label!`,
-               },
-             ]}
-             >
-             <Input placeholder={data.data+"  label"}/>
-             </Form.Item>
-       </Form>
-       </Modal> 
-       
-       :data.url==="StrategicTargets"?
+     >
 
-       <Modal
-       open={open}
-       title={"Create a new "+data.data}
-       okText="Create"
-       cancelText="Cancel"
-       onCancel={onCancel}
-       onOk={() => {
-         form
-           .validateFields()
-           .then((values) => {
-             form.resetFields();
-             onCreate({values:values,url:data.url,data:data.data});
-           })
-           .catch((info) => {
-             console.log('Validate Failed:', info);
-           });
-       }}
-       >
- 
-       <Form
-         {...formItemLayout}
-         form={form}
-         name="form_in_modal"
- 
-       >
-         
-       <Form.Item
-         name="type"
-         label="Type"
-         
-         rules={[
-           {
-             required: true,
-             message: `Please input the ${data.data} type!`,
-           },
-         ]}
-       >
- 
-       <Input placeholder={data.data+"  type"}/>
-       </Form.Item>
- 
-       <Form.Item
-         name="details"
-         label="Details"
-         
-         rules={[
-           {
-             required: true,
-             message: `Please input the ${data.data} details!`,
-           },
-         ]}
-       >
- 
-       <TextArea placeholder={data.data+"  details"}/>
-       </Form.Item>
-       </Form>
-       </Modal> 
-       :
+        <Form.Item
+          name="name"
+          label={t("Name")}
+          
+          rules={[
+            {
+              required: true,
+              message: `${t(" Pleaseinputthe") + "" + ll}`,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="shares"
+          label={t("Shares")}
+          rules={[
+            {
+              required: true,
+              message: `Please input the ${data.data} Shares!`,
+            },
+          ]}
+        >
+          <InputNumber
+            // disabled={SHselected}
+            min={0}
+            max={100}
+            size={'large'}
+            formatter={(value) => `${value}%`}
+            parser={(value) => value.replace('%', '')}
+            // onChange={e=>setShareHolderShares(e)}
+
+          />
+
+        </Form.Item>
+      
+      
+
+
+        <Form.Item
+        name="startedAt"
+        label={t("Startdate")}
+        rules={[
+          {
+            required: true,
+            message: `${t("Pleaseinputthe" + "" + ll)}`,
+          },
+        ]}
+        >
+          <DatePicker format={"YYYY-MM-DD"} size={'large'} 
+          // onChange={(date) => {
+          // const d = new Date(date).toLocaleDateString('en-US');
+          // console.log(date);
+          // setDate({date,d});
+          // }}
+          />
+        </Form.Item>
+      </Form>
+      </Modal>
+      :data.url==="Managers"?
+      <Modal
+        open={open}
+        title={ll}
+        okText={t("Create")}
+        cancelText={t("Cancel")}
+        onCancel={onCancel}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              form.resetFields();
+              onCreate({values:values,url:data.url,data:data.data});
+            })
+            .catch((info) => {
+              console.log('Validate Failed:', info);
+            });
+        }}
+      >
+      <Form
+        form={form}
+        layout="vertical"
+        name="form_in_modal"
+        // initialValues={{
+        //   modifier: 'public',
+        // }}
+      >
+        <Form.Item
+            name="name"
+            label={t("Lastname")}
+            rules={[
+              {
+                required: true,
+                message: `${t("Pleaseinputthemanagerfirstname")}`,
+              },
+            ]}
+          >
+            <Input  />
+        </Form.Item>
+        <Form.Item
+          name="firstName"
+          label={t("Firstname")}
+          rules={[
+            {
+              required: true,
+              message: `${t("Pleaseinputthemanagerfirstname")}`,
+            },
+          ]}
+        >
+            <Input  />
+        </Form.Item>
+
+      <Form.Item
+        name="titles"
+        label={t("Titles")}
+        rules={[
+          {
+            required: true,
+            message: `${t("Pleaseinputthemanagertitle")}`,
+          },
+        ]}
+      >
+        <Select mode="multiple" allowClear placeholder={t("selectmanagerstitles")} size={'large'} onChange={titlesState}>
+          {Titles.map((e)=>(
+
+            e&&<Option value={e.id}>{e.label}</Option>
+
+          ))}
+        </Select>
+
+      </Form.Item>
+     
+      <Form.Item name="yearsOfExperience" label={t("Yearsofexperience")}>
+
+        <InputNumber
+          // disabled={SHselected}
+          min={0}
+          max={100}
+          size={'large'}
+        />
+      </Form.Item>
+      </Form>
+      </Modal>
+       :data.url==="Titles"?
+      <Modal
+      open={open}
+      title={ll}
+      okText={t("Create")}
+      cancelText={t("Cancel")}
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onCreate({values:values,url:data.url,data:data.data});
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+      >
+
+      <Form
+                        {...formItemLayout}
+      form={form}
+      // layout="vertical"
+      name="form_in_modal"
+      // initialValues={{
+      //   modifier: 'public',
+      // }}
+      >
+        
+        <Form.Item
+            name="label"
+            label={t("Label")}
+            rules={[
+              {
+                required: true,
+                message: `${t("Pleaseinputthemanagertitle")}`,
+              },
+            ]}
+            >
+            <Input  />
+            </Form.Item>
+      </Form>
+      </Modal> 
+       :data.url==="StrategicTargets"?
 
       <Modal
       open={open}
-      title={"Create a new "+data.data}
-      okText="Create"
-      cancelText="Cancel"
+      title={ll}
+      okText={t("Create")}
+      cancelText={t("Cancel")}
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onCreate({values:values,url:data.url,data:data.data});
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+      >
+
+      <Form
+        {...formItemLayout}
+        form={form}
+        name="form_in_modal"
+
+      >
+        
+      <Form.Item
+        name="type"
+        label="Type"
+        
+        rules={[
+          {
+            required: true,
+            message: `${t("Pleaseinputthetypeofstrategictarget")}`,
+          },
+        ]}
+      >
+
+<Input />
+      </Form.Item>
+
+      <Form.Item
+        name="details"
+        label={t("details")}
+            rules={[
+              {
+                required: true,
+                message: `${t("Pleaseinputthedetailseofstrategictarget")}`,
+              },
+            ]}
+      >
+
+<TextArea />
+      </Form.Item>
+      </Form>
+      </Modal> 
+      :
+
+      <Modal
+      open={open}
+      title={ll}
+      okText={t("create")}
+      cancelText={t("cancel")}
       onCancel={onCancel}
       onOk={() => {
         form
@@ -672,8 +732,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         
       <Form.Item
       name="label"
-      label="Label"
-      
+      label={"Label"}
       rules={[
         {
           required: true,
@@ -681,7 +740,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         },
       ]}
       >
-      <Input placeholder={data.data+"  label"}/>
+      <Input />
       </Form.Item>
       </Form>
       </Modal> 
@@ -1154,7 +1213,7 @@ const [Open, setOpen] = useState({
       name: values.name,
       firstName: values.firstName,
       titles:titles.map(t=>{return{title:t}}),
-      yearsOfExperience: values.yearsOfExperience
+      yearsOfExperience: values.yearsOfExperience?values.yearsOfExperience:0
 
       }])
 
@@ -1463,7 +1522,13 @@ const [Open, setOpen] = useState({
 
       name="numéro_entreprise"
       label={t("Businessnumber")}
-     
+      rules={[
+        {
+          required: true,
+          message: `${t("PleaseInputTheBusinessNumber")}`,
+          // whitespace: true,
+        },
+      ]}
     >
       <Input />
     </Form.Item>
@@ -1488,7 +1553,13 @@ const [Open, setOpen] = useState({
 
       name="date_de_fondation"
       label={t("foundingdate")}
-     
+      rules={[
+        {
+          required: true,
+          message: `please input the founding date`,
+          // whitespace: true,
+        },
+      ]}
       // tooltip="What do you want others to call you?"
       // validateStatus="error"
       // help="Please select right date"
@@ -1539,8 +1610,7 @@ const [Open, setOpen] = useState({
       <Form.Item
         {...formItemLayout}
       name="startYear"
-      label="Start year"
-       
+      label={t("Startyear")}
       // tooltip="What do you want others to call you?"
       rules={[
         {
@@ -1550,8 +1620,11 @@ const [Open, setOpen] = useState({
         },
       ]}
     >
-      <DatePicker  picker="year" size={'large'}/>
-    </Form.Item>
+ <DatePicker  placeholder={t("Selectyear")} picker="year"  style={{
+                width: "50%",
+                textAlign: "center",
+              }} size={'large'}/>   
+               </Form.Item>
 
   
 
@@ -1565,7 +1638,6 @@ const [Open, setOpen] = useState({
             // tooltip="What do you want others to call you?"
           >
             <Select
-              defaultValue=""
               style={{
                 width: 605,
               }}
@@ -1584,7 +1656,6 @@ const [Open, setOpen] = useState({
             label={t("province")}
           >
             <Select
-              defaultValue=""
               style={{
                 width: 605,
               }}
@@ -1604,10 +1675,16 @@ const [Open, setOpen] = useState({
 
             name="city"
             label={t("city")}
+            rules={[
+              {
+                required: true,
+                message: `please input the city`,
+                // whitespace: true,
+              },
+            ]}
             // tooltip="What do you want others to call you?"
           >
             <Select
-              defaultValue=""
               style={{
                 width: 605,
               }}
@@ -1628,6 +1705,13 @@ const [Open, setOpen] = useState({
 
       name="adresse"
       label={t("address")}
+      rules={[
+        {
+          required: true,
+          message: `please input the address`,
+          // whitespace: true,
+        },
+      ]}
            >
       <Input />
     </Form.Item>
@@ -1638,6 +1722,13 @@ const [Open, setOpen] = useState({
 
       name="code_postal"
       label={t("postalcode")}
+      rules={[
+        {
+          required: true,
+          message: `please input the postal code`,
+          // whitespace: true,
+        },
+      ]}
        
     >
       <Input />
@@ -1650,7 +1741,13 @@ const [Open, setOpen] = useState({
 
       name="date_start"
       label={t("Startdate")}
-     
+      rules={[
+        {
+          required: true,
+          message: `please input the start date`,
+          // whitespace: true,
+        },
+      ]}
       // tooltip="What do you want others to call you?"
       // validateStatus="error"
       // help="Please select right date"
@@ -1686,6 +1783,7 @@ const [Open, setOpen] = useState({
       label={t("Numberofemployees")}
       rules={[
         {
+          required: true,
           type: 'number',
           min: 0,
           message: 'value cannot be less than 0',
@@ -1705,6 +1803,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="type_industrie"
               label={t("Typeofindustry")}
+              rules={[
+                {
+                  required: true,
+                  message: `please select the type of industry`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selectthetypeofindustry")} size={'large'} style={{ width: '100%', }}>
@@ -1737,7 +1842,13 @@ const [Open, setOpen] = useState({
 
       name="budget"
       label="budget"
-       
+      rules={[
+        {
+          required: true,
+          message: `please select the budget`,
+          // whitespace: true,
+        },
+      ]}
       value={company.budget}
 
     >
@@ -1760,7 +1871,7 @@ const [Open, setOpen] = useState({
           type: 'number',
           min: 0,
           max:100,
-          message: 'please enter a number between 0 and 100',
+          message: `${t("pleaseenteranumberbetween0and100")}`,
 
         },
       ]}
@@ -1776,6 +1887,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="market"
               label={t("Market")}  
+              rules={[
+                {
+                  required: true,
+                  message: `please select the market`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selectthemarket")} size={'large'} style={{ width: '100%', }}>
@@ -1809,6 +1927,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="main_customers"
               label={t("MainCustomers")} 
+              rules={[
+                {
+                  required: true,
+                  message: `please select the customer`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
               // rules={[{ required: true, message: 'Please input the main customers!'}]}
             >
@@ -1843,6 +1968,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="revenue_model"
               label={t("RevenueModel")} 
+              rules={[
+                {
+                  required: true,
+                  message: `please select the revenue model`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selecttherevenuemodel")} size={'large'} style={{ width: '100%', }}>
@@ -1876,6 +2008,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="business_partners"
               label={t("BusinesspartnersButton")}   
+               rules={[
+                {
+                  required: true,
+                  message: `please select the business partner`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
               // rules={[{ required: true, message: 'Please input the business partner!'}]}
             >
@@ -1913,6 +2052,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="strategic_target"
               label={t("Strategictargets")} 
+              rules={[
+                {
+                  required: true,
+                  message: `please select the strategic target`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selectthestrategictarget")} onChange={e=>setStrategicTargetselected(StrategicTarget.filter(st=>e.includes(st.type)))}  size={'large'} style={{ width: '100%', }}>
@@ -1949,6 +2095,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="activity_type"
               label={t("Typeofactivities")}  
+              rules={[
+                {
+                  required: true,
+                  message: `please select the activity type`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selectthetypeofactivities")} size={'large'} style={{ width: '100%', }}>
@@ -1982,6 +2135,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="product"
               label={t("ProductsServices")} 
+                rules={[
+                {
+                  required: true,
+                  message: `please select the product / service`,
+                  // whitespace: true,
+                },
+              ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selecttheproductsservices")} onChange={e=>setProductselected(Product.filter(p=> e.includes(p.id)))}  size={'large'} style={{ width: '100%', }}>
@@ -2043,6 +2203,7 @@ const [Open, setOpen] = useState({
           
       </Form.Item>
 
+      <Tooltip title={t("addnewmanager")}>
       <Button
           type="link"
           onClick={() => {
@@ -2053,8 +2214,8 @@ const [Open, setOpen] = useState({
       >
       <PlusOutlined/>
       </Button>
-
-
+      </Tooltip>
+      
       <Button
           type="link"
           onClick={() => {
@@ -2065,7 +2226,6 @@ const [Open, setOpen] = useState({
       >
       <SettingOutlined /> {t("Managetitles")}
       </Button>
-      
 
     <Form.Item name="add">
       <Button  onClick={()=>addManagerdata()}>
@@ -2106,7 +2266,7 @@ const [Open, setOpen] = useState({
             width: 200,
           }}
           size={'large'}
-          placeholder="Search to Select"
+          placeholder={t("selectShareHolders")}
           // optionFilterProp="children"
           onChange={e=>setShareHolderId(e)}
                 // filterOption={(input, option) => (option?.label ?? '').includes(input)}
@@ -2122,16 +2282,19 @@ const [Open, setOpen] = useState({
           
       </Form.Item>
 
-      <Button
-          type="link"
-          onClick={() => {
-            setOpen({open:true,
-            url:"ShareHolders",
-            data:`${t("ShareHolders")}`});
-          }}
-      >
-      <PlusOutlined/>
-      </Button>
+      <Tooltip title={t("addnewholder")}>
+
+<Button
+  type="link"
+  onClick={() => {
+    setOpen({open:true,
+    url:"ShareHolders",
+    data:`${t("ShareHolders")}` });
+  }}
+>
+  <PlusOutlined/>
+</Button>
+</Tooltip>
 
 
 

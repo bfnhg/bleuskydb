@@ -10,11 +10,15 @@ import {
   Form,
   Button,
   InputNumber,
+  Statistic,
+  Col,
   Input,
   Select,
   DatePicker,
   Typography,
   Space,
+  Tooltip,
+  Card,
   Row,
   Descriptions,
 } from "antd";
@@ -47,6 +51,7 @@ const OrderBookDetails = () => {
   const [Customer, setCustomer] = useState();
   const [Product, setProduct] = useState();
   const [SummaryDetails, setSummaryDetails] = useState(null);
+  const [datebegin, setDatebegin] = useState(null);
 
   const [editingRow, setEditingRow] = useState(null);
   const [editingRowbook, setEditingRowbook] = useState(null);
@@ -56,30 +61,22 @@ const OrderBookDetails = () => {
 
   const [costDataSource, setRevenueDataSource] = useState();
   const [RowRevenueData, setRowRevenueData] = useState();
+  const [form] = Form.useForm();
 
-  const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
-    const [form] = Form.useForm();
-    {
-      return data.data === "OrderDetail" ? (
-        <Modal
-          open={open}
-          title={t("Createaneworder")}
-          okText={t("Create")}
-          cancelText={t("Cancel")}
-          onCancel={onCancel}
-          onOk={() => {
-            form
-              .validateFields()
-              .then((values) => {
-                form.resetFields();
-                onCreate({ values: values, url: data.url, data: data.data });
-              })
-              .catch((info) => {
-                console.log("Validate Failed:", info);
-              });
-          }}
-        >
-          <Form
+  const disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current < datebegin;
+  };
+
+  const StatefulModalContent = (props) => {
+    // const [inputValue, setInputValue] = React.useState();
+ 
+    return (
+      // <Layout style={styles.modalContent}>
+      //   <Text>FORM</Text>
+      //   <Input value={inputValue} onChangeText={setInputValue} />
+      // </Layout>
+      <Form
             form={form}
             layout="vertical"
             name="form_in_modal"
@@ -129,12 +126,13 @@ const OrderBookDetails = () => {
               </Select>
               {/* <Input type="textarea" /> */}
             </Form.Item>
+            
             <Form.Item name="startDate" label={t("Startdate")}>
-              <DatePicker placeholder={t("selectdate")} />
+              <DatePicker placeholder={t("selectdate")} onChange={(date)=>setDatebegin(date)}/>
             </Form.Item>
 
             <Form.Item name="endDate" label={t("Enddate")}>
-              <DatePicker placeholder={t("selectdate")} />
+              <DatePicker disabled={datebegin==null?true:false} placeholder={t("selectdate")} disabledDate={disabledDate} />
             </Form.Item>
 
             <Form.Item name="pricePerDay" label={t("Priceperday")}>
@@ -151,6 +149,31 @@ const OrderBookDetails = () => {
               <Input type="textarea" />
             </Form.Item>
           </Form>
+    );
+  };
+
+  const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
+    {
+      return data.data === "OrderDetail" ? (
+        <Modal
+          open={open}
+          title={t("Createaneworder")}
+          okText={t("Create")}
+          cancelText={t("Cancel")}
+          onCancel={onCancel}
+          onOk={() => {
+            form
+              .validateFields()
+              .then((values) => {
+                form.resetFields();
+                onCreate({ values: values, url: data.url, data: data.data });
+              })
+              .catch((info) => {
+                console.log("Validate Failed:", info);
+              });
+          }}
+        >
+          <StatefulModalContent/>
         </Modal>
       ) : data.data === "Customer" ? (
         <Modal
@@ -238,7 +261,7 @@ const OrderBookDetails = () => {
     }
   };
 
-  useEffect(() => getData(), []);
+  useEffect(() => {getData()}, []);
 
   const getData = async () => {
     await axios
@@ -748,7 +771,9 @@ const OrderBookDetails = () => {
                 },
               ]}
             >
-              <DatePicker />
+
+              <DatePicker placeholder={t("selectdate")} onChange={(date)=>setDatebegin(date)}/>
+     
             </Form.Item>
           );
         } else {
@@ -777,7 +802,9 @@ const OrderBookDetails = () => {
                 },
               ]}
             >
-              <DatePicker />
+
+              <DatePicker placeholder={t("selectdate")} disabledDate={disabledDate} />
+
             </Form.Item>
           );
         } else {
@@ -837,14 +864,13 @@ const OrderBookDetails = () => {
       },
     },
     {
-      title: <h3 style={{ textAlign: "center" }}>{t("Actions")}</h3>,
-
+      title: <h3 style={{ textAlign: "center" }}> {t("Actions")} </h3> ,
       dataIndex: "actions",
       align: "center",
       render: (_, record) =>
         editingRowbook === record.key ? (
           <>
-            <Button type="link" onClick={() => setEditingRowbook(null)}>
+            <Button type="link" onClick={() =>{setDatebegin(null);setEditingRowbook(null)}}>
               {t("Cancel")}
             </Button>
             <Button type="link" htmlType="submit">
@@ -857,6 +883,7 @@ const OrderBookDetails = () => {
               type="link"
               onClick={() => {
                 setEditingRowbook(record.key);
+                setDatebegin(dayjs(record.startDate));
                 form2.setFieldsValue({
                   name: record.customer.id,
                   product: record.product.id,
@@ -887,8 +914,11 @@ const OrderBookDetails = () => {
     url: null,
     data: null,
   });
+
   const onCreate = async ({ values, url, data }) => {
+
     if (data == "OrderDetail") {
+
       const obj = {
         orderBookId: stateParamVal,
         customerId: values.customer,
@@ -897,7 +927,6 @@ const OrderBookDetails = () => {
         pricePerDay: values.pricePerDay,
         description: values.description,
         productId: values.product,
-
       };
 
       console.log("obj", obj);
@@ -926,6 +955,8 @@ const OrderBookDetails = () => {
           console.log(error.config);
         });
     } else {
+
+      values.enterpriseId=Company.id;
       await axios
         .post(`${JSON_API}/${url}`, values)
         .then(() => {
@@ -950,11 +981,12 @@ const OrderBookDetails = () => {
           console.log(error.config);
         });
     }
-
+    setDatebegin(null);
     setOpen(false);
   };
   const Edited = async (values) => {
     console.log("values are :", values);
+    setDatebegin(null);
 
     const orderobj = {
       id: editingRowbook,
@@ -1037,7 +1069,6 @@ const OrderBookDetails = () => {
     setEditingRow(null);
   };
 
-  const refreshRevenuedetails = () => {};
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -1058,122 +1089,88 @@ const OrderBookDetails = () => {
   };
 
 
-  const [dataSource, setDataSource] = useState([
-    {
-      key: "1",
-      id: "1",
-      name: "John Doe",
-      dateOfBirth: "01/01/2000",
-      age: "21",
-    },
-    {
-      key: "2",
-      id: "2",
-      name: "Jane Smith",
-      dateOfBirth: "02/02/2001",
-      age: "20",
-    },
-    {
-      key: "3",
-      id: "3",
-      name: "Bob Johnson",
-      dateOfBirth: "03/03/2002",
-      age: "19",
-    },
-    {
-      key: "4",
-      id: "4",
-      name: "Alice Williams",
-      dateOfBirth: "04/04/2003",
-      age: "18",
-    },
-  ]);
 
-  function handleNameChange(e, key) {
-    const newDataSource = [...dataSource];
-    const target = newDataSource.find((item) => item.key === key);
-    if (target) {
-      target.name = e.target.value;
-      setDataSource(newDataSource);
+
+
+  const DisplayRevenueSummary = () => {
+
+    console.log("ttesstt 1");
+    const items = [];
+
+    const months = [
+      t("January"),
+      t("February"),
+      t("March"),
+      t("April"),
+      t("May"),
+      t("June"),
+      t("July"),
+      t("August"),
+      t("September"),
+      t("October"),
+      t("November"),
+      t("December"),
+    ];
+  
+    const revenueData = [
+      SummaryDetails && SummaryDetails.januaryRevenue,
+      SummaryDetails && SummaryDetails.februaryRevenue,
+      SummaryDetails && SummaryDetails.marchRevenue,
+      SummaryDetails && SummaryDetails.aprilRevenue,
+      SummaryDetails && SummaryDetails.mayRevenue,
+      SummaryDetails && SummaryDetails.juneRevenue,
+      SummaryDetails && SummaryDetails.julyRevenue,
+      SummaryDetails && SummaryDetails.augustRevenue,
+      SummaryDetails && SummaryDetails.septemberRevenue,
+      SummaryDetails && SummaryDetails.octoberRevenue,
+      SummaryDetails && SummaryDetails.novemberRevenue,
+      SummaryDetails && SummaryDetails.decemberRevenue,
+    ];
+  
+    const startingMonthIndex = Company.startPeriod - 1;
+  
+    for (let i = 0; i < months.length; i++) {
+      const monthIndex = (i + startingMonthIndex) % months.length;
+      const monthName = months[monthIndex];
+      const revenue = revenueData[monthIndex];
+  
+      items.push(
+        <Descriptions.Item key={monthName} style={{ textAlign: "center" }} label={monthName}>
+          {revenue}
+        </Descriptions.Item>
+      );
     }
-  }
-
-  function handleDOBChange(dateString, key) {
-    const newDataSource = [...dataSource];
-    const target = newDataSource.find((item) => item.key === key);
-    if (target) {
-      target.dateOfBirth = dateString;
-      setDataSource(newDataSource);
-    }
-  }
-
-
-
-  return (
-    <>
-      {contextHolder}
-
-      {/* <div>OrderBook {stateParamVal}</div> */}
-
-      {/* <Table columns={coulumns} dataSource={dataSource} />
-    <Button onClick={handleSubmit}>Save Changes</Button> */}
-      <Title level={4}>{t("RevenueSummary")}</Title>
-
-      <Descriptions
+  
+    
+    return (
+       <Descriptions
         style={{ textAlign: "right" }}
         bordered
         column={6}
         size={"small"}
       >
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("January")}>
-          {SummaryDetails && SummaryDetails.januaryRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item
-          style={{ textAlign: "center" }}
-          label={t("February")}
-        >
-          {SummaryDetails && SummaryDetails.februaryRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("March")}>
-          { SummaryDetails && SummaryDetails.marchRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("April")}>
-          {SummaryDetails && SummaryDetails.aprilRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("May")}>
-          {SummaryDetails && SummaryDetails.mayRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("June")}>
-          {SummaryDetails && SummaryDetails.juneRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("July")}>
-          {SummaryDetails && SummaryDetails.julyRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("August")}>
-          {SummaryDetails && SummaryDetails.augustRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item
-          style={{ textAlign: "center" }}
-          label={t("September")}
-        >
-          {SummaryDetails && SummaryDetails.septemberRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item style={{ textAlign: "center" }} label={t("October")}>
-          {SummaryDetails && SummaryDetails.octoberRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item
-          style={{ textAlign: "center" }}
-          label={t("November")}
-        >
-          {SummaryDetails && SummaryDetails.novemberRevenue}
-        </Descriptions.Item>
-        <Descriptions.Item
-          style={{ textAlign: "center" }}
-          label={t("December")}
-        >
-          {SummaryDetails && SummaryDetails.decemberRevenue}
-        </Descriptions.Item>
-      </Descriptions>
+        {items}
+        </Descriptions>
+    );
+  };
+
+  return (
+    <>
+      {contextHolder}
+
+          <Statistic
+            title="Book Total"
+            value={ SummaryDetails && SummaryDetails.bookTotal}
+            precision={2}
+            valueStyle={{
+              color: '#3f8600',
+            }}
+            // prefix={<ArrowUpOutlined />}
+            suffix="$"
+          />
+      <Title level={4}>{t("RevenueSummary")}</Title>
+
+         <DisplayRevenueSummary/>
 
       <Title level={4}>{t("Commands")}</Title>
       <Row justify="end" gutter={[16, 16]}>
@@ -1208,6 +1205,8 @@ const OrderBookDetails = () => {
         open={Open.open}
         onCreate={onCreate}
         onCancel={() => {
+          form.resetFields();
+          setDatebegin(null);
           setOpen({ open: false, url: null, data: null });
         }}
         data={Open}
