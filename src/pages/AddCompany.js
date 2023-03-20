@@ -442,6 +442,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
             <Input  />
         </Form.Item>
       </Form>
+      
       </Modal> 
       :data.url==="ShareHolders"?
        <Modal

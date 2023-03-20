@@ -12,9 +12,7 @@ function Footer() {
             © 2022, made with
             {<HeartFilled />} by
             <a href="#" className="font-weight-bold" target="_blank">
-              Alidantek Maroc
-            </a>
-            .
+            Agilience</a>.
           </div>
         </Col>
         <Col xs={24} md={12} lg={12}>
@@ -25,9 +23,7 @@ function Footer() {
                   href="#"
                   className="nav-link text-muted"
                   target="_blank"
-                >
-                  Alidantek Maroc
-                </a>
+                >Agilience</a>
               </li>
               <li className="nav-item">
                 <a

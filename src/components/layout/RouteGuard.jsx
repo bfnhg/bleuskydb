@@ -2,8 +2,11 @@ import React, { useState,useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { CompanyContext } from '../../contexts/CompanyContext';
 import { Result  } from 'antd';
+import { useTranslation } from "react-i18next";
 
 function RouteGuard ({ children, ...rest }) {
+    let { t } = useTranslation();
+
   //   let flag = false;
   //   localStorage.getItem("token") ? flag=true : flag=false
 
@@ -16,6 +19,7 @@ function RouteGuard ({ children, ...rest }) {
        let flag = false;
  
        //check user has JWT token
+       console.log("childrenname[0]:",childrenname[0]);
        localStorage.getItem("token") ? flag=true : flag=false
        console.log("token:", flag)
        return flag
@@ -25,19 +29,7 @@ function RouteGuard ({ children, ...rest }) {
        <Route {...rest}
            render={() => (
                hasJWT() ? 
-               Company? children
-                : 
-                childrenname[0]== "AddCompany" ? children:
-
-                <Result title="Select a company to display its data."
-
-                // extra={
-                //   <Button type="primary" key="console">
-                //     Go Console
-                //   </Button>
-                // }
-
-                />
+               Company? children : childrenname[0]== "AddCompany"||childrenname[0]== "lz" ? children : <Result title={t("Selectacompanytodisplayitsdata")}/>
 
                    : 
            <Redirect from="*" to="/sign-in" />

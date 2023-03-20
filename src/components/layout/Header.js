@@ -497,7 +497,7 @@ console.log(" ttessttt ",Companies.map(c=>c.id)[0]);
     {contextHolder}
       <Row gutter={[24, 0]}>
         <Col span={24} md={6}>
-          <Breadcrumb>
+          {/* <Breadcrumb>
             <Breadcrumb.Item>
               <NavLink to="/">Home</NavLink>
             </Breadcrumb.Item>
@@ -512,7 +512,7 @@ console.log(" ttessttt ",Companies.map(c=>c.id)[0]);
             >
               {subName.replace("/", "")}
             </span>
-          </div> 
+          </div>  */}
         </Col> 
         <Col span={24} md={12}>
           { Companies && <Select

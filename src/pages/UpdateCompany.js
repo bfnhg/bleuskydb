@@ -360,7 +360,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       ll = t("StrategictargetsButton");
 
       break;
-
+//f
     case "Customers": // toto vaut 0 donc ce cas correspond
       ll = t("AddnewcustomerButton");
       break;

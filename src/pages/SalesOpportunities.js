@@ -140,7 +140,7 @@ const SalesOpportunities = () => {
             :
 
             <>
-            <Button
+            <Popconfirm
               type="link"
               onClick={() => {
 
@@ -150,9 +150,10 @@ const SalesOpportunities = () => {
                 });
               }}
             >
-              {t("edit")}  
-            </Button>
-            <Popconfirm title={t("deleterow")} onConfirm={() => handleDelete(record.id)} okText="Yes" cancelText="No">
+                  <a> {t("edit")}</a>
+            </Popconfirm>
+            <Popconfirm title={t("deleterow")} onConfirm={() => handleDelete(record.id)}  okText={t("yes")}
+                  cancelText={t("no")}>
             <a>{t('Delete')}</a>
             </Popconfirm>
 
@@ -236,7 +237,38 @@ const SalesOpportunities = () => {
     })
     setEditingRow(null);
   };
-  
+  const Duplicatebook= async ()=>{
+
+    await axios.post(`${JSON_API}/OpportunityBooks/duplicateLastOpportunityBook/${Company.id}`)
+    .then((response)=>{ 
+      getorderbooks();
+      console.log('OpportunityBook added Successfully!');
+      messageApi.open({
+        type: 'success',
+        content: `${t("opportunitybookcreation")}`
+      });
+    })
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+
+      console.log(error.config);
+    });
+
+  }
 
   return (
     <>
@@ -282,6 +314,16 @@ const SalesOpportunities = () => {
       >
         <Button type="primary" htmlType="submit">
         {t("create")} 
+        </Button>
+      </Form.Item>
+      <Form.Item
+        wrapperCol={{
+          offset: 8,
+          span: 16,
+        }}
+      >
+        <Button onClick={Duplicatebook} >
+          {t("duplicatelastopportunitybook")} 
         </Button>
       </Form.Item>
       </Space>

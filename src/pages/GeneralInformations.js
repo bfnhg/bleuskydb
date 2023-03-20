@@ -1,4 +1,4 @@
-import { Radio,Card,DatePicker,Select,Divider,Typography,Row,Col,Button,Descriptions,Modal,Avatar,Tabs, Form, Input,Tag,Table  } from 'antd';
+import { Radio,Card,DatePicker,Select,Divider,Typography,Row,Col,Button, message, Descriptions,Modal,Avatar,Tabs, Form,Popconfirm, Input,Tag,Table  } from 'antd';
 import axios from 'axios';
 import React,{useState,useEffect, useContext} from 'react';
 import { Redirect,NavLink,useHistory } from 'react-router-dom';
@@ -22,6 +22,8 @@ const { Meta } = Card;
 
 const GeneralInformations = () => {
   const history = useHistory();
+  const [messageApi, contextHolder] = message.useMessage();
+
   let {t} =useTranslation();
   const {Lang,setLang,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}=useContext(CompanyContext);
   const [ManagerData, setManagerData] = useState([]);
@@ -142,9 +144,16 @@ const GeneralInformations = () => {
   });
   const deleteCompany = async () => {
     await axios.delete(`${JSON_API}/Enterprises/${Company.id}`)
-    .then((response) => alert("Company deleted successfully"))
-    setCompany({});
-    getCompanies();
+    .then((response) =>  {
+      setCompany({});
+      getCompanies();
+      messageApi.open({
+        type: "success",
+        content: `${t("Companydeleted")}`,
+        
+      });
+  } )
+    
   };
   const updateCompany = async () => {
     await axios.put(`${JSON_API}/companies/${UpdateData.id}`,UpdateData)
@@ -207,6 +216,7 @@ const GeneralInformations = () => {
   
   return (
     <>
+      {contextHolder}
 
     {
 
@@ -254,6 +264,23 @@ Company.name &&
                 <Radio.Button value="delete" danger><DeleteOutlined /> Delete company</Radio.Button>
               </Radio.Group> */}
                   <Button type='link' danger onClick={showDeleteConfirm} ><DeleteOutlined /> {t("deletecompany")}</Button>
+
+                  {/* title: `${t("deletecompanytext")} ${Company.name} ?`,
+      icon: <ExclamationCircleOutlined />,
+      okText: `${t("yes")}`,
+      okType: 'danger',
+      cancelText: `${t("no")}`,
+      onOk() {
+        deleteCompany(); */}
+                  {/* <Popconfirm
+                  title={`${t("deletecompanytext")} ${Company.name} ?`}
+                  okText={t("yes")}
+                  cancelText={t("no")}
+                  onConfirm={() => deleteCompany()}
+                  
+                >
+                  <a>{t("deletecompany")}</a>
+                  </Popconfirm> */}
               </Col>
               </Row>
   </Card>

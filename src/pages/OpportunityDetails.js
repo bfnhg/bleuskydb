@@ -89,7 +89,7 @@ const OpportunityDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please select a customer!",
+                  message: `${t("Pleaseselectacustomer")}`,
                 },
               ]}
             >
@@ -107,7 +107,7 @@ const OpportunityDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please select a product!",
+                  message: `${t("Pleaseselectaproduct")}`,
                 },
               ]}
             >
@@ -127,12 +127,21 @@ const OpportunityDetails = () => {
             </Form.Item>
             
             <Form.Item name="startDate" label={t("Startdate")}>
-              <DatePicker placeholder={t("selectdate")} onChange={(date)=>setDatebegin(date)}/>
-            </Form.Item>
+            <DatePicker
+            style={{ width: 250 }}
+            placeholder={t("selectdatedebut")}
+            onChange={(date) => setDatebegin(date)}
+          />
+                      </Form.Item>
 
             <Form.Item name="endDate" label={t("Enddate")}>
-              <DatePicker disabled={datebegin==null?true:false} placeholder={t("selectdate")} disabledDate={disabledDate} />
-            </Form.Item>
+            <DatePicker
+            disabled={datebegin == null ? true : false}
+            style={{ width: 250 }}
+            placeholder={t("selectdatefin")}
+            disabledDate={disabledDate}
+          />
+                      </Form.Item>
 
             <Form.Item
               name="status"
@@ -140,22 +149,22 @@ const OpportunityDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Please select a status!',
+                  message: `${t("Pleaseselectastatus")}`,
                 },
               ]}
             >
               <Select
-                placeholder="Select opportunity status"
-                style={
+            placeholder={t("Selectopportunitystatus")}
+            style={
                   {
                     // width: 120,
                   }
                 }
               >
-                <Option value={0}>Open</Option>
-                <Option value={1}>Waiting</Option>
-                <Option value={2}>Suspended</Option>
-                <Option value={4}>Lost</Option>
+                <Option value={0}>{t("Open")}</Option>
+            <Option value={1}>{t("Waiting")}</Option>
+            <Option value={2}>{t("Suspended")}</Option>
+            <Option value={4}>{t("Lost")}</Option>
               </Select>
             </Form.Item>
 
@@ -169,7 +178,12 @@ const OpportunityDetails = () => {
               />
             </Form.Item>
 
-            <Form.Item name="description" label={t("Description")}>
+            <Form.Item   rules={[
+            {
+              required: true,
+              message: `${t("Descriptionplaceholder")}`,
+            },
+          ]} name="description" label={t("Description")}>
               <Input type="textarea" />
             </Form.Item>
           </Form>
@@ -228,15 +242,15 @@ const OpportunityDetails = () => {
           >
             <Form.Item
               name="name"
-              label={t("Customersname")}
+              // label={t("Customersname")}
               rules={[
                 {
                   required: true,
-                  message: `Please input the name!`,
+                  message: `${t("writeacostumer")}`,
                 },
               ]}
             >
-              <Input />
+              <Input placeholder={t("writeacostumerplaceholder")} />
             </Form.Item>
           </Form>
         </Modal>
@@ -269,15 +283,15 @@ const OpportunityDetails = () => {
           >
             <Form.Item
               name="label"
-              label={t("Productslabel")}
+              // label={t("Productslabel")}
               rules={[
                 {
                   required: true,
-                  message: `Please input the label!`,
+                  message: `${t("writeaproduct")}`,
                 },
               ]}
             >
-              <Input />
+              <Input placeholder={t("writeaproductplaceholder")} />
             </Form.Item>
           </Form>
         </Modal>
@@ -407,7 +421,11 @@ const OpportunityDetails = () => {
       .then(() => {
         console.log("opportunity " + id + " deleted successfully");
         getData();
-      })
+        messageApi.open({
+          type: "success",
+          content: t("Opportunitydeletedsuccessfully"),
+        });
+            })
       .catch(function (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -644,7 +662,7 @@ const OpportunityDetails = () => {
     },
 
     {
-      title: <h3 style={{ textAlign: "center" }}>Total</h3>,
+      title: <h3 style={{ textAlign: "center" }}>Total $</h3>,
       dataIndex: "total",
       key: "total",
       fixed: "right",
@@ -675,7 +693,7 @@ const OpportunityDetails = () => {
               </>
             ) : (
               <>
-                <Button
+                <Popconfirm
                   type="link"
                   onClick={() => {
                     setEditingRow(record.key);
@@ -696,8 +714,8 @@ const OpportunityDetails = () => {
                     });
                   }}
                 >
-                  {t("edit")}
-                </Button>
+                  <a> {t("edit")}</a>
+                </Popconfirm>
               </>
             )}
           </Space>
@@ -722,12 +740,12 @@ const OpportunityDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter customer name",
+                  message: `${t("Pleaseentercustomername")}`,
                 },
               ]}
             >
               <Select
-                placeholder="Select a customer"
+                placeholder={t("Pleaseselectacustomer")}
                 style={{
                   width: 120,
                 }}
@@ -759,12 +777,12 @@ const OpportunityDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter product label",
+                  message: `${t("Pleaseenterproductlabel")}`,
                 },
               ]}
             >
               <Select
-                placeholder="Select a product"
+                placeholder={t("Pleaseselectaproduct")}
                 style={{
                   width: 120,
                 }}
@@ -793,7 +811,7 @@ const OpportunityDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter a date",
+                  message: `${t("Pleaseenteradate")}`,
                 },
               ]}
             >
@@ -821,7 +839,7 @@ const OpportunityDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter a date",
+                  message: `${t("Pleaseenteradate")}`,
                 },
               ]}
             >
@@ -843,35 +861,41 @@ const OpportunityDetails = () => {
       render: (_, record) => {
         if (editingRowbook === record.id) {
           return (
-            <Form.Item name="status">
+            <Form.Item  rules={[
+              {
+                required: true,
+                message: `${t("Selectopportunitystatus")}`,
+              },
+            ]} name="status">
               <Select
-                placeholder="Select opportunity status"
+                placeholder={t("Selectopportunitystatus")}
                 style={
                   {
                     // width: 120,
                   }
                 }
               >
-                <Option value={0}>Open</Option>
-                <Option value={1}>Waiting</Option>
-                <Option value={2}>Suspended</Option>
-                <Option value={3}>Gained</Option>
-                <Option value={4}>Lost</Option>
+
+                <Option value={0}>{t("Open")}</Option>
+                <Option value={1}>{t("Waiting")}</Option>
+                <Option value={2}>{t("Suspended")}</Option>
+                <Option value={3}>{t("Gained")}</Option>
+                <Option value={4}>{t("Lost")}</Option>
               </Select>
             </Form.Item>
           );
         } else {
           switch (record.status) {
             case 0:
-              return "Open";
+              return `${t("Open")}`;
             case 1:
-              return "Waiting";
+              return `${t("Waiting")}`;
             case 2:
-              return "Suspended";
+              return `${t("Suspended")}`;
             case 3:
-              return "Gained";
+              return `${t("Gained")}`;
             case 4:
-              return "Lost";
+              return `${t("Lost")}`;
             default:
               return "__";
           }
@@ -914,7 +938,7 @@ const OpportunityDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter a description",
+                  message: `${t("Descriptionplaceholder")}`,
                 },
               ]}
             >
@@ -942,7 +966,7 @@ const OpportunityDetails = () => {
           </>
         ) : (
           <>
-            <Button
+            <Popconfirm
               type="link"
               onClick={() => {
                 setEditingRowbook(record.key);
@@ -958,15 +982,16 @@ const OpportunityDetails = () => {
                 });
               }}
             >
-              {t("Edit")}
-            </Button>
+              <a>{t("Edit")}</a>
+            </Popconfirm>
 
             <Popconfirm
               title={t("Suretodelete")}
-              cancelText={t("cancel")}              
+              okText={t("yes")}
+              cancelText={t("no")}            
               onConfirm={() => handleshareholderDelete(record.id)}
             >
-              <a> {t("Delete")}</a>{" "}
+              <a style={{ marginLeft: ".5rem" }}> {t("Delete")}</a>{" "}
             </Popconfirm>
           </>
         ),
@@ -1078,7 +1103,7 @@ const OpportunityDetails = () => {
 
         messageApi.open({
           type: "success",
-          content: "Opportunity updated Successfully!",
+          content: `${t("OpportunityupdatedSuccessfully")}`,
         });
         setEditingRowbook(null);
         getData();
@@ -1140,7 +1165,7 @@ const OpportunityDetails = () => {
 
         messageApi.open({
           type: "success",
-          content: "Opportunity revenue details updated Successfully!",
+          content: t("OpportunityrevenuedetailsupdatedSuccessfully"),
         });
       });
     setEditingRow(null);
@@ -1347,7 +1372,7 @@ const OpportunityDetails = () => {
 
 
           <Statistic
-            title="Book Total"
+            title={t("BookTotal")}
             value={ SummaryDetails && SummaryDetails.bookTotal}
             precision={2}
             valueStyle={{

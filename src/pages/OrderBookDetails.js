@@ -90,7 +90,7 @@ const OrderBookDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please select a customer!",
+                  message: `${t("Pleaseselectacustomer")}`,
                 },
               ]}
             >
@@ -108,7 +108,7 @@ const OrderBookDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please select a product!",
+                  message: `${t("Pleaseselectaproduct")}`,
                 },
               ]}
             >
@@ -128,11 +128,15 @@ const OrderBookDetails = () => {
             </Form.Item>
             
             <Form.Item name="startDate" label={t("Startdate")}>
-              <DatePicker placeholder={t("selectdate")} onChange={(date)=>setDatebegin(date)}/>
-            </Form.Item>
+            <DatePicker
+            style={{ width: 250 }}
+            placeholder={t("selectdatedebut")}
+            onChange={(date) => setDatebegin(date)}
+          />
+                      </Form.Item>
 
             <Form.Item name="endDate" label={t("Enddate")}>
-              <DatePicker disabled={datebegin==null?true:false} placeholder={t("selectdate")} disabledDate={disabledDate} />
+              <DatePicker  style={{ width: 250 }} disabled={datebegin==null?true:false} placeholder={t("selectdatefin")} disabledDate={disabledDate} />
             </Form.Item>
 
             <Form.Item name="pricePerDay" label={t("Priceperday")}>
@@ -145,8 +149,13 @@ const OrderBookDetails = () => {
               />
             </Form.Item>
 
-            <Form.Item name="description" label={t("Description")}>
-              <Input type="textarea" />
+            <Form.Item  rules={[
+            {
+              required: true,
+              message: `${t("Descriptionplaceholder")}`,
+            },
+          ]}name="description" label={t("Description")}>
+              <Input placeholder={t("Descriptionplace")} type="textarea" />
             </Form.Item>
           </Form>
     );
@@ -204,15 +213,15 @@ const OrderBookDetails = () => {
           >
             <Form.Item
               name="name"
-              label={t("Customersname")}
+              // label={t("Customersname")}
               rules={[
                 {
                   required: true,
-                  message: `Please input the name!`,
+                  message: `${t("writeacostumer")}`,
                 },
               ]}
             >
-              <Input />
+              <Input placeholder={t("writeacostumerplaceholder")} />
             </Form.Item>
           </Form>
         </Modal>
@@ -245,15 +254,15 @@ const OrderBookDetails = () => {
           >
             <Form.Item
               name="label"
-              label=""
+              // label=""
               rules={[
                 {
                   required: true,
-                  message: `Please input the label!`,
+                  message: `${t("writeaproduct")}`,
                 },
               ]}
             >
-              <Input />
+              <Input placeholder={t("writeaproductplaceholder")} />
             </Form.Item>
           </Form>
         </Modal>
@@ -381,6 +390,10 @@ const OrderBookDetails = () => {
       .then(() => {
         console.log("order detail" + id + " deleted successfully");
         getData();
+        messageApi.open({
+          type: "success",
+          content: t("Orderdeletedsuccessfully"),
+        });
       })
       .catch(function (error) {
         if (error.response) {
@@ -622,7 +635,7 @@ const OrderBookDetails = () => {
     },
 
     {
-      title: <h3 style={{ textAlign: "center" }}>Total</h3>,
+      title: <h3 style={{ textAlign: "center" }}>Total $</h3>,
       dataIndex: "total",
       key: "total",
       fixed: "right",
@@ -652,7 +665,7 @@ const OrderBookDetails = () => {
               </>
             ) : (
               <>
-                <Button
+                <Popconfirm
                   type="link"
                   onClick={() => {
                     setEditingRow(record.key);
@@ -673,8 +686,8 @@ const OrderBookDetails = () => {
                     });
                   }}
                 >
-                  {t("edit")}
-                </Button>
+                  <a> {t("edit")}</a>
+                </Popconfirm>
               </>
             )}
           </Space>
@@ -698,12 +711,12 @@ const OrderBookDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter customer name",
+                  message: `${t("Pleaseentercustomername")}`,
                 },
               ]}
             >
               <Select
-                placeholder="Select a customer"
+                placeholder={t("Pleaseselectacustomer")}
                 style={{
                   width: 120,
                 }}
@@ -734,12 +747,12 @@ const OrderBookDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter product label",
+                  message: `${t("Pleaseenterproductlabel")}`,
                 },
               ]}
             >
               <Select
-                placeholder="Select a product"
+                placeholder={t("Pleaseselectaproduct")}
                 style={{
                   width: 120,
                 }}
@@ -767,7 +780,7 @@ const OrderBookDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter a date",
+                  message: `${t("Pleaseenteradate")}`,
                 },
               ]}
             >
@@ -798,7 +811,7 @@ const OrderBookDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter a date",
+                  message: `${t("Pleaseenteradate")}`,
                 },
               ]}
             >
@@ -851,7 +864,7 @@ const OrderBookDetails = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter a description",
+                  message: `${t("Descriptionplaceholder")}`,
                 },
               ]}
             >
@@ -879,7 +892,7 @@ const OrderBookDetails = () => {
           </>
         ) : (
           <>
-            <Button
+            <Popconfirm
               type="link"
               onClick={() => {
                 setEditingRowbook(record.key);
@@ -894,15 +907,16 @@ const OrderBookDetails = () => {
                 });
               }}
             >
-              {t("Edit")}
-            </Button>
+              <a>{t("Edit")}</a>
+            </Popconfirm>
 
             <Popconfirm
               title={t("Suretodelete")}
-              cancelText={t("cancel")}
+              cancelText={t("no")}
+              okText={t("yes")}
               onConfirm={() => handleshareholderDelete(record.id)}
             >
-              <a> {t("Delete")}</a>
+              <a style={{ marginLeft: ".5rem" }}> {t("Delete")}</a>
             </Popconfirm>
           </>
         ),
@@ -1008,7 +1022,7 @@ const OrderBookDetails = () => {
 
         messageApi.open({
           type: "success",
-          content: "Order updated Successfully!",
+          content: `${t("OrderupdatedSuccessfully")}`,
         });
         setEditingRowbook(null);
       })
@@ -1063,7 +1077,7 @@ const OrderBookDetails = () => {
 
         messageApi.open({
           type: "success",
-          content: "Order cost details updated Successfully!",
+          content: t("OrdercostdetailsupdatedSuccessfully"),
         });
       });
     setEditingRow(null);
@@ -1159,7 +1173,7 @@ const OrderBookDetails = () => {
       {contextHolder}
 
           <Statistic
-            title="Book Total"
+            title={t("BookTotal")}
             value={ SummaryDetails && SummaryDetails.bookTotal}
             precision={2}
             valueStyle={{
