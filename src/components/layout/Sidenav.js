@@ -11,6 +11,7 @@ import {
   SyncOutlined,
   AimOutlined,
   BookFilled,
+  ReconciliationOutlined,
   BookOutlined
 } from '@ant-design/icons';
 function Sidenav({ color }) {
@@ -256,21 +257,23 @@ function Sidenav({ color }) {
             <span className="label">Budget</span>
           </NavLink>
         </Menu.Item> */}
-        {/* <Menu.Item key="6">
+
+        <Menu.Item key="6">
         <NavLink to="/chartofaccounts">
           <span
               className="icon"
               style={{
                 background:"",
               }}
-            >            <LoadingOutlined />
+            >           <ReconciliationOutlined />
 
             </span>
             <span className="label">Chart of accounts</span>
           </NavLink>
-        </Menu.Item> */}
-        {/*<Menu.Item key="6">
-        <NavLink to="/ComingSoon">
+        </Menu.Item>
+
+        <Menu.Item key="6">
+        <NavLink to="/glaccountsandhyphotheses">
           <span
               className="icon"
               style={{
@@ -279,9 +282,10 @@ function Sidenav({ color }) {
             >            <LoadingOutlined />
 
             </span>
-            <span className="label">Performance</span>
+            <span className="label">GL Accounts & Hyphotheses</span>
           </NavLink>
         </Menu.Item>
+        {/*
         <Menu.Item className="menu-item-header" key="5">
         Expenses
         </Menu.Item>

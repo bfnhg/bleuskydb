@@ -76,12 +76,14 @@ const tailFormItemLayout = {
 
        
 const UpdateCompany = () => {
-  const {submitted, setSubmitted,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited}=useContext(CompanyContext);
+  const {submitted, setSubmitted,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate}=useContext(CompanyContext);
   let {t} =useTranslation();
 
 
 
   const [country, setcountry] = useState([]);
+  const [form1] = Form.useForm();
+  const [form2] = Form.useForm();
 
   const [province, setprovince] = useState([]);
   const [city, setcity] = useState([]);
@@ -191,93 +193,346 @@ const UpdateCompany = () => {
       dataIndex: 'name',
       width: '30%',
       align:"center",
-      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
-
+      render: (text, record) =>{
+        if (editingRowbook2 === record.id) {
+          return (
+            <Form.Item
+          name="name"          
+          rules={[
+            {
+              required: true,
+              message: `${t("addnewholder")}`,
+            },
+          ]}
+        >
+          <Input onChange={e=>setShareholdername(e.target.value)} />
+        </Form.Item>
+          );
+        } else {
+           return  <div style={{ textAlign: "left" }}>{text}</div>
+        }
+      } 
+     
     },
     {
       title:  `${t("Shares")}`,
       dataIndex: 'shares',
       align:"center",
+      render: (text, record) =>{
+        if (editingRowbook2 === record.id) {
+          return (
+            <Form.Item
+          name="shares"
+          rules={[
+            {
+              required: true,
+              message: `${t("Selectsharepourcent")}`,
+            },
+          ]}
+        >
+          <InputNumber
+            // disabled={SHselected}
+            min={0}
+            max={100}
+            size={'large'}
+            formatter={(value) => `${value}%`}
+            parser={(value) => value.replace('%', '')}
+            // onChange={e=>setShareHolderShares(e)}
+            onChange={e=>setShareholdershares(e)}
 
-      render: (_, record) =>(
-          <div style={{textAlign: "right"}}>{record.shares}%</div>
-        )
+          />
+
+        </Form.Item>
+          );
+        } else {
+           return  <div style={{textAlign: "right"}}>{record.shares}%</div>
+        }
+      } 
+
+     
     },
     {
       title:  `${t("Startdate")}`,
       dataIndex: 'startedAt',
       align:"center",
+      render: (text, record) =>{
+        if (editingRowbook2 === record.id) {
+          return (
+            <Form.Item
+            name="startedAt"
+            rules={[
+              {
+                required: true,
+                message: `${t("selectdate")}`,
+              },
+            ]}
+            >
+              <DatePicker
+                style={{ width: "200" }}
+                format={"YYYY-MM-DD"}
+                size={"large"}
+                placeholder={t("selectdate")}
+                onChange={e=>setShareholderstart(e)}
 
-      render: (_, record) =>(
-          <div style={{textAlign: "center"}}>{dayjs(record.startedAt).format('YYYY/MM/DD')}</div>
-        )
+              />
+            </Form.Item>
+          );
+        } else {
+           return  <div style={{textAlign: "center"}}>{dayjs(record.startedAt).format('YYYY/MM/DD')}</div>
+        }
+      } 
+
     },
     {
-      title: 'Actions',
-      dataIndex: 'operation',
-      align:"center",
-
+      title: "Actions",
+      align: "center",
       render: (_, record) =>
-        shareHolderData.length >= 1 ? (
-          <Popconfirm title={t("Suretodelete")} onConfirm={() => handleshareholderDelete(record.id)}>
-            <a>{t("Delete")}</a>
+      shareHolderData.length >= 1 ? (
+        <Space size="middle">
+          {
+          editingRowbook2 === record.id?
+          <>
+          <Button type="link" onClick={()=>setEditingRowbook2(null)}>
+            {t("cancel")}
+          </Button>
+          <Button type="link" onClick={()=>updateShareholderdata(record.id)}>
+            {t("save")}
+          </Button>
+          </>
+          
+          :
+          <>
+             <Popconfirm
+              type="link"
+              onClick={() => {
+                setEditingRowbook2(record.id);
+                form2.setFieldsValue({
+                  name: record.name,
+                  shares:record.shares,
+                  startedAt: dayjs(record.startedAt)
+                });
+              }}
+            >
+                <a> {t("edit")}</a>
           </Popconfirm>
-        ) : null,
+          
+          <Popconfirm
+              title={t("Suretodelete")}
+              cancelText={t("no")}
+              okText={t("yes")}
+              onConfirm={() => handleshareholderDelete(record.id)}
+            >
+              <a style={{ marginLeft: ".5rem" }}> {t("Delete")}</a>
+            </Popconfirm>
+
+        
+          </>
+          }
+          
+        </Space>
+        
+      ) : null,
+
+       
     },
+   
   ];
   const defaultmanagerColumns = [
     {
-      title: 'Id',
-      dataIndex: 'id',
-      align:"center",
-
-      render: (text, record) =>(
-        <div style={{textAlign: "right"}}>{text}</div>
-      )
+      title: "Id",
+      dataIndex: "id",
+      align: "center",
+      render: (text, record) => (
+        <div style={{ textAlign: "right" }}>{text}</div>
+      ),
     },
     {
-      title:  `${t("Lastname")}`,
-      dataIndex: 'name',
-      width: '30%',
-      align:"center",
-      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
+      title: `${t("Lastname")}`,
+      dataIndex: "name",
+      width: "30%",
+      align: "center",
+      render: (text, record) =>{
+        if (editingRowbook === record.id) {
+          return (
+            <Form.Item
+            name="name"
+            
 
+            rules={[
+              {
+                required: true,
+                message: `${t("Pleaseinputthemanagerfirstname")}`,
+              },
+            ]}
+          >
+            <Input onChange={e=>setManagerlastname(e.target.value)} placeholder={`${t("Pleaseinputthemanagerfirstname")}`} />
+          </Form.Item>
+          );
+        } else {
+           return  <div style={{ textAlign: "left" }}>{text}</div>
+        }
+      } 
     },
     {
       title: `${t("Firstname")}`,
-      dataIndex: 'firstName',
-      align:"center",
-      render:(text,record)=><div style={{textAlign: "left"}}>{text}</div>
-
+      dataIndex: "firstName",
+      align: "center",
+      render: (text, record) => {
+        if (editingRowbook === record.id) {
+          return (
+            <Form.Item
+            name="firstName"
+            
+            rules={[
+              {
+                required: true,
+                message: `${t("Pleaseinputthemanagerlastname")}`,
+              },
+            ]}
+          >
+            <Input onChange={f=>setManagername(f.target.value)} placeholder={`${t("Pleaseinputthemanagerlastname")}`} />
+          </Form.Item>
+          );
+        } else {
+           return  <div style={{ textAlign: "left" }}>{text}</div>
+        }
+      }
+     
     },
     {
       title: `${t("Titles")}`,
-      dataIndex: 'titles',
-      align:"center",
+      dataIndex: "titles",
+      align: "center",
 
-      render :(_,record)=>{
-        return record.titles.map(o=><div style={{textAlign: "left"}}><Tag >{o.title.label}</Tag></div> )
+      render: (_, record) => {
+        if (editingRowbook === record.id) {
+          return (
+            <Form.Item
+            name="titles"
+           
+            rules={[
+              {
+                required: true,
+                message: `${t("Pleaseinputthemanagertitle")}`,
+              },
+            ]}
+          >
+            <Select
+              mode="multiple"
+              allowClear
+              placeholder={t("selectmanagerstitles")}
+              size={"large"}
+              // onChange={titlesState}
+              onChange={(e)=>titlesState(e)}
+            >
+              {Titles.map(
+                (e) => e && <Option value={e.id}>{e.label}</Option>
+              )}
+            </Select>
+          </Form.Item>
+          );
+        } else {
+           return record.titles.map((o) => (
+          <div style={{ textAlign: "left" }}>
+            <Tag>{o.title.label}</Tag>
+          </div>
+        ));
       }
+      }
+
+       
     },
     {
-      title:  `${t("Yearsofexperience")}`,
-      dataIndex: 'yearsOfExperience',
-      align:"center",
+      title: `${t("Yearsofexperience")}`,
+      dataIndex: "yearsOfExperience",
+      align: "center",
+      render: (text, record) => {
+        if (editingRowbook === record.id) {
+          return (
+            <Form.Item name="yearsOfExperience">
+              <InputNumber
+                // disabled={SHselected}
+                min={0}
+                max={100}
+                size={"large"}
+                onChange={f=>setManagerexp(f)}
 
-      render:(text,record)=><div style={{textAlign: "right"}}>{text}</div>
+              />
+            </Form.Item>
+          );
+        } else {
+          return <div style={{ textAlign: "right" }}>{text}</div>
+          
+        }
+        },
     },
     {
-      title: 'Actions',
-      dataIndex: 'operation',
-      align:"center",
-
+      title: "Actions",
+      align: "center",
       render: (_, record) =>
       ManagerData.length >= 1 ? (
-          <Popconfirm title={t("Suretodelete")} cancelText={t("no")} okText={t("yes")} onConfirm={() => handlemanagerDelete(record.id)}>
-            <a>{t("Delete")}</a>
+        <Space size="middle">
+          {
+          editingRowbook === record.id?
+          <>
+          <Button type="link" onClick={()=>setEditingRowbook(null)}>
+            {t("cancel")}
+          </Button>
+          <Button type="link" onClick={()=>updateManagerdata(record.id)}>
+            {t("save")}
+          </Button>
+          </>
+          
+          :
+          <>
+             <Popconfirm
+              type="link"
+              onClick={() => {
+                setEditingRowbook(record.id);
+                form1.setFieldsValue({
+                  name: record.name,
+                  firstName:record.firstName,
+                  titles:record.titles.map(o=>o.title.id),
+                  yearsOfExperience: record.yearsOfExperience
+                });
+              }}
+            >
+                <a> {t("edit")}</a>
           </Popconfirm>
-        ) : null,
+          
+          <Popconfirm
+              title={t("Suretodelete")}
+              cancelText={t("no")}
+              okText={t("yes")}
+              onConfirm={() => handlemanagerDelete(record.id)}
+            >
+              <a style={{ marginLeft: ".5rem" }}> {t("Delete")}</a>
+            </Popconfirm>
+          </>
+          }
+          
+        </Space>
+        
+      ) : null,
+
+       
     },
+    // {
+    //   title: "Actions",
+    //   dataIndex: "operation",
+    //   align: "center",
+    //   render: (_, record) =>
+    //     ManagerData.length >= 1 ? (
+    //       <Popconfirm
+    //         title={t("Suretodelete")}
+    //         okText={t("yes")}
+    //         cancelText={t("no")}
+    //         onConfirm={() => handlemanagerDelete(record.id)}
+    //       >
+    //         <a>{t("Delete")}</a>
+    //       </Popconfirm>
+    //     ) : null,
+    // },
   ];
   const shareholdercolumns = defaultshareholderColumns.map((col) => {
       return col;
@@ -293,12 +548,27 @@ const [RevenueModel,setRevenueModel]=useState([]);
 const [Customer,setCustomer]=useState([]);
 const [Customerselected,setCustomerselected]=useState([]);
 
+const [managerid,setManagerid]=useState(null);
+const [managername,setManagername]=useState(null);
+const [managerlastname,setManagerlastname]=useState(null);
+const [managertitles,setManagertitles]=useState([]);
+const [managerexp,setManagerexp]=useState(null);
+
+const [shareholdername,setShareholdername]=useState(null);
+const [shareholdershares,setShareholdershares]=useState(null);
+const [shareholderstart,setShareholderstart]=useState(null);
+
+
+
 const [BusinessPartner,setBusinessPartner]=useState([]);
 const [StrategicTarget,setStrategicTarget]=useState([]);
 const [ActivityType,setActivityType]=useState([]);
 const [Product,setProduct]=useState([]);
 const [Productselected,setProductselected]=useState([]);
 const [StrategicTargetselected,setStrategicTargetselected]=useState([]);
+const [editingRowbook, setEditingRowbook] = useState(null);
+const [editingRowbook2, setEditingRowbook2] = useState(null);
+
 
 const [ShareHolders,setShareHolders]=useState([]);
 const [Managers,setManagers]=useState([]);
@@ -360,7 +630,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
       ll = t("StrategictargetsButton");
 
       break;
-//f
+
     case "Customers": // toto vaut 0 donc ce cas correspond
       ll = t("AddnewcustomerButton");
       break;
@@ -461,7 +731,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
           rules={[
             {
               required: true,
-              message: `${t(" Pleaseinputthe") + "" + ll}`,
+              message: `${ll}`,
             },
           ]}
         >
@@ -474,7 +744,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
           rules={[
             {
               required: true,
-              message: `Please input the ${data.data} Shares!`,
+              message: `${t("Selectsharepourcent")}`,
             },
           ]}
         >
@@ -500,17 +770,16 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         rules={[
           {
             required: true,
-            message: `${t("Pleaseinputthe" + "" + ll)}`,
+            message: `${t("selectdate")}`,
           },
         ]}
         >
-          <DatePicker format={"YYYY-MM-DD"} size={'large'} 
-          // onChange={(date) => {
-          // const d = new Date(date).toLocaleDateString('en-US');
-          // console.log(date);
-          // setDate({date,d});
-          // }}
-          />
+          <DatePicker
+                style={{ width: "200" }}
+                format={"YYYY-MM-DD"}
+                size={"large"}
+                placeholder={t("selectdate")}
+              />
         </Form.Item>
       </Form>
       </Modal>
@@ -559,7 +828,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
           rules={[
             {
               required: true,
-              message: `${t("Pleaseinputthemanagerfirstname")}`,
+              message: `${t("Pleaseinputthemanagerlastname")}`,
             },
           ]}
         >
@@ -576,7 +845,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
           },
         ]}
       >
-        <Select mode="multiple" allowClear placeholder={t("selectmanagerstitles")} size={'large'} onChange={titlesState}>
+        <Select mode="multiple" allowClear placeholder={t("selectmanagerstitles")} size={'large'}>
           {Titles.map((e)=>(
 
             e&&<Option value={e.id}>{e.label}</Option>
@@ -681,7 +950,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         ]}
       >
 
-<Input />
+<Input placeholder={ll}/>
       </Form.Item>
 
       <Form.Item
@@ -695,7 +964,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
             ]}
       >
 
-<TextArea />
+<TextArea placeholder={ll}/>
       </Form.Item>
       </Form>
       </Modal> 
@@ -732,15 +1001,15 @@ const CollectionCreateForm = ({ open, onCreate, onCancel, data }) => {
         
       <Form.Item
       name="label"
-      label={"Label"}
+      label={t("Label")}
       rules={[
         {
           required: true,
-          message: `Please input the ${data.data} label!`,
+          message: `${ll}`,
         },
       ]}
       >
-      <Input />
+              <Input style={{ width: "250" }} placeholder={ll} />
       </Form.Item>
       </Form>
       </Modal> 
@@ -1164,7 +1433,6 @@ const filteredmanagerOptions = Managers.filter(o => {
   return notFound;
 });
 const [shareHolderShares,setShareHolderShares]=useState();
-const [Managerexp,setManagerexp]=useState();
 const [messageApi, contextHolder] = message.useMessage();
 
 const handleChange = (event) => {
@@ -1189,11 +1457,21 @@ const [Open, setOpen] = useState({
       setCustomer([...Customer,{
         name:values.name
       }]);
-      
+      messageApi.open({
+        type: "success",
+        content: `${t("valuesaddedSuccessfully")}`,
+        
+      });
+
     }else if(url=="Products"){
       setProduct([...Product,{
         label:values.label
       }])
+      messageApi.open({
+        type: "success",
+        content: `${t("valuesaddedSuccessfully")}`,
+        
+      });
     }
     else if(url=="Managers"){
 
@@ -1216,7 +1494,11 @@ const [Open, setOpen] = useState({
       yearsOfExperience: values.yearsOfExperience?values.yearsOfExperience:0
 
       }])
-
+      messageApi.open({
+        type: "success",
+        content: `${t("valuesaddedSuccessfully")}`,
+        
+      });
       setCount(count+1);
 
     }
@@ -1225,6 +1507,11 @@ const [Open, setOpen] = useState({
         type:values.type,
         details:values.details
       }]);
+      messageApi.open({
+        type: "success",
+        content: `${t("valuesaddedSuccessfully")}`,
+        
+      });
     }
     else if(url=="ShareHolders"){
       setShareHolders([...ShareHolders,{
@@ -1234,6 +1521,11 @@ const [Open, setOpen] = useState({
         date:values.startedAt,
         startedAt:new Date(values.startedAt).toLocaleDateString('en-US')
       }]);
+      messageApi.open({
+        type: "success",
+        content: `${t("valuesaddedSuccessfully")}`,
+        
+      });
       setCountsh(countsh+1)
     }
     else{
@@ -1244,7 +1536,7 @@ const [Open, setOpen] = useState({
 
         messageApi.open({
           type: 'success',
-          content: 'values were added to ' + data + " Successfully!",
+          content: `${t("valuesaddedSuccessfully")}`,
         });
       })
       }
@@ -1294,6 +1586,12 @@ const [Open, setOpen] = useState({
     setDateend( dayjs(dates,"YYYY-MM-DD").clone().add(12, 'months'));
 
   };
+  const Edited = (e) => {
+    e.preventDefault();
+        // onClick={()=>updateManagerdata(record.id)}
+    console.log("values are :", e);
+  };
+
   const addShareholderdata = () => {
 
     const d= ShareHolders.filter(e=>e.id===shareHolderId);
@@ -1308,6 +1606,79 @@ const [Open, setOpen] = useState({
     }
     
         console.log("after add:",shareHolderData);
+  }
+
+  const updateShareholderdata=(e)=>{
+
+    const newshareholderdata = shareHolderData.map((sh)=>{
+      if(sh.id==e){
+        return {...sh,  
+          name:shareholdername?shareholdername:sh.name,
+          shares:shareholdershares?shareholdershares:sh.shares,
+          startedAt:shareholderstart?shareholderstart:sh.startedAt,
+        };
+
+      }else return sh;
+    })
+    setShareHolderData(newshareholderdata);
+    setShareholdername(null);
+    setShareholdershares(null);
+    setShareholderstart(null);
+    setEditingRowbook2(null);
+
+  }
+
+  const updateManagerdata = (e) => {
+
+    const m= Managers.filter(e=>e.id===ManagerId);
+
+    console.log("managerlastname",managerlastname);
+
+    const newmanagerdata = ManagerData.map((manager) => {
+      var titles = null ;
+      if(managertitles)
+      {
+        titles = Titles.filter(o => {
+          let notFound = false;
+          managertitles.forEach(d=>{
+            if(d == o.id) notFound = true;
+          });
+          return notFound;
+        });
+      }
+       
+
+      console.log("titles",titles);
+      // console.log("titles 1",titles.map(t=>{return{title:t}}));
+
+      if (manager.id === e) {
+        return {...manager,  
+          name:managerlastname?managerlastname:manager.name,
+          firstName:managername?managername:manager.firstName,
+          titles:managertitles?titles.map(t=>{return{title:t}}):manager.titles,
+          yearsOfExperience:managerexp?managerexp:manager.yearsOfExperience,
+        };
+      }
+
+      return manager;
+    });
+  
+    setManagerData(newmanagerdata);
+    setManagerlastname(null);
+    setManagername(null);
+    setManagerexp(null);
+    setManagertitles(null);
+    // ManagerData.map(manager=>manager.id==e ? {...manager,
+    //   name:managername?
+    //   managername
+    //   :
+    //   m[0].name,
+    //   firstName:managerlastname?managerlastname:m[0].firstName,
+    //   titles:managertitles?managertitles:m[0].titles,
+    //   yearsOfExperience:managerexp?managerexp:m[0].yearsOfExperience
+    // } : manager)
+    
+    setEditingRowbook(null);
   }
 
   const addManagerdata = () => {
@@ -1353,7 +1724,7 @@ const [Open, setOpen] = useState({
 
   const titlesState = event => {
     console.log(event);
-    // setTitlesData(event)
+     setManagertitles(event);
   }
   const handleInputChange = event => {
     const { name, value } = event.target;
@@ -1466,10 +1837,10 @@ const [Open, setOpen] = useState({
      
        <Result
        status="success"
-       title="The Company has been updated successfully"
+       title={t("TheCompanyhasbeenupdatedsuccessfully")}
        extra={[
          <Button type="link" onClick={gotoGI}>
-         <span className="label">Return to General Informations</span>
+              <span className="label">{t("ReturntoGeneralInformations")}</span>
        </Button>
        ]}
      />
@@ -1556,7 +1927,7 @@ const [Open, setOpen] = useState({
       rules={[
         {
           required: true,
-          message: `please input the founding date`,
+          message: `${t("pleaseinputthefoundingdate")}`,
           // whitespace: true,
         },
       ]}
@@ -1564,7 +1935,11 @@ const [Open, setOpen] = useState({
       // validateStatus="error"
       // help="Please select right date"
     >
-        <DatePicker format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+        <DatePicker  placeholder={t("Selectdate")}
+              style={{
+                width: "50%",
+                textAlign: "center",
+              }} format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
       const d = new Date(date).toLocaleDateString('en-US');
       console.log(d);
       setDatefound(d);
@@ -1576,7 +1951,7 @@ const [Open, setOpen] = useState({
 <Form.Item
         {...formItemLayout}
       name="startPeriod"
-      label="Start Period"
+      label={t("StartPeriod")}
        
       // tooltip="What do you want others to call you?"
       rules={[
@@ -1592,18 +1967,18 @@ const [Open, setOpen] = useState({
       <Select disabled placeholder={t("SelectStartPeriod")}
         onChange={handleStartPeriodChange} size={'large'}>
 
-        <Option value={1}>{t("January")}</Option>
-        <Option value={2}>{t("February")}</Option>
-        <Option value={3}>{t("March")}</Option>
-        <Option value={4}>{t("April")}</Option>
-        <Option value={5}>{t("May")}</Option>
-        <Option value={6}>{t("June")}</Option>
-        <Option value={7}>{t("January")}</Option>
-        <Option value={8}>{t("August")}</Option>
-        <Option value={9}>{t("September")}</Option>
-        <Option value={10}>{t("October")}</Option>
-        <Option value={11}>{t("November")}</Option>
-        <Option value={12}>{t("December")}</Option>
+          <Option value={0}>{t("January")}</Option>
+          <Option value={1}>{t("February")}</Option>
+          <Option value={2}>{t("March")}</Option>
+          <Option value={3}>{t("April")}</Option>
+          <Option value={4}>{t("May")}</Option>
+          <Option value={5}>{t("June")}</Option>
+          <Option value={6}>{t("July")}</Option>
+          <Option value={7}>{t("August")}</Option>
+          <Option value={8}>{t("September")}</Option>
+          <Option value={9}>{t("October")}</Option>
+          <Option value={10}>{t("November")}</Option>
+          <Option value={11}>{t("December")}</Option>
       </Select>
     </Form.Item>
 
@@ -1678,7 +2053,7 @@ const [Open, setOpen] = useState({
             rules={[
               {
                 required: true,
-                message: `please input the city`,
+                message: `${t("pleaseinputthecity")}`,
                 // whitespace: true,
               },
             ]}
@@ -1708,7 +2083,7 @@ const [Open, setOpen] = useState({
       rules={[
         {
           required: true,
-          message: `please input the address`,
+          message: `${t("pleaseinputtheaddress")}`,
           // whitespace: true,
         },
       ]}
@@ -1725,7 +2100,7 @@ const [Open, setOpen] = useState({
       rules={[
         {
           required: true,
-          message: `please input the postal code`,
+          message: `${t("pleaseinputthepostalcode")}`,
           // whitespace: true,
         },
       ]}
@@ -1744,7 +2119,7 @@ const [Open, setOpen] = useState({
       rules={[
         {
           required: true,
-          message: `please input the start date`,
+          message: `${t("pleaseinputthestartdate")}`,
           // whitespace: true,
         },
       ]}
@@ -1752,7 +2127,8 @@ const [Open, setOpen] = useState({
       // validateStatus="error"
       // help="Please select right date"
     >
-        <DatePicker disabled format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
+        <DatePicker               placeholder={t("Selectdate")}
+ disabled format={"YYYY-MM-DD"} size={'large'} onChange={(date) => {
       // const d = new Date(date).toLocaleDateString('en-US');
       // console.log(d);
       setDatestart(date);
@@ -1786,7 +2162,7 @@ const [Open, setOpen] = useState({
           required: true,
           type: 'number',
           min: 0,
-          message: 'value cannot be less than 0',
+          message: `${t("valuecannotbelessthan0")}`,
 
         },
       ]}
@@ -1806,7 +2182,7 @@ const [Open, setOpen] = useState({
               rules={[
                 {
                   required: true,
-                  message: `please select the type of industry`,
+                  message: `${t("pleaseselectthetypeofindustry")}`,
                   // whitespace: true,
                 },
               ]}
@@ -1841,11 +2217,11 @@ const [Open, setOpen] = useState({
           {...formItemLayout}
 
       name="budget"
-      label="budget"
+      label="Budget"
       rules={[
         {
           required: true,
-          message: `please select the budget`,
+          message: `${t("pleaseselectthebudget")}`,
           // whitespace: true,
         },
       ]}
@@ -1890,7 +2266,7 @@ const [Open, setOpen] = useState({
               rules={[
                 {
                   required: true,
-                  message: `please select the market`,
+                  message: `${t("pleaseselectthemarket")}`,
                   // whitespace: true,
                 },
               ]}
@@ -1927,13 +2303,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="main_customers"
               label={t("MainCustomers")} 
-              rules={[
-                {
-                  required: true,
-                  message: `please select the customer`,
-                  // whitespace: true,
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: `${t("pleaseselectthecustomer")}`,
+              //     // whitespace: true,
+              //   },
+              // ]}
               noStyle
               // rules={[{ required: true, message: 'Please input the main customers!'}]}
             >
@@ -1971,7 +2347,7 @@ const [Open, setOpen] = useState({
               rules={[
                 {
                   required: true,
-                  message: `please select the revenue model`,
+                  message: `${t("pleaseselecttherevenuemodel")}`,
                   // whitespace: true,
                 },
               ]}
@@ -2011,7 +2387,7 @@ const [Open, setOpen] = useState({
                rules={[
                 {
                   required: true,
-                  message: `please select the business partner`,
+                  message: `${t("pleaseselectthebusinesspartner")}`,
                   // whitespace: true,
                 },
               ]}
@@ -2055,7 +2431,7 @@ const [Open, setOpen] = useState({
               rules={[
                 {
                   required: true,
-                  message: `please select the strategic target`,
+                  message: `${t("pleaseselectthestrategictarget")}`,
                   // whitespace: true,
                 },
               ]}
@@ -2098,7 +2474,7 @@ const [Open, setOpen] = useState({
               rules={[
                 {
                   required: true,
-                  message: `please select the activity type`,
+                  message: `${t("pleaseselecttheactivitytype")}`,
                   // whitespace: true,
                 },
               ]}
@@ -2135,13 +2511,13 @@ const [Open, setOpen] = useState({
             <Form.Item
               name="product"
               label={t("ProductsServices")} 
-                rules={[
-                {
-                  required: true,
-                  message: `please select the product / service`,
-                  // whitespace: true,
-                },
-              ]}
+              //   rules={[
+              //   {
+              //     required: true,
+              //     message: `${t("pleaseselecttheproductservice")}`,
+              //     // whitespace: true,
+              //   },
+              // ]}
               noStyle
             >
               <Select mode="multiple" allowClear placeholder={t("selecttheproductsservices")} onChange={e=>setProductselected(Product.filter(p=> e.includes(p.id)))}  size={'large'} style={{ width: '100%', }}>
@@ -2235,13 +2611,21 @@ const [Open, setOpen] = useState({
 
    
       </Space>
-    <Table
+
+      <Form form={form1} onFinish={Edited}>
+            <Table
+              bordered
+              dataSource={ManagerData}
+              columns={managercolumns}
+            />
+          </Form>
+    {/* <Table
         rowClassName={() => 'editable-row'}
         bordered
         dataSource={ManagerData}
         columns={managercolumns}
 
-      />
+      /> */}
       
 
       <Divider orientation="left">{t("Legalstructure")}</Divider>
@@ -2306,14 +2690,13 @@ const [Open, setOpen] = useState({
 
    
       </Space>
-  <Table
-        rowClassName={() => 'editable-row'}
-        bordered
-        dataSource={shareHolderData}
-        columns={shareholdercolumns}
-
-      />
-
+      <Form form={form2} onFinish={Edited}>
+        <Table
+            bordered
+            dataSource={shareHolderData}
+            columns={shareholdercolumns}
+        />
+      </Form>
     <Form.Item {...tailFormItemLayout}>
       
       <Space style={{marginTop:10}}>

@@ -22,9 +22,12 @@ import Testpage from "./pages/Testpage";
 import UpdateCompany from "./pages/UpdateCompany";
 import StrategicPlanning from "./pages/StrategicPlanning";
 import Chartofaccounts from "./pages/Chartofaccounts";
+import ChartofAcount from "./pages/ChartofAcount";
+
 import Newchartofaccounts from "./pages/Newchartofaccounts";
 import SalesOpportunities from "./pages/SalesOpportunities";
 import OpportunityDetails from "./pages/OpportunityDetails";
+import HyphotheseofGl from "./pages/HyphotheseofGl";
 
 function App() {
   const [Company,setCompany]=useState(null);
@@ -72,7 +75,11 @@ function App() {
         <RouteGuard exact path='/updatecompany'><UpdateCompany /></RouteGuard>
         <RouteGuard exact path='/comingsoon'><ComingSoon /></RouteGuard>
         <RouteGuard exact path='/strategicplanning'><StrategicPlanning/></RouteGuard>
-        <RouteGuard exact path='/chartofaccounts'><Chartofaccounts/></RouteGuard>
+        <RouteGuard exact path='/chartofaccounts1'><Chartofaccounts/></RouteGuard>
+        <RouteGuard exact path='/chartofaccounts'><ChartofAcount/></RouteGuard>
+
+        <RouteGuard exact path='/glaccountsandhyphotheses'><HyphotheseofGl/></RouteGuard>
+
         <RouteGuard exact path='/testpage'><Testpage /></RouteGuard>
         <RouteGuard exact path='/new_chart_of_accounts'><Newchartofaccounts /></RouteGuard>
 
