@@ -1539,16 +1539,29 @@ const AddCompany = () => {
     console.log("Received manager data of form: ", ManagerData);
     console.log("Received shareholder of form: ", shareHolderData);
 
-    var dates = values.date_start.$y + "-" + values.startPeriod + "-01";
+    var dates = values.date_start.$y + "-" + values.startPeriod + "-20";
    
 
-    const startDate = new Date(dates);
-    const endDate = new Date(startDate);
+   
+    // const startDate = new Date(dates);
+    // const endDate = new Date(startDate.getTime()); // create a new instance of Date
 
-    console.log(startDate);
+    // console.log(startDate);
 
-    endDate.setMonth(startDate.getMonth() + 12);
-    console.log(endDate);
+    // endDate.setMonth(startDate.getMonth() + 12);
+    // console.log(endDate);
+
+
+    const startDate = new Date(dates); // replace with your start date variable
+
+const year = startDate.getFullYear();
+const month = startDate.getMonth();
+const day = startDate.getDate();
+
+const endDate = new Date(year, month + 11, day);
+
+console.log(startDate.toISOString().substring(0, 10)); // output start date in yyyy-mm-dd format
+console.log(endDate.toISOString().substring(0, 10)); // output end date in yyyy-mm-dd format
 
     var companyinfo = {
       name: values.nom_de_la_société,
@@ -1835,18 +1848,18 @@ const AddCompany = () => {
                 width: "50%",
               }}
             >
-              <Option value={0}>{t("January")}</Option>
-              <Option value={1}>{t("February")}</Option>
-              <Option value={2}>{t("March")}</Option>
-              <Option value={3}>{t("April")}</Option>
-              <Option value={4}>{t("May")}</Option>
-              <Option value={5}>{t("June")}</Option>
-              <Option value={6}>{t("July")}</Option>
-              <Option value={7}>{t("August")}</Option>
-              <Option value={8}>{t("September")}</Option>
-              <Option value={9}>{t("October")}</Option>
-              <Option value={10}>{t("November")}</Option>
-              <Option value={11}>{t("December")}</Option>
+              <Option value={1}>{t("January")}</Option>
+              <Option value={2}>{t("February")}</Option>
+              <Option value={3}>{t("March")}</Option>
+              <Option value={4}>{t("April")}</Option>
+              <Option value={5}>{t("May")}</Option>
+              <Option value={6}>{t("June")}</Option>
+              <Option value={7}>{t("July")}</Option>
+              <Option value={8}>{t("August")}</Option>
+              <Option value={9}>{t("September")}</Option>
+              <Option value={10}>{t("October")}</Option>
+              <Option value={11}>{t("November")}</Option>
+              <Option value={12}>{t("December")}</Option>
             </Select>
           </Form.Item>
 

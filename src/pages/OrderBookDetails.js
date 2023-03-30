@@ -1141,7 +1141,7 @@ const OrderBookDetails = () => {
       SummaryDetails && SummaryDetails.decemberRevenue,
     ];
   
-    const startingMonthIndex = Company.startPeriod - 1;
+    const startingMonthIndex = Company.startPeriod-1;
   
     for (let i = 0; i < months.length; i++) {
       const monthIndex = (i + startingMonthIndex) % months.length;
@@ -1188,7 +1188,11 @@ const OrderBookDetails = () => {
 
       <Title level={4}>{t("Commands")}</Title>
       <Row justify="end" gutter={[16, 16]}>
-        <Space align="center">
+        <Space style={{
+          display: 'flex',
+          marginBottom: 8,
+
+        }} align="center">
           <Button
             onClick={() => {
               setOpen({ open: true, url: "Customers", data: "Customer" });

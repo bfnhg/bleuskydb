@@ -278,7 +278,7 @@ const SalesOpportunities = () => {
     bordered={false}
     className="header-solid mb-24"
     title={
-        <h6 className="font-semibold">{t("opportunitybook")}</h6>
+        <h3 className="font-semibold">{t("opportunitybook")}</h3>
     }
   >
     

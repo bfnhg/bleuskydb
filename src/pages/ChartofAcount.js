@@ -7,6 +7,7 @@ import {
   Collapse,
   Popconfirm,
   Modal,
+  Card,
   message,
   Form,
   Checkbox,
@@ -15,9 +16,12 @@ import {
   Typography,
   Divider,
   Space,
+  Col,
   Row,
   Descriptions,
 } from "antd";
+import { DownloadOutlined } from '@ant-design/icons';
+
 import { JSON_API } from "../services/Constants";
 import { CompanyContext } from '../contexts/CompanyContext';
 import axios from "axios";
@@ -57,6 +61,7 @@ function ChartofAcount() {
   const [loading, setLoading] = useState(false);
 
   const [ChartofAccounts,setChartofAccounts] = useState(null);
+  const [loadings, setLoadings] = useState(false);
 
   const { Panel } = Collapse;
   const [year,setYear]=useState(null);
@@ -210,7 +215,7 @@ function ChartofAcount() {
           // Something happened in setting up the request that triggered an Error
           console.log("Error", error.message);
         }
-        console.log(error.config);
+        setChartofAccounts(null);
       });
 
   };
@@ -230,6 +235,7 @@ function ChartofAcount() {
 
   }
   const downloadFile = async () => {
+    setLoadings(true);
     const response = await axios.get(`${JSON_API}/ChartAccounts/Print?year=${year}&enterpriseId=${Company.id}`, {
       responseType: 'blob',
     });
@@ -243,6 +249,8 @@ function ChartofAcount() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    setLoadings(false);
+
   };
   const Submit = async (e) => {
 
@@ -343,17 +351,17 @@ function ChartofAcount() {
             ]}
           >
             <Select
-              // style={{
-              //   width: 470,
-              // }}
+              style={{
+                width: 550,
+              }}
               disabled={props.form==form2?true:false}
 
               onChange={handletype}
 
             >
               {statementtype.map((o) => {
-                return <Option value={o.gifi}>{o.gifi}</Option>;
-              })}
+              return <Option value={o.gifi}>{"(GIFI: "+ o.gifi +") "+ o.description}</Option>;
+            })}
             </Select>
           </Form.Item>
 
@@ -430,6 +438,8 @@ function ChartofAcount() {
       <Modal
         forceRender
         open={open}
+        width={800}
+
         style={{ textAlign: 'center' }}
         title={<h3 >Create a new Account for {Company.name}</h3>}
         okText="Créer"
@@ -469,6 +479,7 @@ function ChartofAcount() {
         open={open}
         title="Update account"
         okText="Update"
+        width={800}
         cancelText="Cancel"
         footer={[
           <Button key="back" cancelText="Cancel" onClick={onCancel}>
@@ -526,7 +537,7 @@ function ChartofAcount() {
       // dataIndex: "financialStatementTypeId",
       align: "center",
       // render: (text) => <a>{text}</a>,
-      render: (_,record) => <div style={{ textAlign: "left" }}>{record.financialStatementType.gifi}</div> ,
+      render: (_,record) => <div style={{ textAlign: "right" }}>{record.financialStatementType.gifi}</div> ,
 
     },
     {
@@ -589,14 +600,18 @@ function ChartofAcount() {
   ];
 
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>
-        Chart of accounts for {Company.name}
-      </h1>
-      <br></br>
-      <div>
-        <span>
-          <DatePicker
+    <Card
+    bordered={false}
+    className="header-solid mb-24"
+    title={
+        <h3 className="font-semibold"> Chart of Accounts for: {Company.name}</h3>
+    }
+  >
+    
+          
+        <Row>
+          <Col span={8}>
+            <DatePicker
             defaultValue={dayjs(date)}
             name="year"
             picker="year"
@@ -604,14 +619,15 @@ function ChartofAcount() {
             style={{ width: 200, height: 35 }}
             onChange={onChangee}
           />
-        </span>
 
         <Button
           className="Create-button"
           type="primary"
+          loading={loadings} 
+          icon={<DownloadOutlined />}
           style={{
-            width: 80,
-            height: 35,
+            // width: 80,
+            // height: 35,
             marginLeft: "2rem",
           }}
           onClick={() => {
@@ -621,11 +637,15 @@ function ChartofAcount() {
         >
           Print
         </Button>
-        <div
-          style={{
-            textAlign: "right",
-          }}
-        >
+
+          </Col>
+          <Col span={6} offset={10}>
+            <Space style={{
+          // display: 'flex',
+          marginBottom: 8,
+        }} >
+
+        
           <Button
             className="Create-button"
             type="primary"
@@ -654,7 +674,7 @@ function ChartofAcount() {
             disabled
             style={{
               textAlign: "right",
-              marginLeft: "2rem",
+              marginLeft:5,
             }}
             onClick={() => {
               // setOpenupdate(true);
@@ -671,13 +691,14 @@ function ChartofAcount() {
               setOpenupdate(false);
             }}
           />
+        </Space>
+          </Col>
+        </Row>
 
-        </div>
-      </div>
-      <div>
+        
+      
         <Table columns={columns} dataSource={ChartofAccounts} bordered />
-      </div>
-    </div>
+    </Card>
   );
 }
  export default ChartofAcount;

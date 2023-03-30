@@ -10,6 +10,7 @@ import {
   SmileOutlined,
   SyncOutlined,
   AimOutlined,
+  BlockOutlined,
   BookFilled,
   ReconciliationOutlined,
   BookOutlined
@@ -279,7 +280,7 @@ function Sidenav({ color }) {
               style={{
                 background:"",
               }}
-            >            <LoadingOutlined />
+            >            <BlockOutlined /> 
 
             </span>
             <span className="label">GL Accounts & Hyphotheses</span>

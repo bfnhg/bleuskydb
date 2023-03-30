@@ -1967,18 +1967,18 @@ const [Open, setOpen] = useState({
       <Select disabled placeholder={t("SelectStartPeriod")}
         onChange={handleStartPeriodChange} size={'large'}>
 
-          <Option value={0}>{t("January")}</Option>
-          <Option value={1}>{t("February")}</Option>
-          <Option value={2}>{t("March")}</Option>
-          <Option value={3}>{t("April")}</Option>
-          <Option value={4}>{t("May")}</Option>
-          <Option value={5}>{t("June")}</Option>
-          <Option value={6}>{t("July")}</Option>
-          <Option value={7}>{t("August")}</Option>
-          <Option value={8}>{t("September")}</Option>
-          <Option value={9}>{t("October")}</Option>
-          <Option value={10}>{t("November")}</Option>
-          <Option value={11}>{t("December")}</Option>
+          <Option value={1}>{t("January")}</Option>
+          <Option value={2}>{t("February")}</Option>
+          <Option value={3}>{t("March")}</Option>
+          <Option value={4}>{t("April")}</Option>
+          <Option value={5}>{t("May")}</Option>
+          <Option value={6}>{t("June")}</Option>
+          <Option value={7}>{t("July")}</Option>
+          <Option value={8}>{t("August")}</Option>
+          <Option value={9}>{t("September")}</Option>
+          <Option value={10}>{t("October")}</Option>
+          <Option value={11}>{t("November")}</Option>
+          <Option value={12}>{t("December")}</Option>
       </Select>
     </Form.Item>
 

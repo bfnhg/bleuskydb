@@ -37,7 +37,6 @@ const SalesOrderBook = () => {
   const getorderbooks = async ()=>{
     await axios.get(`${JSON_API}/OrderBooks/enterprise/${Company.id}`)
     .then((response)=>{
-      console.log("orderbook:",response.data);
       setDataSource(response.data);
     }).catch(function (error) {
       if (error.response) {
@@ -56,8 +55,6 @@ const SalesOrderBook = () => {
         console.log('Error', error.message);
       }
       setDataSource(null);
-
-      console.log(error.config);
     });
   };
 
@@ -283,7 +280,7 @@ const SalesOrderBook = () => {
     bordered={false}
     className="header-solid mb-24"
     title={
-        <h6 className="font-semibold">{t("orderbook")}</h6>
+        <h3 className="font-semibold">{t("orderbook")}</h3>
     }
   >
     
