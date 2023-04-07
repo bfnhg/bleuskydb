@@ -31,6 +31,9 @@ import HyphotheseofGl from "./pages/HyphotheseofGl";
 import Strategic_Planning from "./pages/Strategic_planning";
 import StrategicPlans from "./pages/StrategicPlans";
 
+import Liabilities from "./pages/Financial Statement/Liability";
+import LiabilityDetail from "./pages/Financial Statement/LiabilityDetail";
+
 function App() {
   const [Company,setCompany]=useState(null);
   const [Companies,setCompanies]=useState([]);
@@ -89,6 +92,9 @@ function App() {
 
 
         <RouteGuard exact path='/generalinformations/:id'><Details /></RouteGuard>
+
+        <RouteGuard exact path='/liabilities'><Liabilities /></RouteGuard>
+        <RouteGuard exact path='/liabilityDetail/:id'><LiabilityDetail /></RouteGuard>
 
         </Main>
         
