@@ -20,7 +20,7 @@ import RouteGuard from './components/layout/RouteGuard';
 import OrderBookDetails from "./pages/OrderBookDetails";
 import Testpage from "./pages/Testpage";
 import UpdateCompany from "./pages/UpdateCompany";
-import StrategicPlanning from "./pages/StrategicPlanning";
+// import StrategicPlanning from "./pages/StrategicPlanning";
 import Chartofaccounts from "./pages/Chartofaccounts";
 import ChartofAcount from "./pages/ChartofAcount";
 
@@ -28,6 +28,8 @@ import Newchartofaccounts from "./pages/Newchartofaccounts";
 import SalesOpportunities from "./pages/SalesOpportunities";
 import OpportunityDetails from "./pages/OpportunityDetails";
 import HyphotheseofGl from "./pages/HyphotheseofGl";
+import Strategic_Planning from "./pages/Strategic_planning";
+import StrategicPlans from "./pages/StrategicPlans";
 
 function App() {
   const [Company,setCompany]=useState(null);
@@ -74,7 +76,9 @@ function App() {
         <RouteGuard exact path='/addcompany'><AddCompany /></RouteGuard>
         <RouteGuard exact path='/updatecompany'><UpdateCompany /></RouteGuard>
         <RouteGuard exact path='/comingsoon'><ComingSoon /></RouteGuard>
-        <RouteGuard exact path='/strategicplanning'><StrategicPlanning/></RouteGuard>
+        {/* <RouteGuard exact path='/strategicplanning'><StrategicPlanning/></RouteGuard> */}
+        <RouteGuard exact path='/strategic_planning'><Strategic_Planning/></RouteGuard>
+        <RouteGuard exact path="/strategicplans/:id/:year"><StrategicPlans/></RouteGuard>
         <RouteGuard exact path='/chartofaccounts1'><Chartofaccounts/></RouteGuard>
         <RouteGuard exact path='/chartofaccounts'><ChartofAcount/></RouteGuard>
 

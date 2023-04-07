@@ -279,31 +279,31 @@ function HyphotheseofGl() {
       dataIndex: "financialStatementTypeGIFI",
       align: "center",
       render: (text, record) => {
-        if (editingRow === record.key) {
-          return (
-            <Form.Item
-              name="gifi"
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter your ",
-                },
-              ]}
-            >
-             <Select
-              size="large"
-              showSearch
-              placeholder="Select a Financial Statement Type"
-            >
-              {statementtype.map((o) => {
-              return <Option value={o.gifi}>{"(GIFI: "+ o.gifi +") "+ o.description}</Option>;
-            })}
-            </Select>
-            </Form.Item>
-          );
-        } else {
+        // if (editingRow === record.key) {
+        //   return (
+        //     <Form.Item
+        //       name="gifi"
+        //       rules={[
+        //         {
+        //           required: true,
+        //           message: "Please enter your ",
+        //         },
+        //       ]}
+        //     >
+        //      <Select
+        //       size="large"
+        //       showSearch
+        //       placeholder="Select a Financial Statement Type"
+        //     >
+        //       {statementtype.map((o) => {
+        //       return <Option value={o.gifi}>{"(GIFI: "+ o.gifi +") "+ o.description}</Option>;
+        //     })}
+        //     </Select>
+        //     </Form.Item>
+        //   );
+        // } else {
           return <div style={{ textAlign: "right" }}>{text}</div>;
-        }
+        // }
       },
     },
     {
@@ -589,7 +589,7 @@ const onFinishEdit= async(e)=>{
     glNumber: e.GLNumber,
     description: e.Description,
     enterpriseId: Company.id,
-    financialStatementTypeGIFI: e.gifi
+    // financialStatementTypeGIFI: e.gifi
   }
   console.log("updated data:",obj);
 

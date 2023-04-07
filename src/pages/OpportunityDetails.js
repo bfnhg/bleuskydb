@@ -905,7 +905,7 @@ const OpportunityDetails = () => {
     {
       title: <h3 style={{ textAlign: "center" }}>{t("Priceperday")}</h3>,
       dataIndex: "pricePerDay",
-      align: "left",
+      align: "center",
 
       render: (text, record) => {
         if (editingRowbook === record.id) {
@@ -927,7 +927,7 @@ const OpportunityDetails = () => {
     {
       title: <h3 style={{ textAlign: "center" }}>{t("Description")}</h3>,
       dataIndex: "description",
-      align: "left",
+      align: "center",
       render: (text, record) => {
         // console.log('t',customerClone);
         // const name= customerClone.length>0?customerClone.filter(o=>o.id==record.customerId)[0].name:"unkown";
@@ -946,7 +946,9 @@ const OpportunityDetails = () => {
             </Form.Item>
           );
         } else {
-          return <>{text}</>;
+          return ( <div style={{ textAlign: "left" }}>
+         {text}
+          </div>);
         }
       },
     },
