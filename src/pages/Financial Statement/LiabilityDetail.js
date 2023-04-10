@@ -68,12 +68,13 @@ function LiabilityDetail() {
   const [performance,setperformance] = useState([]);
   const [Note,setNote] = useState("");
   const [Category,setCategory] = useState();
+
+  const [Class,setClass] = useState();
   useEffect(()=>  {
     getLiability();
     getReals();
     getPerformance();
     getStatementClass();
-    handleclass();
     getHypothesis();
     },[Company.id]);
 
@@ -86,6 +87,8 @@ function LiabilityDetail() {
         setNote(res.data.note);
         {res.data.financialStatementCategory &&
           setCategory(res.data.financialStatementCategory.id);}
+          setClass(res.data.financialStatementClass.id);
+          handleclass(res.data.financialStatementClass.id);
         setGifi(res.data.financialStatementType.gifi);
         setglAccount(res.data.glAccount.glNumber);
         getHypothesis(res.data.glAccount.id);
@@ -134,8 +137,6 @@ function LiabilityDetail() {
       .delete(`${JSON_API}/Liability/${liability.id}`)
       .then((res) => {
         console.log(res.data);
-        
-        //setCategory(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -224,12 +225,12 @@ function LiabilityDetail() {
         console.log(err);
       });
   };
-  const handleclass = async () => {
+  const handleclass = async (ClassId) => {
     // console.log(e);
     await axios
-      .get(`${JSON_API}/FinancialStatementCategory/class/${id}`)
+      .get(`${JSON_API}/FinancialStatementCategory/class/${ClassId}`)
       .then((res) => {
-        console.log("testtest",res);
+        console.log(res);
         setStatementCategory(res.data);
       })
       .catch((err) => {
