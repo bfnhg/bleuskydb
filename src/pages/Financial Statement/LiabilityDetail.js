@@ -68,10 +68,12 @@ function LiabilityDetail() {
   const [performance,setperformance] = useState([]);
   const [Note,setNote] = useState("");
   const [Category,setCategory] = useState();
+  const [CategoryName,setCategoryName] = useState();
 
   const [Class,setClass] = useState();
   useEffect(()=>  {
     getLiability();
+    console.log(CategoryName);
     getReals();
     getPerformance();
     getStatementClass();
@@ -87,6 +89,8 @@ function LiabilityDetail() {
         setNote(res.data.note);
         {res.data.financialStatementCategory &&
           setCategory(res.data.financialStatementCategory.id);}
+          {res.data.financialStatementCategory &&
+          setCategoryName(res.data.financialStatementCategory.label);}
           setClass(res.data.financialStatementClass.id);
           handleclass(res.data.financialStatementClass.id);
         setGifi(res.data.financialStatementType.gifi);
@@ -300,7 +304,7 @@ function LiabilityDetail() {
             </Form.Item>
 
             <Form.Item name="category" label="Category">
-              <Select placeholder={Category} onChange={e=>setCategory(e)}>
+              <Select placeholder={CategoryName} onChange={e=>setCategory(e)}>
                 {statementcategory && statementcategory.map(
                   (e) => e && <Option value={e.id}>{e.label}</Option>
                 )}

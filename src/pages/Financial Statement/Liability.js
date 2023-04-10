@@ -34,10 +34,6 @@ function Liability() {
   const [statementcategory, setStatementCategory]=useState([{}]);
   var date;
   useEffect(() => {
-    //date =  new Date().getFullYear();
-    //if( year == null){
-    //  setYear(date);
-    //}
     console.log("year"+date);
     getLiabilities();
     }, [Company.id,year]);
@@ -67,7 +63,8 @@ function Liability() {
       title: "Category",
       // dataIndex: "category",
       align: "center",
-      render: (_,record) => <div style={{ textAlign: "left" }}>{record.financialStatementType.financialStatementCategory.label}</div> ,
+      render: (_,record) => 
+        <div style={{ textAlign: "left" }}>{record.financialStatementCategory.label}</div>
     },
     {
       title: "GL Number",
