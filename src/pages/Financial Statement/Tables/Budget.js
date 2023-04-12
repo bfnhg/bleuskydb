@@ -98,7 +98,7 @@ function Budget(props) {
       //  key: "2",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[0]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,0)} style={{ textAlign: "right" }}/>;
+          return <Input type="number" value={record.budgets[0].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,0)} style={{ textAlign: "right" }}/>;
       },
     },
     {
@@ -107,7 +107,7 @@ function Budget(props) {
       //  key: "3",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[1]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,1)} style={{ textAlign: "right" }}/>
+          return <Input type="number" value={record.budgets[1].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,1)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -116,7 +116,7 @@ function Budget(props) {
       key: "4",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[2]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,2)} style={{ textAlign: "right" }}/>;
+          return <Input type="number" value={record.budgets[2].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,2)} style={{ textAlign: "right" }}/>;
       },
     },
     {
@@ -125,7 +125,7 @@ function Budget(props) {
       key: "5",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[3]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,3)} style={{ textAlign: "right" }}/>
+          return <Input type="number" value={record.budgets[3].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,3)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -134,7 +134,7 @@ function Budget(props) {
       key: "6",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[4]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,4)} style={{ textAlign: "right" }}/>
+          return <Input type="number" value={record.budgets[4].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,4)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -143,7 +143,7 @@ function Budget(props) {
       key: "7",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[5]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,5)} style={{ textAlign: "right" }}/>
+          return <Input type="number" value={record.budgets[5].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,5)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -152,7 +152,7 @@ function Budget(props) {
       key: "8",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[6]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,6)} style={{ textAlign: "right" }}/>
+          return <Input type="number" value={record.budgets[6].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,6)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -161,7 +161,7 @@ function Budget(props) {
       key: "9",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[7]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,7)} style={{ textAlign: "right" }}/>
+          return <Input type="number" value={record.budgets[7].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,7)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -170,7 +170,7 @@ function Budget(props) {
       key: "10",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[8]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,8)} style={{ textAlign: "right" }}/>
+          return <Input type="number" value={record.budgets[8].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,8)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -179,7 +179,7 @@ function Budget(props) {
       key: "11",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[9]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,9)} style={{ textAlign: "right" }}/>
+          return <Input type="number" value={record.budgets[9].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,9)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -188,7 +188,7 @@ function Budget(props) {
       key: "12",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[10]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,10)} style={{ textAlign: "right" }}/>;
+          return <Input type="number" value={record.budgets[10].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,10)} style={{ textAlign: "right" }}/>;
       },
     },
     {
@@ -197,7 +197,7 @@ function Budget(props) {
       key: "12",
       width: 120,
       render: (text, record) => {
-          return <Input type="number" value={record.budgets[11]} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,11)} style={{ textAlign: "right" }}/>;
+          return <Input type="number" value={record.budgets[11].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,11)} style={{ textAlign: "right" }}/>;
       },
     },
     {
@@ -207,7 +207,18 @@ function Budget(props) {
         return (
           <h3 style={{ textAlign: "right" }}>
             {" "}
-            {record.totalBudget}
+            {(record.budgets[0]+
+            record.budgets[1]+
+            record.budgets[2]+
+            record.budgets[3]+
+            record.budgets[4]+
+            record.budgets[5]+
+            record.budgets[6]+
+            record.budgets[7]+
+            record.budgets[8]+
+            record.budgets[9]+
+            record.budgets[10]+
+            record.budgets[11]).toFixed(2)}
           </h3>
         );
       },
@@ -407,7 +418,18 @@ function Budget(props) {
                 <Table.Summary.Cell index={10}>
                   <Text>
                     <h6 style={{ textAlign: "right", width: 100 }}>
-                      {totaltotal}
+                      {(totalbudget+
+                      totalfevrierbudget+
+                      totalMarsbudget+
+                      totalavrilbudget+
+                      totalmaibudget+
+                      totalJuinbudget+
+                      totaljuilletbudget+
+                      totalaoutbudget+
+                      totalseptembrebudget+
+                      totaloctobrebudget+
+                      totalnovemberbudget+
+                      totaldecembrebudget).toFixed(2)}
                     </h6>
                   </Text>
                 </Table.Summary.Cell>

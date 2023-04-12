@@ -33,6 +33,8 @@ import StrategicPlans from "./pages/StrategicPlans";
 
 import Liabilities from "./pages/Financial Statement/Liability";
 import LiabilityDetail from "./pages/Financial Statement/LiabilityDetail";
+import Assets from "./pages/Asset/Asset";
+import AssetsDetail from "./pages/Asset/AssetDetail";
 
 function App() {
   const [Company,setCompany]=useState(null);
@@ -96,6 +98,8 @@ function App() {
         <RouteGuard exact path='/liabilities'><Liabilities /></RouteGuard>
         <RouteGuard exact path='/liabilityDetail/:id'><LiabilityDetail /></RouteGuard>
 
+        <RouteGuard exact path='/Assets'><Assets /></RouteGuard>
+        <RouteGuard exact path='/AssetDetail/:id'><AssetsDetail /></RouteGuard>
         </Main>
         
       </Switch>

@@ -68,7 +68,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[0].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -95,7 +95,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[0].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[0]-budget).toFixed(2)}</p>
@@ -106,7 +106,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[0].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[0]-budget).toFixed(2)}</p>
@@ -134,7 +134,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[1].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -162,7 +162,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[1].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[1]-budget).toFixed(2)}</p>
@@ -189,7 +189,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[2].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -217,7 +217,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[2].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[2]-budget).toFixed(2)}</p>
@@ -244,7 +244,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[3].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -272,7 +272,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[3].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[3]-budget).toFixed(2)}</p>
@@ -299,7 +299,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[4].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -327,7 +327,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[4].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[4]-budget).toFixed(2)}</p>
@@ -354,7 +354,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[5].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -382,7 +382,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[5].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[5]-budget).toFixed(2)}</p>
@@ -409,7 +409,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[6].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -437,7 +437,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[6].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[6]-budget).toFixed(2)}</p>
@@ -464,7 +464,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[7].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -492,7 +492,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[7].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[7]-budget).toFixed(2)}</p>
@@ -520,7 +520,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[8].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -548,7 +548,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[8].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[8]-budget).toFixed(2)}</p>
@@ -574,7 +574,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[9].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -602,7 +602,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[9].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[9]-budget).toFixed(2)}</p>
@@ -630,7 +630,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[10].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -658,7 +658,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[10].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[10]-budget).toFixed(2)}</p>
@@ -684,7 +684,7 @@ function Performance(props) {
         let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[11].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{budget}</p>
@@ -712,7 +712,7 @@ function Performance(props) {
             let budget=0;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             budget = e.budgets[11].toFixed(2);
           }})}
           <p style={{ textAlign: "right" }}>{(record.reals[11]-budget).toFixed(2)}</p>
@@ -733,7 +733,7 @@ function Performance(props) {
             let performance=0;
           return (
             <>
-            {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+            {props.AssetBudgets.map(e=>{if(e.year==record.year){
             performance = (record.reals[0]-e.budgets[0]+
             record.reals[1]-e.budgets[1]+
             record.reals[2]-e.budgets[2]+
@@ -759,7 +759,7 @@ function Performance(props) {
     <div>
       <Table
         columns={columnsbalanceReals}
-        dataSource={props.liabilityReals}
+        dataSource={props.AssetReals}
         scroll={{
           x: 1300,
         }}
@@ -813,7 +813,7 @@ function Performance(props) {
           );
           return (
             <>
-            {props.liabilityBudgets && props.liabilityBudgets.map((e)=>(
+            {props.AssetBudgets && props.AssetBudgets.map((e)=>(
                         //console.log(e.budgets[1]),
                         //console.log(fevrierbudget),
                         totalmontant = e.budgets[0],
@@ -844,7 +844,7 @@ function Performance(props) {
                         totaltotal -= totalmontant, 
                         console.log()
                         ))}
-                        {props.liabilityReals && props.liabilityReals.map((e)=>(
+                        {props.AssetReals && props.AssetReals.map((e)=>(
                         //console.log(e.budgets[1]),
                         //console.log(fevrierbudget),
                         totalmontant = e.reals[0],

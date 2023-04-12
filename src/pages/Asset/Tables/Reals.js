@@ -20,21 +20,21 @@ const { Text } = Typography;
 const { TextArea } = Input;
 
 function Reals(props) {
-  const [liabilityReals, setliabilityReals] = useState(props.liabilityReals);
+  const [AssetReals, setAssetReals] = useState(props.AssetReals);
   const { TextArea } = Input;
-  console.log(liabilityReals);
+  console.log(AssetReals);
 
 
 
   function handleinputchange(ee,i,n){
     //if(ee.target.value){
-    console.log(props.liabilityReals)
-    const newReal = [...props.liabilityReals];
+    console.log(props.AssetReals)
+    const newReal = [...props.AssetReals];
     newReal.map(e=>{if(e.id==i){
       e.reals[n]=parseFloat(ee.target.value) || 0;
     }})
     //newReal[i]=e.target.value;
-    setliabilityReals(newReal);
+    setAssetReals(newReal);
     props.onRealChange(newReal);
     //}
   }
@@ -94,7 +94,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})}
           <Input type="number" value={record.reals[0].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,0)} style={{ textAlign: "right" }}/>
@@ -111,7 +111,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[1].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,1)} style={{ textAlign: "right" }}/>
           </>)
@@ -126,7 +126,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[2].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,2)} style={{ textAlign: "right" }}/>
           </>);
@@ -141,7 +141,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[3].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,3)} style={{ textAlign: "right" }}/>
           </>)
@@ -156,7 +156,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[4].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,4)} style={{ textAlign: "right" }}/>
           </>)
@@ -171,7 +171,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[5].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,5)} style={{ textAlign: "right" }}/>
           </>)
@@ -186,7 +186,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[6].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,6)} style={{ textAlign: "right" }}/>
           </>)
@@ -201,7 +201,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[7].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,7)} style={{ textAlign: "right" }}/>
           </>)
@@ -216,7 +216,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[8].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,8)} style={{ textAlign: "right" }}/>
           </>)
@@ -231,7 +231,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[9].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,9)} style={{ textAlign: "right" }}/>
           </>)
@@ -246,7 +246,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})} <Input type="number" value={record.reals[10].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,10)} style={{ textAlign: "right" }}/>
           </>)
@@ -261,7 +261,7 @@ function Reals(props) {
         let confirm=false;
           return (
             <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
+        {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
           }})}
           <Input type="number" value={record.reals[11].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,11)} style={{ textAlign: "right" }}/>
@@ -296,7 +296,7 @@ function Reals(props) {
     <div>
       <Table
         columns={columnsbalanceBudget}
-        dataSource={props.liabilityReals}
+        dataSource={props.AssetReals}
         scroll={{
           x: 1300,
         }}
@@ -337,7 +337,7 @@ function Reals(props) {
           );
           return (
             <>
-            {props.liabilityReals && props.liabilityReals.map((e)=>(
+            {props.AssetReals && props.AssetReals.map((e)=>(
                         //console.log(e.reals[1]),
                         //console.log(fevrierbudget),
                         totalmontant = e.reals[0],
@@ -370,7 +370,7 @@ function Reals(props) {
                         ))}
               <Table.Summary.Row>
                 <Table.Summary.Cell index={1} colSpan={1}>
-                  <h3 style={{ textAlign: "center" }}> {props.liabilityReals && console.log("test",props.liabilityReals)}</h3>
+                  <h3 style={{ textAlign: "center" }}> {props.AssetReals && console.log("test",props.AssetReals)}</h3>
                 </Table.Summary.Cell>
 
                 <Table.Summary.Cell index={4}>
@@ -383,7 +383,7 @@ function Reals(props) {
                 <Table.Summary.Cell index={4}>
                   <Text>
                     <h6 style={{ textAlign: "right", width: 100 }}>
-                      {console.log(props.liabilityReals)}
+                      {console.log(props.AssetReals)}
                       {totalfevrierbudget}
                     </h6>
                   </Text>

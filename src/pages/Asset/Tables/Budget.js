@@ -19,24 +19,32 @@ import { CompanyContext } from '../../../contexts/CompanyContext';
 const { Text } = Typography;
 const { TextArea } = Input;
 
-function Reals(props) {
-  const [liabilityReals, setliabilityReals] = useState(props.liabilityReals);
+function Budget(props) {
+  const [AssetBudgets, setAssetBudgets] = useState(props.AssetBudgets);
   const { TextArea } = Input;
-  console.log(liabilityReals);
+
 
 
 
   function handleinputchange(ee,i,n){
     //if(ee.target.value){
-    console.log(props.liabilityReals)
-    const newReal = [...props.liabilityReals];
-    newReal.map(e=>{if(e.id==i){
-      e.reals[n]=parseFloat(ee.target.value) || 0;
+    const newBudget = [...AssetBudgets];
+    newBudget.map(e=>{if(e.id==i){
+      e.budgets[n]=parseFloat(ee.target.value) || 0;
     }})
-    //newReal[i]=e.target.value;
-    setliabilityReals(newReal);
-    props.onRealChange(newReal);
+    //newBudget[i]=e.target.value;
+    setAssetBudgets(newBudget);
+    props.onBudgetChange(newBudget);
     //}
+  }
+
+  function confirm(i){
+    const newBudget = [...AssetBudgets];
+    newBudget.map(e=>{if(e.id==i){
+      e.confirmed=true;
+    }})
+    setAssetBudgets(newBudget);
+    props.onBudgetChange(newBudget);
   }
 
 
@@ -81,25 +89,16 @@ function Reals(props) {
       aligne: "right",
       //   key: "year",
       render: (text, record) => {
-          return <p style={{textAlign: "center" }}>{text}</p>;
+          return <p style={{ textAlign: "center" }}>{text}</p>;
       },
     },
-
     {
       title: <h1 style={{ textAlign: "center" }}>Janvier</h1>,
       dataIndex: "montant",
       //  key: "2",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})}
-          <Input type="number" value={record.reals[0].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,0)} style={{ textAlign: "right" }}/>
-          </>
-          );
+          return <Input type="number" value={record.budgets[0].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,0)} style={{ textAlign: "right" }}/>;
       },
     },
     {
@@ -108,13 +107,7 @@ function Reals(props) {
       //  key: "3",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[1].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,1)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[1].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,1)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -123,13 +116,7 @@ function Reals(props) {
       key: "4",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[2].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,2)} style={{ textAlign: "right" }}/>
-          </>);
+          return <Input type="number" value={record.budgets[2].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,2)} style={{ textAlign: "right" }}/>;
       },
     },
     {
@@ -138,13 +125,7 @@ function Reals(props) {
       key: "5",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[3].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,3)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[3].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,3)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -153,13 +134,7 @@ function Reals(props) {
       key: "6",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[4].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,4)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[4].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,4)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -168,13 +143,7 @@ function Reals(props) {
       key: "7",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[5].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,5)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[5].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,5)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -183,13 +152,7 @@ function Reals(props) {
       key: "8",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[6].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,6)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[6].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,6)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -198,13 +161,7 @@ function Reals(props) {
       key: "9",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[7].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,7)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[7].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,7)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -213,13 +170,7 @@ function Reals(props) {
       key: "10",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[8].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,8)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[8].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,8)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -228,13 +179,7 @@ function Reals(props) {
       key: "11",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[9].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,9)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[9].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,9)} style={{ textAlign: "right" }}/>
       },
     },
     {
@@ -243,13 +188,7 @@ function Reals(props) {
       key: "12",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})} <Input type="number" value={record.reals[10].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,10)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[10].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,10)} style={{ textAlign: "right" }}/>;
       },
     },
     {
@@ -258,14 +197,7 @@ function Reals(props) {
       key: "12",
       width: 120,
       render: (text, record) => {
-        let confirm=false;
-          return (
-            <>
-        {props.liabilityBudgets.map(e=>{if(e.year==record.year){
-            confirm = !e.confirmed;
-          }})}
-          <Input type="number" value={record.reals[11].toFixed(2)} disabled={confirm} onChange={(e)=>handleinputchange(e,record.id,11)} style={{ textAlign: "right" }}/>
-          </>)
+          return <Input type="number" value={record.budgets[11].toFixed(2)} disabled={record.confirmed} onChange={(e)=>handleinputchange(e,record.id,11)} style={{ textAlign: "right" }}/>;
       },
     },
     {
@@ -275,28 +207,45 @@ function Reals(props) {
         return (
           <h3 style={{ textAlign: "right" }}>
             {" "}
-            {(record.reals[0]+
-            record.reals[1]+
-            record.reals[2]+
-            record.reals[3]+
-            record.reals[4]+
-            record.reals[5]+
-            record.reals[6]+
-            record.reals[7]+
-            record.reals[8]+
-            record.reals[9]+
-            record.reals[10]+
-            record.reals[11]).toFixed(2)}
+            {(record.budgets[0]+
+            record.budgets[1]+
+            record.budgets[2]+
+            record.budgets[3]+
+            record.budgets[4]+
+            record.budgets[5]+
+            record.budgets[6]+
+            record.budgets[7]+
+            record.budgets[8]+
+            record.budgets[9]+
+            record.budgets[10]+
+            record.budgets[11]).toFixed(2)}
           </h3>
         );
       },
+    },
+    {
+      title: <h1>Action</h1>,
+      key: "operation",
+      fixed: "left",
+      width: 200,
+      render: (_, record) => (
+        <>
+          <Button
+            type="link"
+            style={{ marginLeft: ".1rem" }}
+            onClick={()=>confirm(record.id)}
+          >
+            <a>Confirm</a>
+          </Button>
+        </>
+      ),
     },
   ];
   return (
     <div>
       <Table
         columns={columnsbalanceBudget}
-        dataSource={props.liabilityReals}
+        dataSource={props.AssetBudgets}
         scroll={{
           x: 1300,
         }}
@@ -337,40 +286,40 @@ function Reals(props) {
           );
           return (
             <>
-            {props.liabilityReals && props.liabilityReals.map((e)=>(
-                        //console.log(e.reals[1]),
+            {props.AssetBudgets && props.AssetBudgets.map((e)=>(
+                        //console.log(e.budgets[1]),
                         //console.log(fevrierbudget),
-                        totalmontant = e.reals[0],
+                        totalmontant = e.budgets[0],
                         totalbudget += totalmontant,
-                        totalmontant = e.reals[1],
+                        totalmontant = e.budgets[1],
                         totalfevrierbudget += totalmontant,
-                        totalmontant = e.reals[2],
+                        totalmontant = e.budgets[2],
                         totalMarsbudget += totalmontant,
-                        totalmontant = e.reals[3],
+                        totalmontant = e.budgets[3],
                         totalavrilbudget += totalmontant,
-                        totalmontant = e.reals[4],
+                        totalmontant = e.budgets[4],
                         totalmaibudget += totalmontant,
-                        totalmontant = e.reals[5],
+                        totalmontant = e.budgets[5],
                         totalJuinbudget += totalmontant,
-                        totalmontant = e.reals[6],
+                        totalmontant = e.budgets[6],
                         totaljuilletbudget += totalmontant,
-                        totalmontant = e.reals[7],
+                        totalmontant = e.budgets[7],
                         totalaoutbudget += totalmontant,
-                        totalmontant = e.reals[8],
+                        totalmontant = e.budgets[8],
                         totalseptembrebudget += totalmontant,
-                        totalmontant = e.reals[9],
+                        totalmontant = e.budgets[9],
                         totaloctobrebudget += totalmontant,
-                        totalmontant = e.reals[10],
+                        totalmontant = e.budgets[10],
                         totalnovemberbudget += totalmontant,
-                        totalmontant = e.reals[11],
+                        totalmontant = e.budgets[11],
                         totaldecembrebudget += totalmontant,
-                        totalmontant = e.totalReal,
+                        totalmontant = e.totalBudget,
                         totaltotal += totalmontant,
                         console.log()
                         ))}
               <Table.Summary.Row>
                 <Table.Summary.Cell index={1} colSpan={1}>
-                  <h3 style={{ textAlign: "center" }}> {props.liabilityReals && console.log("test",props.liabilityReals)}</h3>
+                  <h3 style={{ textAlign: "center" }}> {props.AssetBudgets && console.log("balance",props.AssetBudgets)}</h3>
                 </Table.Summary.Cell>
 
                 <Table.Summary.Cell index={4}>
@@ -383,7 +332,7 @@ function Reals(props) {
                 <Table.Summary.Cell index={4}>
                   <Text>
                     <h6 style={{ textAlign: "right", width: 100 }}>
-                      {console.log(props.liabilityReals)}
+                      {console.log(props.AssetBudgets)}
                       {totalfevrierbudget}
                     </h6>
                   </Text>
@@ -493,4 +442,4 @@ function Reals(props) {
   );
 }
 
-export default Reals;
+export default Budget;
