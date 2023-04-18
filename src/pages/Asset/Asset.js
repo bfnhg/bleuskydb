@@ -152,6 +152,9 @@ function Asset() {
             Upload the Reals
           </Button>
           
+          <Link to={{
+              pathname:`/AssetSummary`
+            }}>
           <Button
             className="Create-button"
             type="primary"
@@ -163,6 +166,7 @@ function Asset() {
           >
             Summary
           </Button>
+          </Link>
           
         </div>
       </div>

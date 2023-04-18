@@ -69,8 +69,8 @@ function AssetDetail() {
   const [Note,setNote] = useState("");
   const [Category,setCategory] = useState();
   const [CategoryName,setCategoryName] = useState();
-
   const [Class,setClass] = useState();
+  const[realfrombudget,setrealfrombudget] = useState([]);
   useEffect(()=>  {
     getAsset();
     console.log(CategoryName);
@@ -186,6 +186,18 @@ function AssetDetail() {
     setAsset(prevState => {
       return {...prevState,budgets:budget}
     })
+    /*Asset.budgets.map((e)=>{
+      setrealfrombudget(prevState => {
+      return {...prevState,
+        id:e.id,
+        year:e.year,
+      reals:e.budgets,
+      totalReal:e.totalBudget
+    }
+    })
+    })*/
+    //console.log("testtest",realfrombudget)
+    //handleRealChange(realfrombudget)
     console.log(Asset.budgets);
   }
   function handleRealChange(real){
