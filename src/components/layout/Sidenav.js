@@ -1,24 +1,25 @@
 import { Menu, Button } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/images/blueskylogo.png";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 import {
   HomeFilled,
   LoadingOutlined,
-  SettingFilled,
-  SmileOutlined,
-  SyncOutlined,
-  AimOutlined,
+  ContactsOutlined,
+  TeamOutlined,
+  UnlockOutlined,
+  IdcardOutlined,
   BlockOutlined,
   BookFilled,
   ReconciliationOutlined,
-  BookOutlined
-} from '@ant-design/icons';
+  BookOutlined,
+  ProfileOutlined,
+} from "@ant-design/icons";
 function Sidenav({ color }) {
   const { pathname } = useLocation();
   const page = pathname.replace("/", "");
-  let {t} =useTranslation();
+  let { t } = useTranslation();
 
   const dashboard = [
     <svg
@@ -114,7 +115,6 @@ function Sidenav({ color }) {
       xmlns="http://www.w3.org/2000/svg"
       key={0}
     >
-      
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -165,7 +165,11 @@ function Sidenav({ color }) {
   return (
     <>
       <div className="brand">
-        <img src={logo} alt="bleusky logo" style={{ width:'100%' ,height:'5rem'}}  />
+        <img
+          src={logo}
+          alt="bleusky logo"
+          style={{ width: "100%", height: "5rem" }}
+        />
         {/* <span>Muse Dashboard</span> */}
       </div>
       <hr />
@@ -178,7 +182,7 @@ function Sidenav({ color }) {
                 background: page === "dashboard" ? color : "",
               }}
             >
-                  <HomeFilled />
+              <HomeFilled />
             </span>
             <span className="label">{t("dashboard")}</span>
           </NavLink>
@@ -190,10 +194,85 @@ function Sidenav({ color }) {
               style={{
                 background: page === "generalinformations" ? color : "",
               }}
-            > 
+            >
               {tables}
             </span>
             <span className="label">{t("generalinf")}</span>
+          </NavLink>
+        </Menu.Item>
+
+        {/* author: {youssef-ettafssaoui} */}
+        <Menu.Item className="menu-item-header" key="3">
+          {t("AccessControl")}
+        </Menu.Item>
+
+        <Menu.Item key="6">
+          <NavLink to="/manageTeam">
+            <span
+              className="icon"
+              style={{
+                background: "",
+              }}
+            >
+              <ContactsOutlined />
+            </span>
+            <span className="label">{t("ManageTeam")}</span>
+          </NavLink>
+        </Menu.Item>
+
+        <Menu.Item key="4">
+          <NavLink to="/manageAccounts">
+            <span
+              className="icon"
+              style={{
+                background: "",
+              }}
+            >
+              <TeamOutlined />
+            </span>
+            <span className="label">{t("ManageAccounts")}</span>
+          </NavLink>
+        </Menu.Item>
+
+        {/* <Menu.Item key="5">
+          <NavLink to="/manageRoles">
+            <span
+              className="icon"
+              style={{
+                background: "",
+              }}
+            >
+              <IdcardOutlined />
+            </span>
+            <span className="label">{t("ManageRoles")}</span>
+          </NavLink>
+        </Menu.Item> */}
+
+        <Menu.Item key="6">
+          <NavLink to="/manageSections">
+            <span
+              className="icon"
+              style={{
+                background: "",
+              }}
+            >
+              <ProfileOutlined />
+            </span>
+            <span className="label">{t("ManageSections")}</span>
+          </NavLink>
+        </Menu.Item>
+
+        <Menu.Item key="7">
+          <NavLink to="/manageAccess">
+            <span
+              className="icon"
+              style={{
+                background: "",
+              }}
+            >
+              <UnlockOutlined />
+            </span>
+            <span className="label">{t("ManageAccess")}</span>
           </NavLink>
         </Menu.Item>
 
@@ -212,37 +291,36 @@ function Sidenav({ color }) {
         </Menu.Item> */}
 
         <Menu.Item className="menu-item-header" key="10">
-        {t("sales")}
+          {t("sales")}
         </Menu.Item>
-        <Menu.Item key="4">
+        <Menu.Item key="11">
           <NavLink to="/orderbooks">
-          <span
+            <span
               className="icon"
               style={{
-                background:"",
+                background: "",
               }}
             >
-              <BookFilled  />
-
+              <BookFilled />
             </span>
             <span className="label">{t("orderbook")}</span>
           </NavLink>
         </Menu.Item>
-        
-        <Menu.Item key="5">
+
+        <Menu.Item key="12">
           <NavLink to="/opportunities">
-          <span
+            <span
               className="icon"
               style={{
-                background:"",
+                background: "",
               }}
-            >           
-            <BookOutlined />
+            >
+              <BookOutlined />
             </span>
             <span className="label">{t("opportunitybook")}</span>
           </NavLink>
         </Menu.Item>
-         {/* <Menu.Item className="menu-item-header" key="5">
+        {/* <Menu.Item className="menu-item-header" key="5">
         Revenue
         </Menu.Item>
         <Menu.Item key="8">
@@ -259,29 +337,31 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item> */}
 
-        <Menu.Item key="6">
-        <NavLink to="/chartofaccounts">
-          <span
+        <Menu.Item key="13">
+          <NavLink to="/chartofaccounts">
+            <span
               className="icon"
               style={{
-                background:"",
+                background: "",
               }}
-            >           <ReconciliationOutlined />
-
+            >
+              {" "}
+              <ReconciliationOutlined />
             </span>
             <span className="label">Chart of accounts</span>
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item key="6">
-        <NavLink to="/glaccountsandhyphotheses">
-          <span
+        <Menu.Item key="14">
+          <NavLink to="/glaccountsandhyphotheses">
+            <span
               className="icon"
               style={{
-                background:"",
+                background: "",
               }}
-            >            <BlockOutlined /> 
-
+            >
+              {" "}
+              <BlockOutlined />
             </span>
             <span className="label">GL Accounts & Hyphotheses</span>
           </NavLink>
@@ -693,11 +773,6 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item> */}
       </Menu>
-
-
-
-
-      
     </>
   );
 }

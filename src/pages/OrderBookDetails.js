@@ -23,7 +23,7 @@ import {
   Descriptions,
 } from "antd";
 import { JSON_API } from "../services/Constants";
-import { CompanyContext } from '../contexts/CompanyContext';
+import { CompanyContext } from "../contexts/CompanyContext";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment";
@@ -37,7 +37,8 @@ const { TextArea } = Input;
 
 const OrderBookDetails = () => {
   let { t } = useTranslation();
-  const {Companies,setCompanies,Company,Actionstate,setActionstate}=useContext(CompanyContext);
+  const { Companies, setCompanies, Company, Actionstate, setActionstate } =
+    useContext(CompanyContext);
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -70,94 +71,99 @@ const OrderBookDetails = () => {
 
   const StatefulModalContent = (props) => {
     // const [inputValue, setInputValue] = React.useState();
- 
+
     return (
       // <Layout style={styles.modalContent}>
       //   <Text>FORM</Text>
       //   <Input value={inputValue} onChangeText={setInputValue} />
       // </Layout>
       <Form
-            form={form}
-            layout="vertical"
-            name="form_in_modal"
-            initialValues={{
-              modifier: "public",
-            }}
-          >
-            <Form.Item
-              name="customer"
-              label={t("Customer")}
-              rules={[
-                {
-                  required: true,
-                  message: `${t("Pleaseselectacustomer")}`,
-                },
-              ]}
-            >
-              <Select placeholder={t("selectcustomer")} style={{}}>
-                {Customer?.map(
-                  (e) => e && <Option value={e.id}>{e.name}</Option>
-                )}
-              </Select>
-              {/* <Input type="textarea" /> */}
-            </Form.Item>
+        form={form}
+        layout="vertical"
+        name="form_in_modal"
+        initialValues={{
+          modifier: "public",
+        }}
+      >
+        <Form.Item
+          name="customer"
+          label={t("Customer")}
+          rules={[
+            {
+              required: true,
+              message: `${t("Pleaseselectacustomer")}`,
+            },
+          ]}
+        >
+          <Select placeholder={t("selectcustomer")} style={{}}>
+            {Customer?.map((e) => e && <Option value={e.id}>{e.name}</Option>)}
+          </Select>
+          {/* <Input type="textarea" /> */}
+        </Form.Item>
 
-            <Form.Item
-              name="product"
-              label={t("Product")}
-              rules={[
-                {
-                  required: true,
-                  message: `${t("Pleaseselectaproduct")}`,
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("selectproduct")}
-                style={
-                  {
-                    // width: 120,
-                  }
-                }
-              >
-                {Product?.map(
-                  (e) => e && <Option value={e.id}>{e.label}</Option>
-                )}
-              </Select>
-              {/* <Input type="textarea" /> */}
-            </Form.Item>
-            
-            <Form.Item name="startDate" label={t("Startdate")}>
-            <DatePicker
+        <Form.Item
+          name="product"
+          label={t("Product")}
+          rules={[
+            {
+              required: true,
+              message: `${t("Pleaseselectaproduct")}`,
+            },
+          ]}
+        >
+          <Select
+            placeholder={t("selectproduct")}
+            style={
+              {
+                // width: 120,
+              }
+            }
+          >
+            {Product?.map((e) => e && <Option value={e.id}>{e.label}</Option>)}
+          </Select>
+          {/* <Input type="textarea" /> */}
+        </Form.Item>
+
+        <Form.Item name="startDate" label={t("Startdate")}>
+          <DatePicker
             style={{ width: 250 }}
             placeholder={t("selectdatedebut")}
             onChange={(date) => setDatebegin(date)}
           />
-                      </Form.Item>
+        </Form.Item>
 
-            <Form.Item name="endDate" label={t("Enddate")}>
-              <DatePicker  style={{ width: 250 }} disabled={datebegin==null?true:false} placeholder={t("selectdatefin")} disabledDate={disabledDate} />
-            </Form.Item>
+        <Form.Item name="endDate" label={t("Enddate")}>
+          <DatePicker
+            style={{ width: 250 }}
+            disabled={datebegin == null ? true : false}
+            placeholder={t("selectdatefin")}
+            disabledDate={disabledDate}
+          />
+        </Form.Item>
 
-            <Form.Item name="pricePerDay" label={t("Priceperday")}>
-              <InputNumber
-                min={0}
-                size={"large"}
-                // style={{width:}}
-                formatter={(value) => `$${value}`}
-                parser={(value) => value.replace("$", "")}
-              />
-            </Form.Item>
+        <Form.Item name="pricePerDay" label={t("Priceperday")}>
+          <InputNumber
+            min={0}
+            size={"large"}
+            // style={{width:}}
+            formatter={(value) => `$${value}`}
+            parser={(value) => value.replace("$", "")}
+          />
+        </Form.Item>
 
-            <Form.Item  rules={[
+        <Form.Item
+          rules={[
             {
               required: true,
               message: `${t("Descriptionplaceholder")}`,
             },
-          ]}name="description" label={t("Description")}>
-              <Input placeholder={t("Descriptionplace")} type="textarea" />
-            </Form.Item>
-          </Form>
+          ]}
+          name="description"
+          label={t("Description")}
+        >
+          <Input placeholder={t("Descriptionplace")} type="textarea" />
+        </Form.Item>
+      </Form>
     );
   };
 
@@ -182,7 +188,7 @@ const OrderBookDetails = () => {
               });
           }}
         >
-          <StatefulModalContent/>
+          <StatefulModalContent />
         </Modal>
       ) : data.data === "Customer" ? (
         <Modal
@@ -270,7 +276,9 @@ const OrderBookDetails = () => {
     }
   };
 
-  useEffect(() => {getData()}, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
   const getData = async () => {
     await axios
@@ -338,14 +346,13 @@ const OrderBookDetails = () => {
         console.log("all orderdetails ", newState);
       })
       .catch(function (error) {
-        if (error.response.status==404) {
+        if (error.response.status == 404) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           setOrderDetails(null);
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
-
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -402,7 +409,6 @@ const OrderBookDetails = () => {
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
-
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -454,8 +460,7 @@ const OrderBookDetails = () => {
         }
       },
     },
-   
-    
+
     {
       title: <h3 style={{ textAlign: "center" }}>{t("February")}</h3>,
 
@@ -784,9 +789,10 @@ const OrderBookDetails = () => {
                 },
               ]}
             >
-
-              <DatePicker placeholder={t("selectdate")} onChange={(date)=>setDatebegin(date)}/>
-     
+              <DatePicker
+                placeholder={t("selectdate")}
+                onChange={(date) => setDatebegin(date)}
+              />
             </Form.Item>
           );
         } else {
@@ -815,9 +821,10 @@ const OrderBookDetails = () => {
                 },
               ]}
             >
-
-              <DatePicker placeholder={t("selectdate")} disabledDate={disabledDate} />
-
+              <DatePicker
+                placeholder={t("selectdate")}
+                disabledDate={disabledDate}
+              />
             </Form.Item>
           );
         } else {
@@ -877,13 +884,19 @@ const OrderBookDetails = () => {
       },
     },
     {
-      title: <h3 style={{ textAlign: "center" }}> {t("Actions")} </h3> ,
+      title: <h3 style={{ textAlign: "center" }}> {t("Actions")} </h3>,
       dataIndex: "actions",
       align: "center",
       render: (_, record) =>
         editingRowbook === record.key ? (
           <>
-            <Button type="link" onClick={() =>{setDatebegin(null);setEditingRowbook(null)}}>
+            <Button
+              type="link"
+              onClick={() => {
+                setDatebegin(null);
+                setEditingRowbook(null);
+              }}
+            >
               {t("Cancel")}
             </Button>
             <Button type="link" htmlType="submit">
@@ -930,9 +943,7 @@ const OrderBookDetails = () => {
   });
 
   const onCreate = async ({ values, url, data }) => {
-
     if (data == "OrderDetail") {
-
       const obj = {
         orderBookId: stateParamVal,
         customerId: values.customer,
@@ -969,8 +980,7 @@ const OrderBookDetails = () => {
           console.log(error.config);
         });
     } else {
-
-      values.enterpriseId=Company.id;
+      values.enterpriseId = Company.id;
       await axios
         .post(`${JSON_API}/${url}`, values)
         .then(() => {
@@ -1083,7 +1093,6 @@ const OrderBookDetails = () => {
     setEditingRow(null);
   };
 
-
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       console.log(
@@ -1102,12 +1111,7 @@ const OrderBookDetails = () => {
     },
   };
 
-
-
-
-
   const DisplayRevenueSummary = () => {
-
     console.log("ttesstt 1");
     const items = [];
 
@@ -1125,7 +1129,7 @@ const OrderBookDetails = () => {
       t("November"),
       t("December"),
     ];
-  
+
     const revenueData = [
       SummaryDetails && SummaryDetails.januaryRevenue,
       SummaryDetails && SummaryDetails.februaryRevenue,
@@ -1140,31 +1144,34 @@ const OrderBookDetails = () => {
       SummaryDetails && SummaryDetails.novemberRevenue,
       SummaryDetails && SummaryDetails.decemberRevenue,
     ];
-  
-    const startingMonthIndex = Company.startPeriod-1;
-  
+
+    const startingMonthIndex = Company.startPeriod - 1;
+
     for (let i = 0; i < months.length; i++) {
       const monthIndex = (i + startingMonthIndex) % months.length;
       const monthName = months[monthIndex];
       const revenue = revenueData[monthIndex];
-  
+
       items.push(
-        <Descriptions.Item key={monthName} style={{ textAlign: "center" }} label={monthName}>
+        <Descriptions.Item
+          key={monthName}
+          style={{ textAlign: "center" }}
+          label={monthName}
+        >
           {revenue}
         </Descriptions.Item>
       );
     }
-  
-    
+
     return (
-       <Descriptions
+      <Descriptions
         style={{ textAlign: "right" }}
         bordered
         column={6}
         size={"small"}
       >
         {items}
-        </Descriptions>
+      </Descriptions>
     );
   };
 
@@ -1172,27 +1179,29 @@ const OrderBookDetails = () => {
     <>
       {contextHolder}
 
-          <Statistic
-            title={t("BookTotal")}
-            value={ SummaryDetails && SummaryDetails.bookTotal}
-            precision={2}
-            valueStyle={{
-              color: '#3f8600',
-            }}
-            // prefix={<ArrowUpOutlined />}
-            suffix="$"
-          />
+      <Statistic
+        title={t("BookTotal")}
+        value={SummaryDetails && SummaryDetails.bookTotal}
+        precision={2}
+        valueStyle={{
+          color: "#3f8600",
+        }}
+        // prefix={<ArrowUpOutlined />}
+        suffix="$"
+      />
       <Title level={4}>{t("RevenueSummary")}</Title>
 
-         <DisplayRevenueSummary/>
+      <DisplayRevenueSummary />
 
       <Title level={4}>{t("Commands")}</Title>
       <Row justify="end" gutter={[16, 16]}>
-        <Space style={{
-          display: 'flex',
-          marginBottom: 8,
-
-        }} align="center">
+        <Space
+          style={{
+            display: "flex",
+            marginBottom: 8,
+          }}
+          align="center"
+        >
           <Button
             onClick={() => {
               setOpen({ open: true, url: "Customers", data: "Customer" });

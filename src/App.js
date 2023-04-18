@@ -1,9 +1,10 @@
 import { Switch, Route } from "react-router-dom";
+import axios from "axios";
 import Home from "./pages/Home";
 import Tables from "./pages/Tables";
 import Billing from "./pages/Billing";
 import ComingSoon from "./pages/ComingSoon";
-import {useState} from 'react';
+import { useEffect, useState } from "react";
 import Rtl from "./pages/Rtl";
 import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
@@ -16,13 +17,18 @@ import { CompanyContext } from "./contexts/CompanyContext";
 // import "antd/dist/antd.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
-import RouteGuard from './components/layout/RouteGuard';
+import RouteGuard from "./components/layout/RouteGuard";
 import OrderBookDetails from "./pages/OrderBookDetails";
 import Testpage from "./pages/Testpage";
 import UpdateCompany from "./pages/UpdateCompany";
 import StrategicPlanning from "./pages/StrategicPlanning";
 import Chartofaccounts from "./pages/Chartofaccounts";
 import ChartofAcount from "./pages/ChartofAcount";
+import ManageTeam from "./pages/ManageTeam";
+import ManageAccounts from "./pages/ManageAccounts";
+import ManageSections from "./pages/ManageSections";
+import ManageAccess from "./pages/ManageAccess";
+import { JSON_API } from "./services/Constants";
 
 import Newchartofaccounts from "./pages/Newchartofaccounts";
 import SalesOpportunities from "./pages/SalesOpportunities";
@@ -30,65 +36,152 @@ import OpportunityDetails from "./pages/OpportunityDetails";
 import HyphotheseofGl from "./pages/HyphotheseofGl";
 
 function App() {
-  const [Company,setCompany]=useState(null);
-  const [Companies,setCompanies]=useState([]);
+  const [Company, setCompany] = useState(null);
+  const [Companies, setCompanies] = useState([]);
 
-  const[TempCompany,setTempCompany]=useState({});
+  const [TempCompany, setTempCompany] = useState({});
 
-  const [Actionstate,setActionstate]=useState(true);
-  const [Edited,setEdited]=useState(true);
+  const [Actionstate, setActionstate] = useState(true);
+  const [Edited, setEdited] = useState(true);
 
-  const [TypeIndustries,setTypeIndustries]=useState([]);
-  const [Market,setMarket]=useState([]);
-  const [RevenueModel,setRevenueModel]=useState([]);
-  const [MainCustomer,setMainCustomer]=useState([]);
-  const [BusinessPartner,setBusinessPartner]=useState([]);
-  const [StrategicTarget,setStrategicTarget]=useState([]);
-  const [ActivityType,setActivityType]=useState([]);
-  const [Product,setProduct]=useState([]);
-  const [ShareHolders,setShareHolders]=useState([]);
-  const [Shares,setShares]=useState([]);
-  const [Lang,setLang]=useState("en");
-  const [submitted, setSubmitted]=useState(false);
+  const [TypeIndustries, setTypeIndustries] = useState([]);
+  const [Market, setMarket] = useState([]);
+  const [RevenueModel, setRevenueModel] = useState([]);
+  const [MainCustomer, setMainCustomer] = useState([]);
+  const [BusinessPartner, setBusinessPartner] = useState([]);
+  const [StrategicTarget, setStrategicTarget] = useState([]);
+  const [ActivityType, setActivityType] = useState([]);
+  const [Product, setProduct] = useState([]);
+  const [ShareHolders, setShareHolders] = useState([]);
+  const [Shares, setShares] = useState([]);
+  const [Lang, setLang] = useState("en");
+  const [submitted, setSubmitted] = useState(false);
+
+  const [userRole, setUserRole] = useState("");
+  const [accesses, setAccesses] = useState({});
+
   return (
     <div className="App">
-      <CompanyContext.Provider value={{submitted, setSubmitted,Lang,setLang,TempCompany,setTempCompany,Shares,setShares,ShareHolders,setShareHolders,Product,setProduct,ActivityType,setActivityType,StrategicTarget,setStrategicTarget,BusinessPartner,setBusinessPartner,MainCustomer,setMainCustomer,RevenueModel,setRevenueModel,Companies,setCompanies,Company,setCompany,Actionstate,setActionstate,Edited,setEdited,TypeIndustries,setTypeIndustries,Market,setMarket}}>
-      <Switch>
-        
-        <Route path="/sign-in" exact component={SignIn} />
+      <CompanyContext.Provider
+        value={{
+          submitted,
+          setSubmitted,
+          Lang,
+          setLang,
+          TempCompany,
+          setTempCompany,
+          Shares,
+          setShares,
+          ShareHolders,
+          setShareHolders,
+          Product,
+          setProduct,
+          ActivityType,
+          setActivityType,
+          StrategicTarget,
+          setStrategicTarget,
+          BusinessPartner,
+          setBusinessPartner,
+          MainCustomer,
+          setMainCustomer,
+          RevenueModel,
+          setRevenueModel,
+          Companies,
+          setCompanies,
+          Company,
+          setCompany,
+          Actionstate,
+          setActionstate,
+          Edited,
+          setEdited,
+          TypeIndustries,
+          setTypeIndustries,
+          Market,
+          setMarket,
+        }}
+      >
+        <Switch>
+          <Route path="/sign-in" exact component={SignIn} />
 
-        
-        <Main>
-        <RouteGuard exact path='/'><Home /></RouteGuard>
-        <RouteGuard exact path='/dashboard'><Home /></RouteGuard>
-        <RouteGuard exact path='/tables'><Tables /></RouteGuard>
-        <RouteGuard exact path='/billing'><Billing /></RouteGuard>
-        <RouteGuard exact path='/rtl'><Rtl /></RouteGuard>
-        <RouteGuard exact path='/profile'><Profile /></RouteGuard>
-        <RouteGuard exact path='/orderbooks'><SalesOrderBook /></RouteGuard>
-        <RouteGuard exact path='/opportunities'><SalesOpportunities /></RouteGuard>
-        <RouteGuard exact path='/orderbook/:id'><OrderBookDetails /></RouteGuard>
-        <RouteGuard exact path='/opportunitybook/:id'><OpportunityDetails /></RouteGuard>
+          <Main>
+            <RouteGuard exact path="/">
+              <Home />
+            </RouteGuard>
+            <RouteGuard exact path="/manageTeam">
+              <ManageTeam />
+            </RouteGuard>
+            <RouteGuard exact path="/manageAccounts">
+              <ManageAccounts />
+            </RouteGuard>
+            <RouteGuard exact path="/manageSections">
+              <ManageSections />
+            </RouteGuard>
+            <RouteGuard exact path="/manageAccess">
+              <ManageAccess />
+            </RouteGuard>
 
-        <RouteGuard exact path='/generalinformations'><GeneralInformations /></RouteGuard>
-        <RouteGuard exact path='/addcompany'><AddCompany /></RouteGuard>
-        <RouteGuard exact path='/updatecompany'><UpdateCompany /></RouteGuard>
-        <RouteGuard exact path='/comingsoon'><ComingSoon /></RouteGuard>
-        <RouteGuard exact path='/strategicplanning'><StrategicPlanning/></RouteGuard>
-        <RouteGuard exact path='/chartofaccounts1'><Chartofaccounts/></RouteGuard>
-        <RouteGuard exact path='/chartofaccounts'><ChartofAcount/></RouteGuard>
-
-        <RouteGuard exact path='/glaccountsandhyphotheses'><HyphotheseofGl/></RouteGuard>
-
-        <RouteGuard exact path='/testpage'><Testpage /></RouteGuard>
-        <RouteGuard exact path='/new_chart_of_accounts'><Newchartofaccounts /></RouteGuard>
-
-
-        <RouteGuard exact path='/generalinformations/:id'><Details /></RouteGuard>
-
-        </Main>
-        
-      </Switch>
+            <RouteGuard exact path="/dashboard">
+              <Home />
+            </RouteGuard>
+            <RouteGuard exact path="/tables">
+              <Tables />
+            </RouteGuard>
+            <RouteGuard exact path="/billing">
+              <Billing />
+            </RouteGuard>
+            <RouteGuard exact path="/rtl">
+              <Rtl />
+            </RouteGuard>
+            <RouteGuard exact path="/profile">
+              <Profile />
+            </RouteGuard>
+            <RouteGuard exact path="/orderbooks">
+              <SalesOrderBook />
+            </RouteGuard>
+            <RouteGuard exact path="/opportunities">
+              <SalesOpportunities />
+            </RouteGuard>
+            <RouteGuard exact path="/orderbook/:id">
+              <OrderBookDetails />
+            </RouteGuard>
+            <RouteGuard exact path="/opportunitybook/:id">
+              <OpportunityDetails />
+            </RouteGuard>
+            <RouteGuard exact path="/generalinformations">
+              <GeneralInformations />
+            </RouteGuard>
+            <RouteGuard exact path="/addcompany">
+              <AddCompany />
+            </RouteGuard>
+            <RouteGuard exact path="/updatecompany">
+              <UpdateCompany />
+            </RouteGuard>
+            <RouteGuard exact path="/comingsoon">
+              <ComingSoon />
+            </RouteGuard>
+            <RouteGuard exact path="/strategicplanning">
+              <StrategicPlanning />
+            </RouteGuard>
+            <RouteGuard exact path="/chartofaccounts1">
+              <Chartofaccounts />
+            </RouteGuard>
+            <RouteGuard exact path="/chartofaccounts">
+              <ChartofAcount />
+            </RouteGuard>
+            <RouteGuard exact path="/glaccountsandhyphotheses">
+              <HyphotheseofGl />
+            </RouteGuard>
+            <RouteGuard exact path="/testpage">
+              <Testpage />
+            </RouteGuard>
+            <RouteGuard exact path="/new_chart_of_accounts">
+              <Newchartofaccounts />
+            </RouteGuard>
+            <RouteGuard exact path="/generalinformations/:id">
+              <Details />
+            </RouteGuard>
+          </Main>
+        </Switch>
       </CompanyContext.Provider>
     </div>
   );
