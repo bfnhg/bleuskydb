@@ -288,7 +288,7 @@ function Sidenav({ color }) {
             </span>
             <span className="label">{t("strategicplanning")}</span>
           </NavLink>
-        </Menu.Item> */}
+        </Menu.Item>
 
         <Menu.Item className="menu-item-header" key="10">
           {t("sales")}
@@ -366,6 +366,37 @@ function Sidenav({ color }) {
             <span className="label">GL Accounts & Hyphotheses</span>
           </NavLink>
         </Menu.Item>
+
+        <Menu.Item key="9">
+          <NavLink to="/liabilities">
+            <span
+              className="icon"
+              style={{
+                background: "",
+              }}
+            >
+              {" "}
+              <ReconciliationOutlined />
+            </span>
+            <span className="label">Liabilities</span>
+          </NavLink>
+        </Menu.Item>
+
+        <Menu.Item key="10">
+          <NavLink to="/Assets">
+            <span
+              className="icon"
+              style={{
+                background: "",
+              }}
+            >
+              {" "}
+              <ReconciliationOutlined />
+            </span>
+            <span className="label">Assets</span>
+          </NavLink>
+        </Menu.Item>
+
         {/*
         <Menu.Item className="menu-item-header" key="5">
         Expenses

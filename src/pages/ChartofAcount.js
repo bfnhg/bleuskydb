@@ -551,7 +551,7 @@ function ChartofAcount() {
       title: "Category",
       // dataIndex: "category",
       align: "center",
-      render: (_,record) => <div style={{ textAlign: "left" }}>{record.financialStatementCategory.label}</div> ,
+      render: (_,record) => <div style={{ textAlign: "left" }}>{record.financialStatementCategoryForReporting?record.financialStatementCategoryForReporting.label:record.financialStatementCategory.label}</div> ,
     },
     {
       title: "GL Number",
@@ -581,10 +581,10 @@ function ChartofAcount() {
                 setComponentDisabled(record.budgetBreakdown);
                 form2.setFieldsValue({
                   class: record.financialStatementClass.id,
-                  category: record.financialStatementCategory.id,
+                  category: record.financialStatementCategoryForReporting?record.financialStatementCategoryForReporting.id:record.financialStatementCategory.id,
               
                   type: record.glAccount.financialStatementTypeGIFI,
-                  glAccountId:record.glAccount.id,
+                  glAccountId:record.glAccount.glNumber,
                   annualBudget: record.annualBudget,
                   // budgetBreakdown:record.budgetBreakdown,
                   note:record.note
