@@ -98,6 +98,8 @@ function Real(props) {
             <>
         {props.AssetBudgets.map(e=>{if(e.year==record.year){
             confirm = !e.confirmed;
+            if(confirm){
+            record.reals[monthIndex] = e.budgets[monthIndex]}
           }})}
             <Input
               type="number"
@@ -113,7 +115,7 @@ function Real(props) {
     }
 
 
-    items.push({
+    /*items.push({
       title: <h1 style={{ textAlign: "center" }}>Total $</h1>,
       width: 120,
       render: (_, record) => {
@@ -135,7 +137,7 @@ function Real(props) {
           </h3>
         );
       },
-    })
+    })*/
 
     return (
       <Table
@@ -223,7 +225,7 @@ function Real(props) {
               </Table.Summary.Cell>
             );
           }
-
+/*
           return (
             <>
               <Table.Summary.Row>
@@ -249,7 +251,7 @@ function Real(props) {
                 </Table.Summary.Cell>
               </Table.Summary.Row>
             </>
-          );
+          );*/
         }}
       />
     );

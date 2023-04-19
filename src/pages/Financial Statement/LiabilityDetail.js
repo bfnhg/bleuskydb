@@ -373,7 +373,7 @@ function LiabilityDetail() {
       label: <h1 style={{ width: 300, textAlign: "center" }}>Budget</h1>,
       children: (
         <div>
-          {liability.budgets && <Budget liabilityBudgets={liability.financialStatementClass && liability.budgets} onBudgetChange={handleBudgetChange} />}
+          {liability.budgets && <Budget LiabilityBudgets={liability.financialStatementClass && liability.budgets} onBudgetChange={handleBudgetChange} />}
         </div>
       ),
     },
@@ -383,7 +383,7 @@ function LiabilityDetail() {
       label: <h1 style={{ width: 300, textAlign: "center" }}>Reals</h1>,
       children: (
         <div>
-          {liability.budgets && <Reals liabilityReals={Real.reals} liabilityBudgets={liability.financialStatementClass && liability.budgets} onRealChange={handleRealChange} />}
+          {liability.budgets && <Reals LiabilityReals={Real.reals} LiabilityBudgets={liability.financialStatementClass && liability.budgets} onRealChange={handleRealChange} />}
         </div>
       ),
     },
@@ -391,7 +391,7 @@ function LiabilityDetail() {
       key: "3",
       label: <h1 style={{ width: 300, textAlign: "center" }}>Perfermonce</h1>,
       children: <div>
-        {liability.budgets && <Performance liabilityReals={Real.reals} liabilityBudgets={liability.financialStatementClass && liability.budgets} liabilityPerformance={performance.performances}/>}
+        {liability.budgets && <Performance LiabilityReals={Real.reals} LiabilityBudgets={liability.financialStatementClass && liability.budgets} LiabilityPerformance={performance.performances}/>}
       </div>,
     },
   ];

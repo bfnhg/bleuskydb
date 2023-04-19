@@ -116,7 +116,7 @@ function Budget(props) {
       });
     }
 
-
+/*
     items.push({
       title: <h1 style={{ textAlign: "center" }}>Total $</h1>,
       width: 120,
@@ -139,7 +139,7 @@ function Budget(props) {
           </h3>
         );
       },
-    })
+    })*/
 
     items.push({
       title: "Actions",
@@ -245,7 +245,7 @@ function Budget(props) {
             );
           }
 
-          return (
+          /*return (
             <>
               <Table.Summary.Row>
                 <Table.Summary.Cell index={1} colSpan={1}>
@@ -270,7 +270,7 @@ function Budget(props) {
                 </Table.Summary.Cell>
               </Table.Summary.Row>
             </>
-          );
+          );*/
         }}
       />
     );

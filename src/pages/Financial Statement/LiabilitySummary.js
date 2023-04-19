@@ -24,7 +24,7 @@ import {
   Card,
 } from "antd";
 
-function AssetSummary() {
+function LiabilitySummary() {
   const {
     Lang,
     setLang,
@@ -58,7 +58,7 @@ function AssetSummary() {
     setMarket,
   } = useContext(CompanyContext);
   const [year, setYear] = useState(null);
-  const [Asset, setAsset] = useState(null);
+  const [Liability, setLiability] = useState(null);
   const [form2] = Form.useForm();
   const [liability, setliability] = useState([]);
   const [editingRowbook, setEditingRowbook] = useState(null);
@@ -70,29 +70,25 @@ function AssetSummary() {
   var date;
   useEffect(() => {
     console.log("year" + date);
-    getAsset();
+    getLiability();
   }, [Company.id, year]);
 
   const onChangeyear = (date, dateString) => {
-    setAsset();
+    setLiability();
     console.log(date, dateString);
     setYear(dateString);
   };
 
-  const getAsset = async () => {
+  const getLiability = async () => {
     await axios
-      .get(`${JSON_API}/assets/summaries/${Company.id}/${year}`)
+      .get(`${JSON_API}/Liability/summaries/${Company.id}/${year}`)
 
       .then((res) => {
-        console.log(res);
-        setAsset(res.data);
-        console.log(Asset);
-        console.log("mmmm");
+        setLiability(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    console.log("jkjk");
   };
 
 
@@ -722,7 +718,7 @@ function AssetSummary() {
         <div>
           <Table
             columns={columnsbalanceBudget}
-            dataSource={Asset}
+            dataSource={Liability}
             scroll={{
               x: 1300,
             }}
@@ -738,7 +734,7 @@ function AssetSummary() {
         <div>
           <Table
             columns={columnsbalanceBudgetReal}
-            dataSource={Asset}
+            dataSource={Liability}
             scroll={{
               x: 1300,
             }}
@@ -756,7 +752,7 @@ function AssetSummary() {
           {" "}
           <Table
             columns={columnsbalancePerformance}
-            dataSource={Asset}
+            dataSource={Liability}
             scroll={{
               x: 1300,
             }}
@@ -770,7 +766,7 @@ function AssetSummary() {
   return (
     <Card>
       <div>
-        <h1 style={{ textAlign: "center" }}> Asset for {Company.name}</h1>
+        <h1 style={{ textAlign: "center" }}> Liability for {Company.name}</h1>
         <br></br>
         <div>
           <span>
@@ -809,4 +805,4 @@ function AssetSummary() {
   );
 }
 
-export default AssetSummary;
+export default LiabilitySummary;

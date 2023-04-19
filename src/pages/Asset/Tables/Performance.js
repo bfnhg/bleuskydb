@@ -136,7 +136,7 @@ function Performance(props) {
       });
     }
 
-
+/*
     items.push({
       title: <h1 style={{ textAlign: "center" }}>Total $</h1>,
       width: 120,
@@ -161,7 +161,7 @@ function Performance(props) {
           <p style={{ textAlign: "right" }}>{performance}</p>
           </>
           );}
-    })
+    })*/
 
     return (
       <Table
@@ -322,7 +322,7 @@ function Performance(props) {
               </Table.Summary.Cell>
             );
           }
-
+/*
           return (
             <>
               <Table.Summary.Row>
@@ -348,7 +348,7 @@ function Performance(props) {
                 </Table.Summary.Cell>
               </Table.Summary.Row>
             </>
-          );
+          );*/
         }}
       />
     );

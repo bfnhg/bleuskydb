@@ -42,6 +42,7 @@ import LiabilityDetail from "./pages/Financial Statement/LiabilityDetail";
 import Assets from "./pages/Asset/Asset";
 import AssetsDetail from "./pages/Asset/AssetDetail";
 import AssetSummary from "./pages/Asset/AssetSummary";
+import LiabilitySummary from "./pages/Financial Statement/LiabilitySummary";
 
 function App() {
   const [Company, setCompany] = useState(null);
@@ -188,6 +189,15 @@ function App() {
             <RouteGuard exact path="/generalinformations/:id">
               <Details />
             </RouteGuard>
+        <RouteGuard exact path='/liabilities'><Liabilities /></RouteGuard>
+        <RouteGuard exact path='/liabilityDetail/:id'><LiabilityDetail /></RouteGuard>
+
+        <RouteGuard exact path='/Assets'><Assets /></RouteGuard>
+        <RouteGuard exact path='/AssetDetail/:id'><AssetsDetail /></RouteGuard>
+
+        <RouteGuard exact path='/AssetSummary'><AssetSummary /></RouteGuard>
+
+        <RouteGuard exact path='/LiabilitySummary'><LiabilitySummary /></RouteGuard>
           </Main>
         </Switch>
       </CompanyContext.Provider>
