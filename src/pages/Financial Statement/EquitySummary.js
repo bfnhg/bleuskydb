@@ -24,7 +24,7 @@ import {
   Card,
 } from "antd";
 
-function LiabilitySummary() {
+function EquitySummary() {
   const {
     Lang,
     setLang,
@@ -58,7 +58,7 @@ function LiabilitySummary() {
     setMarket,
   } = useContext(CompanyContext);
   const [year, setYear] = useState(null);
-  const [Liability, setLiability] = useState(null);
+  const [Asset, setAsset] = useState(null);
   const [form2] = Form.useForm();
   const [liability, setliability] = useState([]);
   const [editingRowbook, setEditingRowbook] = useState(null);
@@ -70,25 +70,29 @@ function LiabilitySummary() {
   var date;
   useEffect(() => {
     console.log("year" + date);
-    getLiability();
+    getAsset();
   }, [Company.id, year]);
 
   const onChangeyear = (date, dateString) => {
-    setLiability();
+    setAsset();
     console.log(date, dateString);
     setYear(dateString);
   };
 
-  const getLiability = async () => {
+  const getAsset = async () => {
     await axios
-      .get(`${JSON_API}/Liability/summaries/${Company.id}?year=${year}`)
+      .get(`${JSON_API}/Equity/summaries/${Company.id}/${year}`)
 
       .then((res) => {
-        setLiability(res.data);
+        console.log(res);
+        setAsset(res.data);
+        console.log(Asset);
+        console.log("mmmm");
       })
       .catch((err) => {
         console.log(err);
       });
+    console.log("jkjk");
   };
 
   const columnsbalanceBudget = [
@@ -283,7 +287,7 @@ function LiabilitySummary() {
           // width: 150,
           align: "right",
           render: (text, record) => {
-            return record.monthlyBudgets[0].toFixed(2);
+            return record.monthlyBudgets[0];
           },
         },
         {
@@ -293,7 +297,7 @@ function LiabilitySummary() {
           // width: 150,
           align: "right",
           render: (text, record) => {
-            return record.monthlyReals[0].toFixed(2);
+            return record.monthlyReals[0];
           },
         },
         {
@@ -302,7 +306,7 @@ function LiabilitySummary() {
           // width: 150,
           align: "right",
           render: (text, record) => {
-            return record.monthlyPerformances[0].toFixed(2);
+            return record.monthlyPerformances[0];
           },
         },
       ],
@@ -705,7 +709,7 @@ function LiabilitySummary() {
         <div>
           <Table
             columns={columnsbalanceBudget}
-            dataSource={Liability}
+            dataSource={Asset}
             scroll={{
               x: 1300,
             }}
@@ -721,7 +725,7 @@ function LiabilitySummary() {
         <div>
           <Table
             columns={columnsbalanceBudgetReal}
-            dataSource={Liability}
+            dataSource={Asset}
             scroll={{
               x: 1300,
             }}
@@ -739,7 +743,7 @@ function LiabilitySummary() {
           {" "}
           <Table
             columns={columnsbalancePerformance}
-            dataSource={Liability}
+            dataSource={Asset}
             scroll={{
               x: 1300,
             }}
@@ -753,7 +757,7 @@ function LiabilitySummary() {
   return (
     <Card>
       <div>
-        <h1 style={{ textAlign: "center" }}> Liability for {Company.name}</h1>
+        <h1 style={{ textAlign: "center" }}> Equity Summary for {Company.name}</h1>
         <br></br>
         <div>
           <span>
@@ -791,4 +795,4 @@ function LiabilitySummary() {
   );
 }
 
-export default LiabilitySummary;
+export default EquitySummary;

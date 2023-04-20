@@ -24,7 +24,7 @@ import {
   Card,
 } from "antd";
 
-function AssetSummary() {
+function LiabilitySummary() {
   const {
     Lang,
     setLang,
@@ -58,7 +58,7 @@ function AssetSummary() {
     setMarket,
   } = useContext(CompanyContext);
   const [year, setYear] = useState(null);
-  const [Asset, setAsset] = useState(null);
+  const [Liability, setLiability] = useState(null);
   const [form2] = Form.useForm();
   const [liability, setliability] = useState([]);
   const [editingRowbook, setEditingRowbook] = useState(null);
@@ -70,171 +70,154 @@ function AssetSummary() {
   var date;
   useEffect(() => {
     console.log("year" + date);
-    getAsset();
+    getLiability();
   }, [Company.id, year]);
 
   const onChangeyear = (date, dateString) => {
-    setAsset();
+    setLiability();
     console.log(date, dateString);
     setYear(dateString);
   };
 
-  const getAsset = async () => {
+  const getLiability = async () => {
     await axios
       .get(`${JSON_API}/assets/summaries/${Company.id}/${year}`)
 
       .then((res) => {
-        console.log(res);
-        setAsset(res.data);
-        console.log(Asset);
-        console.log("mmmm");
+        setLiability(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    console.log("jkjk");
   };
-
 
   const columnsbalanceBudget = [
     {
-      title: <h1 style={{ textAlign: "center"  }}>GL Number</h1>,
+      title: <h1 style={{ textAlign: "center" }}>GL Number</h1>,
       dataIndex: "glNumber",
-      
     },
     {
       title: <h1 style={{ textAlign: "center" }}>Category</h1>,
       dataIndex: "category",
-      
     },
     {
       title: <h1 style={{ textAlign: "center" }}>Type</h1>,
       dataIndex: "type",
-     
     },
     {
       title: <h1 style={{ textAlign: "center" }}>Year</h1>,
       dataIndex: "year",
-      
     },
-    ];
+  ];
 
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    const startingMonthIndex = Company.startPeriod - 1;
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const startingMonthIndex = Company.startPeriod - 1;
 
-    for (let i = 0; i < months.length; i++) {
-      const monthIndex = (i + startingMonthIndex) % months.length;
-      const monthName = months[monthIndex];
+  for (let i = 0; i < months.length; i++) {
+    const monthIndex = (i + startingMonthIndex) % months.length;
+    const monthName = months[monthIndex];
 
-      columnsbalanceBudget.push({
-        title: monthName,
-        width: 120,
-        render: (text, record) => {
-          return record.monthlyBudgets[monthIndex];
-        },
-      });
-    }
     columnsbalanceBudget.push({
-      title: <h1 style={{ textAlign: "center" }}> Total $ </h1>,
-
-      key: "7",
+      title: monthName,
+      width: 120,
       render: (text, record) => {
-        return record.budgetTotal;
+        return record.monthlyBudgets[monthIndex].toFixed(2);
+      },
+    });
+  }
+  columnsbalanceBudget.push({
+    title: <h1 style={{ textAlign: "center" }}> Total $ </h1>,
+
+    key: "7",
+    render: (text, record) => {
+      return record.budgetTotal;
     },
-    })
-    const columnsbalanceBudgetReal = [
+  });
+  const columnsbalanceBudgetReal = [
     {
-      title: <h1 style={{ textAlign: "center"  }}>GL Number</h1>,
+      title: <h1 style={{ textAlign: "center" }}>GL Number</h1>,
       dataIndex: "glNumber",
-      
     },
     {
       title: <h1 style={{ textAlign: "center" }}>Category</h1>,
       dataIndex: "category",
-      
     },
     {
       title: <h1 style={{ textAlign: "center" }}>Type</h1>,
       dataIndex: "type",
-     
     },
     {
       title: <h1 style={{ textAlign: "center" }}>Year</h1>,
       dataIndex: "year",
-      
     },
-    ];
+  ];
 
-    for (let i = 0; i < months.length; i++) {
-      const monthIndex = (i + startingMonthIndex) % months.length;
-      const monthName = months[monthIndex];
+  for (let i = 0; i < months.length; i++) {
+    const monthIndex = (i + startingMonthIndex) % months.length;
+    const monthName = months[monthIndex];
 
-      columnsbalanceBudgetReal.push({
-        title: monthName,
-        width: 120,
-        render: (text, record) => {
-          return record.monthlyReals[monthIndex];
-        },
-      });
-    }
     columnsbalanceBudgetReal.push({
-      title: <h1 style={{ textAlign: "center" }}> Total $ </h1>,
-
-      key: "7",
+      title: monthName,
+      width: 120,
       render: (text, record) => {
-        return record.realTotal;
+        return record.monthlyReals[monthIndex].toFixed(2);
+      },
+    });
+  }
+  columnsbalanceBudgetReal.push({
+    title: <h1 style={{ textAlign: "center" }}> Total $ </h1>,
+
+    key: "7",
+    render: (text, record) => {
+      return record.realTotal;
     },
-    })
-    const columnsbalancePerformance = [
+  });
+  const columnsbalancePerformance = [
     {
-      title: <h1 style={{ textAlign: "center"  }}>GL Number</h1>,
+      title: <h1 style={{ textAlign: "center" }}>GL Number</h1>,
       dataIndex: "glNumber",
-      
     },
     {
       title: <h1 style={{ textAlign: "center" }}>Category</h1>,
       dataIndex: "category",
-      
     },
     {
       title: <h1 style={{ textAlign: "center" }}>Type</h1>,
       dataIndex: "type",
-     
     },
     {
       title: <h1 style={{ textAlign: "center" }}>Year</h1>,
       dataIndex: "year",
-      
     },
-    ];
+  ];
 
-    for (let i = 0; i < months.length; i++) {
-      const monthIndex = (i + startingMonthIndex) % months.length;
-      const monthName = months[monthIndex];
+  for (let i = 0; i < months.length; i++) {
+    const monthIndex = (i + startingMonthIndex) % months.length;
+    const monthName = months[monthIndex];
 
-      columnsbalancePerformance.push({
-        title: monthName,
-        children: [
+    columnsbalancePerformance.push({
+      title: monthName,
+      children: [
         {
           title: <p style={{ color: "green" }}>Budget</p>,
 
           // width: 150,
           align: "right",
           render: (text, record) => {
-            return record.monthlyBudgets[monthIndex];
+            return record.monthlyBudgets[monthIndex].toFixed(2);
           },
         },
         {
@@ -244,7 +227,7 @@ function AssetSummary() {
           // width: 150,
           align: "right",
           render: (text, record) => {
-            return record.monthlyReals[monthIndex];
+            return record.monthlyReals[monthIndex].toFixed(2);
           },
         },
         {
@@ -253,20 +236,20 @@ function AssetSummary() {
           // width: 150,
           align: "right",
           render: (text, record) => {
-            return record.monthlyPerformances[monthIndex];
+            return record.monthlyPerformances[monthIndex].toFixed(2);
           },
         },
       ],
-      });
-    }
-    columnsbalancePerformance.push({
-      title: <h1 style={{ textAlign: "center" }}> Total $ </h1>,
+    });
+  }
+  columnsbalancePerformance.push({
+    title: <h1 style={{ textAlign: "center" }}> Total $ </h1>,
 
-      key: "7",
-      render: (text, record) => {
-        return record.realTotal;
+    key: "7",
+    render: (text, record) => {
+      return record.realTotal;
     },
-    })
+  });
 
   const columnsbalanceReals = [
     {
@@ -300,7 +283,7 @@ function AssetSummary() {
           // width: 150,
           align: "right",
           render: (text, record) => {
-            return record.monthlyBudgets[0];
+            return record.monthlyBudgets[0].toFixed(2);
           },
         },
         {
@@ -310,7 +293,7 @@ function AssetSummary() {
           // width: 150,
           align: "right",
           render: (text, record) => {
-            return record.monthlyReals[0];
+            return record.monthlyReals[0].toFixed(2);
           },
         },
         {
@@ -319,7 +302,7 @@ function AssetSummary() {
           // width: 150,
           align: "right",
           render: (text, record) => {
-            return record.monthlyPerformances[0];
+            return record.monthlyPerformances[0].toFixed(2);
           },
         },
       ],
@@ -722,7 +705,7 @@ function AssetSummary() {
         <div>
           <Table
             columns={columnsbalanceBudget}
-            dataSource={Asset}
+            dataSource={Liability}
             scroll={{
               x: 1300,
             }}
@@ -738,7 +721,7 @@ function AssetSummary() {
         <div>
           <Table
             columns={columnsbalanceBudgetReal}
-            dataSource={Asset}
+            dataSource={Liability}
             scroll={{
               x: 1300,
             }}
@@ -756,7 +739,7 @@ function AssetSummary() {
           {" "}
           <Table
             columns={columnsbalancePerformance}
-            dataSource={Asset}
+            dataSource={Liability}
             scroll={{
               x: 1300,
             }}
@@ -770,7 +753,7 @@ function AssetSummary() {
   return (
     <Card>
       <div>
-        <h1 style={{ textAlign: "center" }}> Asset for {Company.name}</h1>
+        <h1 style={{ textAlign: "center" }}> Liability for {Company.name}</h1>
         <br></br>
         <div>
           <span>
@@ -798,7 +781,6 @@ function AssetSummary() {
                 defaultActiveKey="2"
                 items={items}
                 onChange={onChange}
-
               />
             </div>
           </div>
@@ -809,4 +791,4 @@ function AssetSummary() {
   );
 }
 
-export default AssetSummary;
+export default LiabilitySummary;

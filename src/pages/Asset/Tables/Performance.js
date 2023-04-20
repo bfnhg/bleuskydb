@@ -322,7 +322,7 @@ function Performance(props) {
               </Table.Summary.Cell>
             );
           }
-/*
+
           return (
             <>
               <Table.Summary.Row>
@@ -332,7 +332,7 @@ function Performance(props) {
 
                 {items}
 
-                <Table.Summary.Cell index={10}>
+                {/* <Table.Summary.Cell index={10}>
                   <Text>{totalReal-totalbudget+
                       totalfevrierReal-totalfevrierbudget+
                       totalMarsReal-totalMarsbudget+
@@ -345,10 +345,10 @@ function Performance(props) {
                       totaloctobreReal-totaloctobrebudget+
                       totalnovemberReal-totalnovemberbudget+
                       totaldecembreReal-totaldecembrebudget}</Text>
-                </Table.Summary.Cell>
+                </Table.Summary.Cell> */}
               </Table.Summary.Row>
             </>
-          );*/
+          );
         }}
       />
     );

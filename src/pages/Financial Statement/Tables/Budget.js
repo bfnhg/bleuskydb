@@ -245,7 +245,7 @@ function Budget(props) {
             );
           }
 
-          /*return (
+          return (
             <>
               <Table.Summary.Row>
                 <Table.Summary.Cell index={1} colSpan={1}>
@@ -254,7 +254,7 @@ function Budget(props) {
 
                 {items}
 
-                <Table.Summary.Cell index={10}>
+                {/* <Table.Summary.Cell index={10}>
                   <Text>{(totalbudget+
                       totalfevrierbudget+
                       totalMarsbudget+
@@ -267,10 +267,10 @@ function Budget(props) {
                       totaloctobrebudget+
                       totalnovemberbudget+
                       totaldecembrebudget).toFixed(2)}</Text>
-                </Table.Summary.Cell>
+                </Table.Summary.Cell> */}
               </Table.Summary.Row>
             </>
-          );*/
+          );
         }}
       />
     );

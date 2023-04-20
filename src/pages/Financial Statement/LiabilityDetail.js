@@ -12,6 +12,9 @@ import {
   Select,
   Space,
   Radio,
+  Modal,
+  Col,
+  Row,
   Tabs,
   Popconfirm,
   ConfigProvider,
@@ -25,6 +28,7 @@ import axios from "axios";
 import { CompanyContext } from "../../contexts/CompanyContext";
 import { JSON_API } from "../../services/Constants";
 
+import { useHistory } from "react-router-dom";
 import { useParams, Link } from "react-router-dom";
 const { Option } = Select;
 
@@ -69,6 +73,8 @@ function LiabilityDetail() {
   const [Note,setNote] = useState("");
   const [Category,setCategory] = useState();
   const [CategoryName,setCategoryName] = useState();
+  const [open, setOpen] = useState(false);
+  const history = useHistory();
 
   const [Class,setClass] = useState();
   useEffect(()=>  {
@@ -79,6 +85,11 @@ function LiabilityDetail() {
     getStatementClass();
     getHypothesis();
     },[Company.id]);
+    
+    function handleredirection() {
+      history.push("/liabilities");
+      getLiability(false);
+    }
 
     const getLiability = async () => {
     await axios
@@ -400,60 +411,95 @@ function LiabilityDetail() {
     <div>
       {contextHolder}
       <Card
-        style={{
-          width: 900,
-          margin: "auto",
-          background: "#FFFDFD",
-        }}
+        bordered={false}
+        className="header-solid mb-24"
+        title={<h3 className="font-semibold">Liability Details</h3>}
       >
-        <Space
-          direction="vertical"
-          style={{
-            width: "27%",
-            height: "50",
-          }}
-        >
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: "#059BFF",
-              },
-            }}
-          >
-            {" "}
-            <Button type="primary" block onClick={UpdateFinancialStatement}>
-              Save Changes
-            </Button>
-          </ConfigProvider>
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: "#FFA805",
-              },
-            }}
-          >
-            {" "}
-            <Link to="/liabilities">
-            <Button type="primary" block>
-              Back to Financial Statements
-            </Button>
-            </Link>
-          </ConfigProvider>
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: "#FF0606",
-              },
-            }}
-          >
-            {" "}
-            <Button type="primary" block onClick={DeleteFinancialStatement}>
-              Delete Statements
-            </Button>
-          </ConfigProvider>
-        </Space>{" "}
+        <Row>
+          <Col span={8}>
+            <ConfigProvider
+              theme={{
+                token: {
+                  // colorPrimary: "#00629d",
+                },
+              }}
+            >
+              {" "}
+              <Button
+                block
+                type="primary"
+                style={{ width: "57%" }}
+                onClick={UpdateFinancialStatement}
+              >
+                Save Changes
+              </Button>
+            </ConfigProvider>
+          </Col>
+          <Col span={6} offset={10}>
+            <Space
+              style={{
+                // display: 'flex',
+                marginBottom: 8,
+              }}
+            >
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimary: "#FFA805",
+                  },
+                }}
+              >
+                {" "}
+                <Link to="/equity">
+                  <Button type="primary" block>
+                    Back to Financial Statements
+                  </Button>
+                </Link>
+              </ConfigProvider>
+
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimary: "#FF0606",
+                  },
+                }}
+              >
+                {" "}
+                <Button
+                  type="primary"
+                  block
+                  onClick={() => setOpen(true)}
+                  // onClick={DeleteFinancialStatement}
+                >
+                  Delete Statements
+                </Button>
+                <Modal
+                  title="Delete the task"
+                  showIcon
+                  closable
+                  description="Are you sure to delete this one"
+                  centered
+                  open={open}
+                  // onConfirm={DeleteFinancialStatement}
+                  // onOpenChange={() => console.log("open change")}
+
+                  onOk={() => {
+                    setOpen(false);
+                    DeleteFinancialStatement(false);
+                    handleredirection();
+                  }}
+                  onCancel={() => setOpen(false)}
+                  width={400}
+                >
+                  <span> Are you sure to Delete liability </span>
+                </Modal>
+              </ConfigProvider>
+            </Space>
+          </Col>
+        </Row>
         <br></br>
-        <br></br>
+
+        {/* <Table columns={columns} dataSource={ChartofAccounts} bordered /> */}
         <Tabs
           style={{ marginBottom: 32, Color: "#059BFF" }}
           type="card"
@@ -462,20 +508,19 @@ function LiabilityDetail() {
           items={itemsForm}
           onChange={onChangee}
         />
+        <div>
+          <Tabs
+            style={{ marginBottom: 32, Color: "#059BFF" }}
+            type="card"
+            centered
+            defaultActiveKey="2"
+            items={items}
+            onChange={onChange}
+          />
+        </div>
       </Card>
 
-      <br></br>
-      <br></br>
-      <div>
-        <Tabs
-          style={{ marginBottom: 32, Color: "#059BFF" }}
-          type="card"
-          centered
-          defaultActiveKey="2"
-          items={items}
-          onChange={onChange}
-        />
-      </div>
+      
     </div>
   );
 }

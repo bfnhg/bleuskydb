@@ -12,29 +12,29 @@ import {
   Select,
   Space,
   Radio,
-  Modal,
-  Col,
-  Row,
   Tabs,
+  Modal,
+  Row,
+  Col,
   Popconfirm,
   ConfigProvider,
 } from "antd";
-import Budget from "./Tables/Budget";
-import Performance from "./Tables/Performance";
-import Reals from "./Tables/Reals";
+import "./tabscard.css";
+import BudgetEquity from "./Tables/BudgetEquity";
+import PerformanceEquity from "./Tables/PerformanceEquity";
+import RealEquity from "./Tables/RealEquity";
 import HyphothesisOfGl from "./Tables/HyphothesisOfGl";
 import { EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { CompanyContext } from "../../contexts/CompanyContext";
 import { JSON_API } from "../../services/Constants";
-
 import { useHistory } from "react-router-dom";
 import { useParams, Link } from "react-router-dom";
+import Equity from "./Equity";
 const { Option } = Select;
 
 const { TextArea } = Input;
 const { Text } = Typography;
-
 
 const layout = {
   labelCol: {
@@ -59,51 +59,50 @@ const onChangee = (key) => {
   console.log(key);
 };
 
-function AssetDetail() {
+function EquityDetails() {
   //mode of tabs
 
-
-  const {Companies,setCompanies,Company,Actionstate,setActionstate}=useContext(CompanyContext);
+  const { Companies, setCompanies, Company, Actionstate, setActionstate } =
+    useContext(CompanyContext);
   const [messageApi, contextHolder] = message.useMessage();
   const { id } = useParams();
   const [balance, setbalance] = useState("");
   const { TextArea } = Input;
-  const [Asset,setAsset] = useState([]);
-  const [Real,setReal] = useState([]);
-  const [performance,setperformance] = useState([]);
-  const [Note,setNote] = useState("");
-  const [Category,setCategory] = useState();
-  const [CategoryName,setCategoryName] = useState();
-  const [Class,setClass] = useState();
+  const [liability, setliability] = useState([]);
+  const [Real, setReal] = useState([]);
+  const [performance, setperformance] = useState([]);
+  const [Note, setNote] = useState("");
+  const [Category, setCategory] = useState();
   const [open, setOpen] = useState(false);
-  const[realfrombudget,setrealfrombudget] = useState([]);
-    const history = useHistory();
-  useEffect(()=>  {
-    getAsset();
-    console.log(CategoryName);
+   const history = useHistory();
+
+  const [Class, setClass] = useState();
+  useEffect(() => {
+    getEquity();
     getReals();
     getPerformance();
-    getStatementClass();
+    // getStatementClass();
     getHypothesis();
-    },[Company.id]);
-     function handleredirection() {
-      history.push("/Assets");
-      getAsset();
-    }
+  }, [Company.id]);
 
-    const getAsset = async () => {
+  function handleredirection() {
+    history.push("/equity");
+    getEquity(false);
+  }
+
+  const getEquity = async () => {
     await axios
-      .get(`${JSON_API}/assets/AssetBudgets/${id}`)
+      .get(`${JSON_API}/Equity/EquityBudgets/${id}`)
       .then((res) => {
         console.log(res.data);
-        setAsset(res.data);
+        setliability(res.data);
         setNote(res.data.note);
-        {res.data.financialStatementCategory &&
-          setCategory(res.data.financialStatementCategory.id);}
-          {res.data.financialStatementCategory &&
-          setCategoryName(res.data.financialStatementCategory.label);}
-          setClass(res.data.financialStatementClass.id);
-          handleclass(res.data.financialStatementClass.id);
+        {
+          res.data.financialStatementCategory &&
+            setCategory(res.data.financialStatementCategory.id);
+        }
+        setClass(res.data.financialStatementClass.id);
+        handleclass(res.data.financialStatementClass.id);
         setGifi(res.data.financialStatementType.gifi);
         setglAccount(res.data.glAccount.glNumber);
         getHypothesis(res.data.glAccount.id);
@@ -118,9 +117,9 @@ function AssetDetail() {
 
   const getPerformance = async () => {
     await axios
-      .get(`${JSON_API}/assets/AssetPerformance/${id}`)
+      .get(`${JSON_API}/Equity/EquityPerformance/${id}`)
       .then((res) => {
-        console.log("test",res.data);
+        console.log("test", res.data);
         setperformance(res.data);
       })
       .catch((err) => {
@@ -131,13 +130,14 @@ function AssetDetail() {
       });
   };
 
-
   const getReals = async () => {
     await axios
-      .get(`${JSON_API}/assets/AssetReal/${id}`)
+      .get(`${JSON_API}/Equity/EquityReal/${id}`)
       .then((res) => {
-        console.log("test",res.data);
+        console.log("test", res.data);
         setReal(res.data);
+         console.log( res.data);
+
       })
       .catch((err) => {
         console.log(err);
@@ -149,7 +149,7 @@ function AssetDetail() {
 
   const DeleteFinancialStatement = async () => {
     await axios
-      .delete(`${JSON_API}/assets/${Asset.id}`)
+      .delete(`${JSON_API}/Equity/${liability.id}`)
       .then((res) => {
         console.log(res.data);
       })
@@ -161,21 +161,21 @@ function AssetDetail() {
       });
   };
   const UpdateFinancialStatement = async () => {
-    console.log(Asset)
-    console.log(Note)
+    console.log(liability);
+    console.log(Note);
     const obj = {
-      id : Asset.id,
-      financialStatementClassId : Asset.financialStatementClass.id,
-      financialStatementCategoryId : Category,
-      note : Note,
-      budgets : Asset.budgets,
-      reals : Real.reals
-    }
-    console.log(obj)
+      id: liability.id,
+      financialStatementClassId: liability.financialStatementClass.id,
+      financialStatementCategoryId: Category,
+      note: Note,
+      budgets: liability.budgets,
+      reals: Real.reals,
+    };
+    console.log(obj);
     await axios
-      .put(`${JSON_API}/assets/AssetBudgetRealUpdate`,obj)
+      .put(`${JSON_API}/Equity/EquityBudgetUpdate`, obj)
       .then((res) => {
-        getAsset();
+        getEquity();
         messageApi.open({
           type: "success",
           content: "Updated successfully",
@@ -190,31 +190,16 @@ function AssetDetail() {
       });
   };
 
-
-
-
-  function handleBudgetChange(budget){
-    setAsset(prevState => {
-      return {...prevState,budgets:budget}
-    })
-    /*Asset.budgets.map((e)=>{
-      setrealfrombudget(prevState => {
-      return {...prevState,
-        id:e.id,
-        year:e.year,
-      reals:e.budgets,
-      totalReal:e.totalBudget
-    }
-    })
-    })*/
-    //console.log("testtest",realfrombudget)
-    //handleRealChange(realfrombudget)
-    console.log(Asset.budgets);
+  function handleBudgetChange(budget) {
+    setliability((prevState) => {
+      return { ...prevState, budgets: budget };
+    });
+    console.log(liability.budgets);
   }
-  function handleRealChange(real){
-    setReal(prevState => {
-      return {...prevState,reals:real}
-    })
+  function handleRealChange(real) {
+    setReal((prevState) => {
+      return { ...prevState, reals: real };
+    });
   }
   const [gifi, setGifi] = useState("");
   const [glAccount, setglAccount] = useState(null);
@@ -231,13 +216,13 @@ function AssetDetail() {
   const [form2] = Form.useForm();
 
   useEffect(() => {
-    getAsset();
+    getEquity();
     getStatementClass();
     handleclass();
     getHypothesis();
-    console.log(Asset);
+    console.log(liability);
   }, []);
-  
+
   const getHypothesis = async (e) => {
     await axios
       .get(`${JSON_API}/GLAccount/${e}`)
@@ -285,11 +270,9 @@ function AssetDetail() {
       label: (
         <h1 style={{ width: 300, textAlign: "center" }}>Main information</h1>
       ),
-      children: Asset.budgets && (
+      children: liability.budgets && (
         <div>
           <Form
-
-          
             {...layout}
             name="nest-messages"
             style={{
@@ -310,7 +293,7 @@ function AssetDetail() {
               // value={nom}
               name="class"
               label="Class"
-              value={Asset}
+              value={liability}
               rules={[
                 {
                   required: true,
@@ -320,17 +303,20 @@ function AssetDetail() {
             >
               {" "}
               <Select
-                defaultValue="Asset"
+                defaultValue="Equity"
                 disabled
                 // placeholder={"Asset"}
               ></Select>
             </Form.Item>
 
             <Form.Item name="category" label="Category">
-              <Select placeholder={CategoryName} onChange={e=>setCategory(e)}>
-                {statementcategory && statementcategory.map(
-                  (e) => e && <Option value={e.id}>{e.label}</Option>
-                )}
+              <Select 
+              // placeholder={Category}
+               onChange={(e) => setCategory(e)}>
+                {statementcategory &&
+                  statementcategory.map(
+                    (e) => e && <Option value={e.id}>{e.label}</Option>
+                  )}
               </Select>
             </Form.Item>
 
@@ -363,7 +349,7 @@ function AssetDetail() {
 
             <Form.Item label="Note">
               <Input.TextArea
-              onChange={e=>setNote(e.target.value)}
+                onChange={(e) => setNote(e.target.value)}
                 style={{
                   width: 400,
                 }}
@@ -382,9 +368,7 @@ function AssetDetail() {
         <h1 style={{ width: 300, textAlign: "center" }}>Hyphotheses GL</h1>
       ),
       children: (
-        <div>
-          {Hypo && <HyphothesisOfGl HypothesesDataSource={Hypo} />}
-        </div>
+        <div>{Hypo && <HyphothesisOfGl HypothesesDataSource={Hypo} />}</div>
       ),
     },
   ];
@@ -396,7 +380,14 @@ function AssetDetail() {
       label: <h1 style={{ width: 300, textAlign: "center" }}>Budget</h1>,
       children: (
         <div>
-          {Asset.budgets && <Budget AssetBudgets={Asset.financialStatementClass && Asset.budgets} onBudgetChange={handleBudgetChange} />}
+          {liability.budgets && (
+            <BudgetEquity
+              equityBudgets={
+                liability.financialStatementClass && liability.budgets
+              }
+              onBudgetChange={handleBudgetChange}
+            />
+          )}
         </div>
       ),
     },
@@ -405,27 +396,48 @@ function AssetDetail() {
       key: "2",
       label: <h1 style={{ width: 300, textAlign: "center" }}>Reals</h1>,
       children: (
+        
         <div>
-          {Asset.budgets && <Reals AssetReals={Real.reals} AssetBudgets={Asset.financialStatementClass && Asset.budgets} onRealChange={handleRealChange} />}
+          {liability.budgets && (
+            <RealEquity
+              AssetReals={Real.reals}
+              AssetBudgets={
+                liability.financialStatementClass && liability.budgets
+              }
+              onRealChange={handleRealChange}
+            />
+          )}
         </div>
       ),
     },
     {
       key: "3",
       label: <h1 style={{ width: 300, textAlign: "center" }}>Perfermonce</h1>,
-      children: <div>
-        {Asset.budgets && <Performance AssetReals={Real.reals} AssetBudgets={Asset.financialStatementClass && Asset.budgets} AssetPerformance={performance.performances}/>}
-      </div>,
+      children: (
+        
+        <div>
+          {liability.budgets && (
+            <PerformanceEquity
+              AssetReals={Real.reals}
+              AssetBudgets={
+                liability.financialStatementClass && liability.budgets
+              }
+              AssetPerformance={performance.performances}
+            />
+          )}
+        </div>
+      ),
     },
   ];
 
   return (
     <div>
       {contextHolder}
-        <Card
+
+      <Card
         bordered={false}
         className="header-solid mb-24"
-        title={<h3 className="font-semibold">Asset Details</h3>}
+        title={<h3 className="font-semibold">Equity Details</h3>}
       >
         <Row>
           <Col span={8}>
@@ -503,7 +515,7 @@ function AssetDetail() {
                   onCancel={() => setOpen(false)}
                   width={400}
                 >
-                  <span> Are you sure to Delete Asset </span>
+                  <span> Are you sure to Delete liability </span>
                 </Modal>
               </ConfigProvider>
             </Space>
@@ -531,10 +543,8 @@ function AssetDetail() {
           />
         </div>
       </Card>
-
-     
     </div>
   );
 }
 
-export default AssetDetail;
+export default EquityDetails;

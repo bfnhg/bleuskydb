@@ -397,6 +397,21 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
 
+        <Menu.Item key="9">
+          <NavLink to="/equity">
+            <span
+              className="icon"
+              style={{
+                background: "",
+              }}
+            >
+              {" "}
+              <ReconciliationOutlined />
+            </span>
+            <span className="label">Equity</span>
+          </NavLink>
+        </Menu.Item>
+
         {/*
         <Menu.Item className="menu-item-header" key="5">
         Expenses

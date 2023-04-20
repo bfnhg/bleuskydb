@@ -43,6 +43,10 @@ import Assets from "./pages/Asset/Asset";
 import AssetsDetail from "./pages/Asset/AssetDetail";
 import AssetSummary from "./pages/Asset/AssetSummary";
 import LiabilitySummary from "./pages/Financial Statement/LiabilitySummary";
+import Equity from "./pages/Financial Statement/Equity";
+import EquityDetails from "./pages/Financial Statement/EquityDetails";
+import EquitySummary from "./pages/Financial Statement/EquitySummary";
+
 
 function App() {
   const [Company, setCompany] = useState(null);
@@ -189,15 +193,37 @@ function App() {
             <RouteGuard exact path="/generalinformations/:id">
               <Details />
             </RouteGuard>
-        <RouteGuard exact path='/liabilities'><Liabilities /></RouteGuard>
-        <RouteGuard exact path='/liabilityDetail/:id'><LiabilityDetail /></RouteGuard>
+            <RouteGuard exact path="/liabilities">
+              <Liabilities />
+            </RouteGuard>
+            <RouteGuard exact path="/liabilityDetail/:id">
+              <LiabilityDetail />
+            </RouteGuard>
 
-        <RouteGuard exact path='/Assets'><Assets /></RouteGuard>
-        <RouteGuard exact path='/AssetDetail/:id'><AssetsDetail /></RouteGuard>
+            <RouteGuard exact path="/Assets">
+              <Assets />
+            </RouteGuard>
+            <RouteGuard exact path="/AssetDetail/:id">
+              <AssetsDetail />
+            </RouteGuard>
 
-        <RouteGuard exact path='/AssetSummary'><AssetSummary /></RouteGuard>
+            <RouteGuard exact path="/AssetSummary">
+              <AssetSummary />
+            </RouteGuard>
 
-        <RouteGuard exact path='/LiabilitySummary'><LiabilitySummary /></RouteGuard>
+            <RouteGuard exact path="/LiabilitySummary">
+              <LiabilitySummary />
+            </RouteGuard>
+            <RouteGuard exact path="/equityDetail/:id">
+              <EquityDetails />
+            </RouteGuard>
+
+            <RouteGuard exact path="/equity">
+              <Equity />
+            </RouteGuard>
+            <RouteGuard exact path="/summaryequity">
+              <EquitySummary />
+            </RouteGuard>
           </Main>
         </Switch>
       </CompanyContext.Provider>

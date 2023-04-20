@@ -1,0 +1,29 @@
+.ant-tabs-nav-wrap{
+    
+    height: 40px;
+    
+  
+
+}
+.ant-tabs-nav-list{
+    transform: translate(0px, 0px);
+    height: 40px;
+     
+      
+}
+.ant-tabs-tab{
+     transform: translate(0px, 0px);
+    height: 40px;
+    
+}
+
+.element.style{
+     height: 40px;
+     width: 100px;
+
+}
+.ant-table-cell{
+    text-align: right;
+    /* background-color: rgb(238, 218, 238); */
+    /* color: white; */
+}

@@ -1,73 +1,56 @@
+
+
 import React, { useContext } from "react";
 
-import { Button, Input, Table, Typography } from "antd";
+import { Button, Input, Popconfirm, message,Table, Typography } from "antd";
 import { useState } from "react";
 import { CompanyContext } from "../../../contexts/CompanyContext";
 const { Text } = Typography;
 const { TextArea } = Input;
 
-function Budget(props) {
-  const [AssetBudgets, setAssetBudgets] = useState(
-    props.AssetBudgets
-  );
+function BudgetEquity(props) {
+  const [equityBudgets, setequityBudgets] = useState(props.equityBudgets);
   const { TextArea } = Input;
 
   function handleinputchange(ee, i, n) {
     //if(ee.target.value){
-    const newBudget = [...AssetBudgets];
+    const newBudget = [...equityBudgets];
     newBudget.map((e) => {
       if (e.id == i) {
         e.budgets[n] = parseFloat(ee.target.value) || 0;
       }
     });
     //newBudget[i]=e.target.value;
-    setAssetBudgets(newBudget);
+    setequityBudgets(newBudget);
     props.onBudgetChange(newBudget);
     //}
   }
+  const cancel = (e) => {
+    console.log(e);
+    // message.error("Click on No");
+  };
 
   function confirm(i) {
-    const newBudget = [...AssetBudgets];
+    const newBudget = [...equityBudgets];
     newBudget.map((e) => {
       if (e.id == i) {
         e.confirmed = true;
       }
     });
-    setAssetBudgets(newBudget);
+    setequityBudgets(newBudget);
     props.onBudgetChange(newBudget);
   }
 
   const { Companies, setCompanies, Company, Actionstate, setActionstate } =
     useContext(CompanyContext);
 
-  const [editingRow, setEditingRow] = useState(null);
-  const [category, setcategory] = useState("");
-  const [year, setyear] = useState("");
-  const [montant, setmontant] = useState("");
-  const [repayment, setrepayment] = useState("");
-  const [fevrierbudget, setfevrierbudget] = useState(0);
+  
 
-  const [Marsbudget, setMarsbudget] = useState("");
-  const [avrilbudget, setavrilbudget] = useState("");
-  const [maibudget, setmaibudget] = useState("");
-  const [Juinbudget, setJuinbudget] = useState("");
-
-  const [juilletbudget, setjuilletbudget] = useState("");
-  const [aoutbudget, setaoutbudget] = useState("");
-  const [septembrebudget, setseptembrebudget] = useState("");
-
-  const [octobrebudget, setoctobrebudget] = useState("");
-  const [novemberbudget, setnovemberbudget] = useState("");
-  const [decembrebudget, setdecembrebudget] = useState("");
-
-  /*useEffect(() => getdata(), []);
-  const getdata = async () => {
-        await setbalance(Asset);
-  };*/
+ 
     console.log("ttesstt 1");
     const items = [
       {
-        title: <h1 style={{ textAlign: "center" }}>Year</h1>,
+        title: "Year",
         width: 120,
         dataIndex: "year",
         aligne: "right",
@@ -102,70 +85,78 @@ function Budget(props) {
       items.push({
         title: monthName,
         width: 120,
-        render: (text, record) => {
+        align: "center",
+        render: (ID, record) => {
           return (
             <Input
-              type="number"
+              // type="number"
               value={record.budgets[monthIndex].toFixed(2)}
               disabled={record.confirmed}
               onChange={(e) => handleinputchange(e, record.id, monthIndex)}
-              style={{ textAlign: "right" }}
+              style={{ textAlign: "right", width: 120 }}
             />
           );
         },
       });
     }
 
-/*
-    items.push({
-      title: <h1 style={{ textAlign: "center" }}>Total $</h1>,
-      width: 120,
-      render: (_, record) => {
-        return (
-          <h3 style={{ textAlign: "right" }}>
-            {" "}
-            {(record.budgets[0]+
-            record.budgets[1]+
-            record.budgets[2]+
-            record.budgets[3]+
-            record.budgets[4]+
-            record.budgets[5]+
-            record.budgets[6]+
-            record.budgets[7]+
-            record.budgets[8]+
-            record.budgets[9]+
-            record.budgets[10]+
-            record.budgets[11]).toFixed(2)}
-          </h3>
-        );
-      },
-    })*/
+    items.push(
+      // {
+      //   title: "Total $",
+      //   width: 120,
 
-    items.push({
-      title: "Actions",
-      fixed: "left",
-      width: 200,
-      render: (_, record) => (
-        <>
-          <Button
-            type="link"
-            style={{ marginLeft: ".1rem" }}
-            onClick={() => confirm(record.id)}
-          >
-            <a>Confirm</a>
-          </Button>
-        </>
-      ),
-    });
+      //   align: "center",
+      //   render: (_, record) => {
+      //     return (
+      //       <h3 style={{ textAlign: "right", width: 120 }}>
+      //         {record.budgets[0] +
+      //           record.budgets[1] +
+      //           record.budgets[2] +
+      //           record.budgets[3] +
+      //           record.budgets[4] +
+      //           record.budgets[5] +
+      //           record.budgets[6] +
+      //           record.budgets[7] +
+      //           record.budgets[8] +
+      //           record.budgets[9] +
+      //           record.budgets[10] +
+      //           record.budgets[11]}
+      //       </h3>
+      //     );
+      //   },
+      // },
+
+      {
+        title: "Actions",
+        // fixed: "right",
+        width: 100,
+        render: (_, record) => (
+          <>
+            <Popconfirm
+              type="link"
+              title="Are you sure to confirm ?"
+              
+             
+              onConfirm={() => confirm(record.id)}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+              
+            >
+              <a>Confirm</a>
+            </Popconfirm>
+          </>
+        ),
+      }
+    );
 
     return (
       <Table
         columns={items}
-        dataSource={props.AssetBudgets}
+        dataSource={props.equityBudgets}
         scroll={{
           x: 1300,
         }}
-        pagination={true}
         bordered
         summary={(pageData) => {
           const items = [];
@@ -187,8 +178,8 @@ function Budget(props) {
           let totaldecembrebudget = 0;
           let totaltotal = 0;
 
-          props.AssetBudgets &&
-            props.AssetBudgets.map((e) => {
+          props.equityBudgets &&
+            props.equityBudgets.map((e) => {
               //console.log(e.budgets[1]),
               totalmontant = e.budgets[0];
               totalbudget += totalmontant;
@@ -238,7 +229,7 @@ function Budget(props) {
 
             items.push(
               <Table.Summary.Cell index={monthIndex}>
-                <Text style={{ textAlign: "right" }}>
+                <Text style={{ textAlign: "center" }}>
                   {monthName.toFixed(2)}
                 </Text>
               </Table.Summary.Cell>
@@ -249,24 +240,13 @@ function Budget(props) {
             <>
               <Table.Summary.Row>
                 <Table.Summary.Cell index={1} colSpan={1}>
-                  <h3 style={{ textAlign: "center" }}>Total</h3>
+                  <h3 style={{ textAlign: "right" }}>Total</h3>
                 </Table.Summary.Cell>
 
                 {items}
 
                 {/* <Table.Summary.Cell index={10}>
-                  <Text>{(totalbudget+
-                      totalfevrierbudget+
-                      totalMarsbudget+
-                      totalavrilbudget+
-                      totalmaibudget+
-                      totalJuinbudget+
-                      totaljuilletbudget+
-                      totalaoutbudget+
-                      totalseptembrebudget+
-                      totaloctobrebudget+
-                      totalnovemberbudget+
-                      totaldecembrebudget).toFixed(2)}</Text>
+                  <Text style={{ textAlign: "right" }}>{totaltotal}</Text>
                 </Table.Summary.Cell> */}
               </Table.Summary.Row>
             </>
@@ -274,6 +254,9 @@ function Budget(props) {
         }}
       />
     );
-}
+  };
 
-export default Budget;
+  
+
+
+export default BudgetEquity;

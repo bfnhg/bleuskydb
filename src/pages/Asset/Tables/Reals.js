@@ -225,7 +225,7 @@ function Real(props) {
               </Table.Summary.Cell>
             );
           }
-/*
+
           return (
             <>
               <Table.Summary.Row>
@@ -235,7 +235,7 @@ function Real(props) {
 
                 {items}
 
-                <Table.Summary.Cell index={10}>
+                {/* <Table.Summary.Cell index={10}>
                   <Text>{(totalReal+
                       totalfevrierReal+
                       totalMarsReal+
@@ -248,10 +248,10 @@ function Real(props) {
                       totaloctobreReal+
                       totalnovemberReal+
                       totaldecembreReal).toFixed(2)}</Text>
-                </Table.Summary.Cell>
+                </Table.Summary.Cell> */}
               </Table.Summary.Row>
             </>
-          );*/
+          );
         }}
       />
     );

@@ -18,6 +18,9 @@ import {
   Input,
   Typography,
   Space,
+  Card,
+
+  Col,
   Row,
   Descriptions,
 } from "antd";
@@ -55,7 +58,10 @@ function Liability() {
     {
       title:"Class",
       align: "center",
-      render: (_,record) => <div style={{ textAlign: "left" }}>{record.financialStatementType.financialStatementCategory.financialStatementClass.label}</div>,
+      render: (_,record) => <div style={{ textAlign: "left" }}>
+      {/* {record.financialStatementType.financialStatementCategory.financialStatementClass.label} */}
+      Liability
+      </div>,
 
 
     },
@@ -118,14 +124,17 @@ function Liability() {
       }
   };
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>
-        {" "}
-        Liabilities for {Company.name}
-      </h1>
-      <br></br>
-      <div>
-        <span>
+    <Card
+      bordered={false}
+      className="header-solid mb-24"
+      title={
+        <h3 className="font-semibold">
+          Financial Statement (Liability) for: {Company.name}
+        </h3>
+      }
+    >
+      <Row>
+        <Col span={8}>
           <DatePicker
             name="year"
             picker="year"
@@ -133,49 +142,49 @@ function Liability() {
             style={{ width: 200, height: 35 }}
             onChange={onChangeyear}
           />
-        </span>
-
-        
-        <div
-          style={{
-            textAlign: "right",
-          }}
-        >
-          <Button
-            className="Create-button"
-            type="primary"
-            
+        </Col>
+        <Col span={6} offset={10}>
+          <Space
             style={{
-              textAlign: "right",
+              // display: 'flex',
+              marginBottom: 8,
             }}
           >
-            Upload the Reals
-          </Button>
-          <Link to={{
-              pathname:`/LiabilitySummary`
-            }}>
-          <Button
-            className="Create-button"
-            type="primary"
-            style={{
-              textAlign: "right",
-              marginLeft: "2rem",
-            }}
-           
-          >
-            Summary
-          </Button>
+            <Link
+              to={{
+                pathname: `/LiabilitySummary`,
+              }}
+            >
+              <Button
+                className="Create-button"
+                type="primary"
+                style={{
+                  textAlign: "right",
+                  marginLeft: "2rem",
+                }}
+                // onClick={() => setOpen(true)}
+              >
+                Summary
+              </Button>
 
-
-
-          </Link>
-          
-        </div>
-      </div>
+              <Button
+                className="Create-button"
+                type="primary"
+                style={{
+                  textAlign: "right",
+                  marginLeft: "2rem",
+                }}
+              >
+                Upload the Reals
+              </Button>
+            </Link>
+          </Space>
+        </Col>
+      </Row>
       <div>
         <Table columns={columns} dataSource={liabilities} bordered />
       </div>
-    </div>
+    </Card>
   );
 }
 
